@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Physics Assessment</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+<header class="navbar">
+    <h2>Physics Assessment Portal</h2>
+    <div class="nav-buttons">
+        <button class="nav-btn active" id="btn-student-view" onclick="switchView('student')">Student Portal</button>
+        <button class="nav-btn" id="btn-admin-view" onclick="switchView('admin')">Admin Portal</button>
+    </div>
+</header>
+
+<div class="container">
+    <section id="student-section">
+        <div id="student-start-card" class="card">
+            <h2>Welcome to the Assessment</h2>
+            <button class="action-btn" id="start-quiz-btn" onclick="startStudentQuiz()">START QUIZ</button>
+            <button class="action-btn" onclick="viewProgress()" style="margin-top: 15px;">VIEW MY PROGRESS</button>
+        </div>
+
+        <div id="student-quiz-card" class="card hidden">
+            <div class="quiz-top">
+                <span id="q-counter">Question 1</span>
+                <div id="timer-box">Time Left: <span id="time-left">00:00</span></div>
+            </div>
+            <h2 id="display-quiz-title" style="color: #8b4bbd; margin-bottom: 15px;">Quiz Title</h2>
+            <h3 id="question-text" class="question-title">Question goes here</h3>
+            <div id="options-list" class="options-container"></div>
+            <div id="explanation-box" class="explanation-container hidden">
+                <h4>Theory / Explanation:</h4>
+                <p id="explanation-text"></p>
+            </div>
+            <div class="quiz-bottom">
+                <button id="next-q-btn" class="action-btn hidden" onclick="nextQuestion()">Next Question</button>
+            </div>
+        </div>
+
+        <div id="student-result-card" class="card hidden">
+            <h2>Quiz Completed!</h2>
+            <div class="score-box">
+                <p>Marks: <span id="final-score">0</span> / 100</p>
+            </div>
+            <button class="action-btn" onclick="location.reload()">Back to Dashboard</button>
+        </div>
+
+        <div id="progress-card" class="card hidden" style="margin-top: 20px;">
+            <h3 style="color: #8b4bbd; margin-bottom: 15px;">My Performance</h3>
+            <canvas id="progressChart" width="400" height="250"></canvas>
+            <button class="action-btn" onclick="document.getElementById('progress-card').classList.add('hidden')" style="margin-top: 20px;">Close</button>
+        </div>
+    </section>
+
+    <section id="admin-section" class="hidden">
+        <div id="admin-login-card" class="card">
+            <h2>Admin Login</h2>
+            <input type="password" id="admin-pass-input" placeholder="Enter Admin Password">
+            <button class="action-btn" onclick="loginAdmin()">Login</button>
+            <p id="admin-error" class="error hidden"></p>
+        </div>
+
+        <div id="admin-dashboard" class="card hidden">
+            <h2>Admin Dashboard</h2>
+            <button class="logout-btn" onclick="logoutAdmin()" style="margin-bottom: 20px;">Logout</button>
+
+            <!-- THIS IS THE SECTION YOU WERE MISSING -->
+            <div class="admin-panel">
+                <h3>Change Admin Password</h3>
+                <input type="password" id="old-pass" placeholder="Current Password">
+                <input type="password" id="new-pass" placeholder="New Password">
+                <button class="sub-btn" onclick="changeAdminPassword()">Update Password</button>
+            </div>
+            <!-- END MISSING SECTION -->
+
+            <div class="admin-panel">
+                <h3>Quiz Settings (ID, Title, Time & Count)</h3>
+                <input type="number" id="quiz-id-input" placeholder="Enter Unique Quiz ID (e.g., 1)" min="1">
+                <input type="text" id="title-input" placeholder="Enter Quiz Title">
+                <input type="number" id="time-input" placeholder="Minutes (e.g. 5)" min="1">
+                <input type="number" id="count-input" placeholder="Max Questions (e.g. 10)" min="1">
+                <button class="sub-btn" onclick="saveFullQuizConfig()">Save Configuration to Database</button>
+            </div>
+
+            <div class="admin-panel">
+                <h3>Add New Question</h3>
+                <input type="text" id="q-input" placeholder="Enter Question text">
+                <input type="text" id="opt-a" placeholder="Option A">
+                <input type="text" id="opt-b" placeholder="Option B">
+                <input type="text" id="opt-c" placeholder="Option C">
+                <input type="text" id="opt-d" placeholder="Option D">
+                <label>Correct Option:</label>
+                <select id="correct-opt">
+                    <option value="A">Option A</option>
+                    <option value="B">Option B</option>
+                    <option value="C">Option C</option>
+                    <option value="D">Option D</option>
+                </select>
+                <textarea id="q-explanation" placeholder="Enter theory/explanation" rows="3"></textarea>
+                <button class="action-btn" onclick="addQuestion()">Add Question</button>
+                <button class="sub-btn" style="background: #ff9800; width: 100%;" onclick="clearQuestionForm()">Clear Form Fields</button>
+                <button class="clear-btn" onclick="clearAllQuestions()">Delete All Questions from DB</button>
+            </div>
+        </div>
+    </section>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>

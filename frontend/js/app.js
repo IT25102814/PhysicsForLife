@@ -1,6 +1,50 @@
-function showInstitutes() {
-    document.getElementById("content").innerHTML =
-        "<h2>Institutes</h2><p>Institute management will be added here.</p>";
+async function showInstitutes() {
+
+    const content = document.getElementById("content");
+
+    content.innerHTML = "<p>Loading institutes...</p>";
+
+    try {
+
+        const response = await fetch("http://localhost:8080/api/institutes");
+
+        if (!response.ok) {
+            throw new Error("Failed to load institutes");
+        }
+
+        const institutes = await response.json();
+
+        let html = "<h2>Institutes</h2>";
+
+        if (institutes.length === 0) {
+            html += "<p>No institutes found.</p>";
+        } else {
+
+            html += "<div class='institute-list'>";
+
+            institutes.forEach(institute => {
+
+                html += `
+                    <div class="institute-card">
+                        <h3>${institute.name}</h3>
+                        <p><strong>Institute ID:</strong> ${institute.instituteId}</p>
+                    </div>
+                `;
+
+            });
+
+            html += "</div>";
+        }
+
+        content.innerHTML = html;
+
+    } catch (error) {
+
+        console.error(error);
+
+        content.innerHTML =
+            "<p>Unable to load institutes. Make sure the Spring Boot backend is running.</p>";
+    }
 }
 
 function showCurricula() {

@@ -1,53 +1,229 @@
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f7f6;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
     margin: 0;
-}
-.container {
-    background: white;
-    padding: 30px;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    width: 300px;
-}
-h2 {
-    text-align: center;
     color: #333;
 }
-.form-group {
-    margin-bottom: 15px;
+
+.container {
+    background: rgba(255, 255, 255, 0.95);
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+    width: 350px;
+    backdrop-filter: blur(10px);
+    transition: transform 0.3s ease;
 }
+
+.container:hover {
+    transform: translateY(-3px);
+}
+
+h2 {
+    text-align: center;
+    color: #1e3c72;
+    margin-bottom: 25px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
 label {
     display: block;
-    margin-bottom: 5px;
-    color: #666;
+    margin-bottom: 8px;
+    color: #444;
+    font-weight: 600;
+    font-size: 14px;
 }
+
 input {
     width: 100%;
-    padding: 8px;
+    padding: 10px 12px;
     border: 1px solid #ccc;
-    border-radius: 4px;
+    border-radius: 6px;
     box-sizing: border-box;
+    font-size: 14px;
+    transition: border-color 0.2s, box-shadow 0.2s;
 }
+
+input:focus {
+    border-color: #2a5298;
+    box-shadow: 0 0 5px rgba(42, 82, 152, 0.3);
+    outline: none;
+}
+
 button {
     width: 100%;
-    padding: 10px;
-    background-color: #28a745;
+    padding: 12px;
+    background: linear-gradient(135deg, #28a745 0%, #218838 100%);
     color: white;
     border: none;
-    border-radius: 4px;
+    border-radius: 6px;
     cursor: pointer;
     font-size: 16px;
+    font-weight: 600;
+    transition: opacity 0.2s;
 }
+
 button:hover {
-    background-color: #218838;
+    opacity: 0.9;
 }
-#message {
+
+#message, #loginMessage {
     text-align: center;
     margin-top: 15px;
     font-weight: bold;
+    font-size: 14px;
+}
+
+p a {
+    color: #2a5298;
+    text-decoration: none;
+}
+
+p a:hover {
+    text-decoration: underline;
+}
+
+/* Dashboard Specific Layout */
+.dashboard-body {
+    background-color: #f4f7f6 !important;
+    display: flex !important;
+    height: 100vh;
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.sidebar {
+    width: 260px;
+    background: white;
+    border-right: 1px solid #e0e0e0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 20px;
+}
+
+.sidebar h2 {
+    font-size: 20px;
+    color: #1e3c72;
+    text-align: left;
+    margin-bottom: 30px;
+}
+
+.nav-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    flex-grow: 1;
+}
+
+.nav-links li {
+    padding: 10px 12px;
+    border-radius: 6px;
+    margin-bottom: 5px;
+    transition: background 0.2s;
+}
+
+.nav-links li:hover {
+    background: #f0f4f8;
+}
+
+.nav-links li a {
+    text-decoration: none;
+    color: #444;
+    font-weight: 500;
+    font-size: 14px;
+    display: block;
+}
+
+.nav-links li.section-title {
+    font-size: 11px;
+    color: #888;
+    font-weight: bold;
+    margin-top: 20px;
+    margin-bottom: 5px;
+    letter-spacing: 0.5px;
+}
+
+.sidebar-footer {
+    padding-top: 15px;
+    border-top: 1px solid #eee;
+}
+
+.logout-btn {
+    background-color: #dc3545 !important;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.main-content {
+    flex-grow: 1;
+    padding: 40px;
+    overflow-y: auto;
+}
+
+.welcome-card {
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.welcome-text h3 {
+    margin: 0 0 5px 0;
+    color: #1e3c72;
+    font-size: 24px;
+}
+
+.welcome-text p {
+    margin: 0;
+    color: #666;
+}
+
+.card-grid {
+    display: flex;
+    gap: 20px;
+}
+
+.portal-card {
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    flex: 1;
+    text-align: center;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.portal-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+}
+
+.card-icon {
+    font-size: 36px;
+    display: block;
+    margin-bottom: 10px;
+}
+
+.portal-card h4 {
+    margin: 0;
+    font-size: 14px;
+    color: #333;
+    font-weight: 600;
 }

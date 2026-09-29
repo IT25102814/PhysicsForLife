@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Portal | Physics for Life</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="dashboard-body">
+
+<!-- SIDEBAR NAVIGATION -->
+<div class="sidebar">
+  <h2>Physics for Life</h2>
+  <ul class="nav-links">
+    <li><a href="#" class="active">📊 Dashboard</a></li>
+    <li><a href="#">⭐ Exam Ratings</a></li>
+    <li class="section-title">STUDENT</li>
+    <li><a href="#">👤 My Profile</a></li>
+    <li><a href="#">🔔 My Notifications</a></li>
+    <li><a href="#">🆔 My Student ID</a></li>
+    <li class="section-title">CLASSES</li>
+    <li><a href="#">📚 My Classes</a></li>
+    <li><a href="#">💳 Purchase Classes</a></li>
+    <li><a href="#">📈 My Performance</a></li>
+  </ul>
+  <div class="sidebar-footer">
+    <button id="logoutBtn" class="logout-btn">Logout</button>
+  </div>
+</div>
+
+<!-- MAIN CONTENT AREA -->
+<div class="main-content">
+  <!-- Top Greeting Banner -->
+  <div class="welcome-card">
+    <div class="welcome-text">
+      <!-- Added id="welcomeHeading" here -->
+      <h3 id="welcomeHeading">Good Evening, Rasindu!</h3>
+      <p>Let's Start Learning Physics</p>
+    </div>
+    <div class="avatar-box">
+      <span style="font-size: 40px;">👨‍🎓</span>
+    </div>
+  </div>
+
+  <!-- Quick Action Cards Grid -->
+  <div class="card-grid">
+    <div class="portal-card">
+      <span class="card-icon">📖</span>
+      <h4>MY CLASSES</h4>
+    </div>
+    <div class="portal-card">
+      <span class="card-icon">💻</span>
+      <h4>PURCHASE CLASSES</h4>
+    </div>
+    <div class="portal-card">
+      <span class="card-icon">💬</span>
+      <h4>TELEGRAM SUPPORT</h4>
+    </div>
+  </div>
+</div>
+
+<script src="app.js"></script>
+
+<!-- Dynamic Greeting Script -->
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const savedName = localStorage.getItem('userName');
+    const welcomeHeading = document.getElementById('welcomeHeading');
+
+    if (savedName && welcomeHeading) {
+      welcomeHeading.textContent = `Good Evening, ${savedName}!`;
+    }
+  });
+</script>
+</body>
+</html>

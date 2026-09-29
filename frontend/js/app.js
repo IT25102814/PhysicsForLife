@@ -47,9 +47,53 @@ async function showInstitutes() {
     }
 }
 
-function showCurricula() {
-    document.getElementById("content").innerHTML =
-        "<h2>Curricula</h2><p>Curriculum management will be added here.</p>";
+async function showCurricula() {
+
+    const content = document.getElementById("content");
+
+    content.innerHTML = "<p>Loading curricula...</p>";
+
+    try {
+
+        const response = await fetch("http://localhost:8080/api/curricula");
+
+        if (!response.ok) {
+            throw new Error("Failed to load curricula");
+        }
+
+        const curricula = await response.json();
+
+        let html = "<h2>Curricula</h2>";
+
+        if (curricula.length === 0) {
+            html += "<p>No curricula found.</p>";
+        } else {
+
+            html += "<div class='curriculum-list'>";
+
+            curricula.forEach(curriculum => {
+
+                html += `
+                    <div class="curriculum-card">
+                        <h3>${curriculum.name}</h3>
+                        <p><strong>Curriculum ID:</strong> ${curriculum.curriculumId}</p>
+                    </div>
+                `;
+
+            });
+
+            html += "</div>";
+        }
+
+        content.innerHTML = html;
+
+    } catch (error) {
+
+        console.error(error);
+
+        content.innerHTML =
+            "<p>Unable to load curricula. Make sure the Spring Boot backend is running.</p>";
+    }
 }
 
 async function showBatches() {

@@ -234,3 +234,66 @@ async function showMaterials() {
             "<p>Unable to load learning materials. Make sure the Spring Boot backend is running.</p>";
     }
 }
+
+function showAddInstituteForm() {
+
+    const content = document.getElementById("content");
+
+    content.innerHTML = `
+        <h2>Add Institute</h2>
+
+        <div class="form-card">
+
+            <label for="instituteName">Institute Name</label>
+
+            <input
+                type="text"
+                id="instituteName"
+                placeholder="Enter institute name"
+            >
+
+            <button onclick="addInstitute()">Add Institute</button>
+
+        </div>
+    `;
+}
+
+async function addInstitute() {
+
+    const name = document.getElementById("instituteName").value.trim();
+
+    if (name === "") {
+        alert("Please enter an institute name.");
+        return;
+    }
+
+    try {
+
+        const response = await fetch("http://localhost:8080/api/institutes", {
+
+            method: "POST",
+
+            headers: {
+                "Content-Type": "application/json"
+            },
+
+            body: JSON.stringify({
+                name: name
+            })
+        });
+
+        if (!response.ok) {
+            throw new Error("Failed to add institute");
+        }
+
+        alert("Institute added successfully!");
+
+        showInstitutes();
+
+    } catch (error) {
+
+        console.error(error);
+
+        alert("Unable to add institute. Make sure the Spring Boot backend is running.");
+    }
+}

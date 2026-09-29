@@ -69,3 +69,19 @@ body {
 #content {
     margin-top: 30px;
 }
+
+.batch-list {
+    display: grid;
+    gap: 15px;
+}
+
+.batch-card {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.batch-card h3 {
+    margin-top: 0;
+}

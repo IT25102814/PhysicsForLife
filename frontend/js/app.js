@@ -148,7 +148,9 @@ async function showCurricula() {
 
     try {
 
-        const response = await fetch("http://localhost:8080/api/curricula");
+        const response = await fetch(
+            "http://localhost:8080/api/curricula"
+        );
 
         if (!response.ok) {
             throw new Error("Failed to load curricula");
@@ -182,6 +184,10 @@ async function showCurricula() {
                             Edit
                         </button>
 
+                        <button onclick="deleteCurriculum(${curriculum.curriculumId})">
+                            Delete
+                        </button>
+
                     </div>
                 `;
 
@@ -198,6 +204,44 @@ async function showCurricula() {
 
         content.innerHTML =
             "<p>Unable to load curricula. Make sure the Spring Boot backend is running.</p>";
+    }
+}
+
+async function deleteCurriculum(curriculumId) {
+
+    const confirmed = confirm(
+        "Are you sure you want to delete this curriculum?"
+    );
+
+    if (!confirmed) {
+        return;
+    }
+
+    try {
+
+        const response = await fetch(
+            `http://localhost:8080/api/curricula/${curriculumId}`,
+            {
+                method: "DELETE"
+            }
+        );
+
+        if (!response.ok) {
+            throw new Error("Failed to delete curriculum");
+        }
+
+        alert("Curriculum deleted successfully!");
+
+        showCurricula();
+
+    } catch (error) {
+
+        console.error(error);
+
+        alert(
+            "Unable to delete curriculum. " +
+            "This curriculum may be used by an existing batch."
+        );
     }
 }
 
@@ -287,7 +331,9 @@ async function showBatches() {
 
     try {
 
-        const response = await fetch("http://localhost:8080/api/batches");
+        const response = await fetch(
+            "http://localhost:8080/api/batches"
+        );
 
         if (!response.ok) {
             throw new Error("Failed to load batches");
@@ -336,6 +382,10 @@ async function showBatches() {
                             Edit
                         </button>
 
+                        <button onclick="deleteBatch(${batch.batchId})">
+                            Delete
+                        </button>
+
                     </div>
                 `;
 
@@ -352,6 +402,44 @@ async function showBatches() {
 
         content.innerHTML =
             "<p>Unable to load batches. Make sure the Spring Boot backend is running.</p>";
+    }
+}
+
+async function deleteBatch(batchId) {
+
+    const confirmed = confirm(
+        "Are you sure you want to delete this batch?"
+    );
+
+    if (!confirmed) {
+        return;
+    }
+
+    try {
+
+        const response = await fetch(
+            `http://localhost:8080/api/batches/${batchId}`,
+            {
+                method: "DELETE"
+            }
+        );
+
+        if (!response.ok) {
+            throw new Error("Failed to delete batch");
+        }
+
+        alert("Batch deleted successfully!");
+
+        showBatches();
+
+    } catch (error) {
+
+        console.error(error);
+
+        alert(
+            "Unable to delete batch. " +
+            "This batch may be used by existing learning materials."
+        );
     }
 }
 
@@ -643,6 +731,14 @@ async function showMaterials() {
                             ${material.fileName || "No file"}
                         </p>
 
+                        <button onclick="showEditMaterialForm(${material.materialId})">
+                            Edit
+                        </button>
+
+                        <button onclick="deleteMaterial(${material.materialId})">
+                            Delete
+                        </button>
+
                     </div>
                 `;
 
@@ -659,6 +755,280 @@ async function showMaterials() {
 
         content.innerHTML =
             "<p>Unable to load learning materials. Make sure the Spring Boot backend is running.</p>";
+    }
+}
+
+async function deleteMaterial(materialId) {
+
+    const confirmed = confirm(
+        "Are you sure you want to delete this learning material?"
+    );
+
+    if (!confirmed) {
+        return;
+    }
+
+    try {
+
+        const response = await fetch(
+            `http://localhost:8080/api/learning-materials/${materialId}`,
+            {
+                method: "DELETE"
+            }
+        );
+
+        if (!response.ok) {
+            throw new Error("Failed to delete learning material");
+        }
+
+        alert("Learning material deleted successfully!");
+
+        showMaterials();
+
+    } catch (error) {
+
+        console.error(error);
+
+        alert(
+            "Unable to delete learning material. " +
+            "Make sure the Spring Boot backend is running."
+        );
+    }
+}
+
+async function showEditMaterialForm(materialId) {
+
+    const content = document.getElementById("content");
+
+    content.innerHTML = "<p>Loading material...</p>";
+
+    try {
+
+        const [materialResponse, batchesResponse] =
+            await Promise.all([
+                fetch(`http://localhost:8080/api/learning-materials/${materialId}`),
+                fetch("http://localhost:8080/api/batches")
+            ]);
+
+        if (!materialResponse.ok || !batchesResponse.ok) {
+            throw new Error("Failed to load material information");
+        }
+
+        const material = await materialResponse.json();
+        const batches = await batchesResponse.json();
+
+        let batchOptions = "";
+
+        batches.forEach(batch => {
+
+            batchOptions += `
+                <option
+                    value="${batch.batchId}"
+                    ${batch.batchId === material.batch.batchId ? "selected" : ""}
+                >
+                    ${batch.batchName} -
+                    ${batch.institute.name} -
+                    ${batch.curriculum.name}
+                </option>
+            `;
+
+        });
+
+        content.innerHTML = `
+            <h2>Edit Learning Material</h2>
+
+            <div class="form-card">
+
+                <label for="editMaterialBatch">
+                    Batch
+                </label>
+
+                <select id="editMaterialBatch">
+                    ${batchOptions}
+                </select>
+
+                <label for="editMaterialWeek">
+                    Week Number
+                </label>
+
+                <input
+                    type="number"
+                    id="editMaterialWeek"
+                    value="${material.weekNumber}"
+                >
+
+                <label for="editMaterialTitle">
+                    Title
+                </label>
+
+                <input
+                    type="text"
+                    id="editMaterialTitle"
+                    value="${material.title}"
+                >
+
+                <label for="editMaterialType">
+                    Material Type
+                </label>
+
+                <select id="editMaterialType">
+
+                    <option value="PDF"
+                        ${material.materialType === "PDF" ? "selected" : ""}>
+                        PDF
+                    </option>
+
+                    <option value="VIDEO"
+                        ${material.materialType === "VIDEO" ? "selected" : ""}>
+                        Video
+                    </option>
+
+                    <option value="DOCUMENT"
+                        ${material.materialType === "DOCUMENT" ? "selected" : ""}>
+                        Document
+                    </option>
+
+                    <option value="LINK"
+                        ${material.materialType === "LINK" ? "selected" : ""}>
+                        Link
+                    </option>
+
+                    <option value="OTHER"
+                        ${material.materialType === "OTHER" ? "selected" : ""}>
+                        Other
+                    </option>
+
+                </select>
+
+                <label for="editMaterialDescription">
+                    Description
+                </label>
+
+                <input
+                    type="text"
+                    id="editMaterialDescription"
+                    value="${material.description || ""}"
+                >
+
+                <label for="editMaterialFileName">
+                    File Name
+                </label>
+
+                <input
+                    type="text"
+                    id="editMaterialFileName"
+                    value="${material.fileName || ""}"
+                >
+
+                <button onclick="updateMaterial(${materialId})">
+                    Save Changes
+                </button>
+
+                <button onclick="showMaterials()">
+                    Cancel
+                </button>
+
+            </div>
+        `;
+
+    } catch (error) {
+
+        console.error(error);
+
+        content.innerHTML =
+            "<p>Unable to load material information. Make sure the Spring Boot backend is running.</p>";
+    }
+}
+
+async function updateMaterial(materialId) {
+
+    const batchId =
+        document.getElementById("editMaterialBatch").value;
+
+    const weekNumber =
+        document.getElementById("editMaterialWeek").value;
+
+    const title =
+        document.getElementById("editMaterialTitle").value.trim();
+
+    const materialType =
+        document.getElementById("editMaterialType").value;
+
+    const description =
+        document.getElementById("editMaterialDescription").value.trim();
+
+    const fileName =
+        document.getElementById("editMaterialFileName").value.trim();
+
+    if (weekNumber === "") {
+        alert("Please enter the week number.");
+        return;
+    }
+
+    if (title === "") {
+        alert("Please enter a title.");
+        return;
+    }
+
+    try {
+
+        const response = await fetch(
+            `http://localhost:8080/api/learning-materials/${materialId}`,
+            {
+                method: "PUT",
+
+                headers: {
+                    "Content-Type": "application/json"
+                },
+
+                body: JSON.stringify({
+
+                    batch: {
+                        batchId: Number(batchId)
+                    },
+
+                    weekNumber: Number(weekNumber),
+
+                    title: title,
+
+                    materialType: materialType,
+
+                    description: description,
+
+                    fileName: fileName,
+
+                    filePath: fileName
+                        ? "/materials/" + fileName
+                        : null,
+
+                    mimeType: materialType === "PDF"
+                        ? "application/pdf"
+                        : null,
+
+                    fileSizeBytes: 0,
+
+                    uploadedBy: 1
+
+                })
+            }
+        );
+
+        if (!response.ok) {
+            throw new Error("Failed to update learning material");
+        }
+
+        alert("Learning material updated successfully!");
+
+        showMaterials();
+
+    } catch (error) {
+
+        console.error(error);
+
+        alert(
+            "Unable to update learning material. " +
+            "Make sure the Spring Boot backend is running."
+        );
     }
 }
 

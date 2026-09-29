@@ -178,6 +178,10 @@ async function showCurricula() {
                             ${curriculum.curriculumId}
                         </p>
 
+                        <button onclick="showEditCurriculumForm(${curriculum.curriculumId})">
+                            Edit
+                        </button>
+
                     </div>
                 `;
 
@@ -194,6 +198,83 @@ async function showCurricula() {
 
         content.innerHTML =
             "<p>Unable to load curricula. Make sure the Spring Boot backend is running.</p>";
+    }
+}
+
+function showEditCurriculumForm(curriculumId) {
+
+    const content = document.getElementById("content");
+
+    content.innerHTML = `
+        <h2>Edit Curriculum</h2>
+
+        <div class="form-card">
+
+            <label for="editCurriculumName">
+                Curriculum Name
+            </label>
+
+            <input
+                type="text"
+                id="editCurriculumName"
+                placeholder="Enter new curriculum name"
+            >
+
+            <button onclick="updateCurriculum(${curriculumId})">
+                Save Changes
+            </button>
+
+            <button onclick="showCurricula()">
+                Cancel
+            </button>
+
+        </div>
+    `;
+}
+
+async function updateCurriculum(curriculumId) {
+
+    const name =
+        document.getElementById("editCurriculumName").value.trim();
+
+    if (name === "") {
+        alert("Please enter a curriculum name.");
+        return;
+    }
+
+    try {
+
+        const response = await fetch(
+            `http://localhost:8080/api/curricula/${curriculumId}`,
+            {
+                method: "PUT",
+
+                headers: {
+                    "Content-Type": "application/json"
+                },
+
+                body: JSON.stringify({
+                    name: name
+                })
+            }
+        );
+
+        if (!response.ok) {
+            throw new Error("Failed to update curriculum");
+        }
+
+        alert("Curriculum updated successfully!");
+
+        showCurricula();
+
+    } catch (error) {
+
+        console.error(error);
+
+        alert(
+            "Unable to update curriculum. " +
+            "Make sure the Spring Boot backend is running."
+        );
     }
 }
 
@@ -251,6 +332,10 @@ async function showBatches() {
                             ${batch.active ? "Active" : "Inactive"}
                         </p>
 
+                        <button onclick="showEditBatchForm(${batch.batchId})">
+                            Edit
+                        </button>
+
                     </div>
                 `;
 
@@ -267,6 +352,223 @@ async function showBatches() {
 
         content.innerHTML =
             "<p>Unable to load batches. Make sure the Spring Boot backend is running.</p>";
+    }
+}
+
+async function showEditBatchForm(batchId) {
+
+    const content = document.getElementById("content");
+
+    content.innerHTML = "<p>Loading batch...</p>";
+
+    try {
+
+        const [batchResponse, institutesResponse, curriculaResponse] =
+            await Promise.all([
+                fetch(`http://localhost:8080/api/batches/${batchId}`),
+                fetch("http://localhost:8080/api/institutes"),
+                fetch("http://localhost:8080/api/curricula")
+            ]);
+
+        if (
+            !batchResponse.ok ||
+            !institutesResponse.ok ||
+            !curriculaResponse.ok
+        ) {
+            throw new Error("Failed to load batch information");
+        }
+
+        const batch = await batchResponse.json();
+        const institutes = await institutesResponse.json();
+        const curricula = await curriculaResponse.json();
+
+        let instituteOptions = "";
+
+        institutes.forEach(institute => {
+
+            instituteOptions += `
+                <option
+                    value="${institute.instituteId}"
+                    ${institute.instituteId === batch.institute.instituteId ? "selected" : ""}
+                >
+                    ${institute.name}
+                </option>
+            `;
+
+        });
+
+        let curriculumOptions = "";
+
+        curricula.forEach(curriculum => {
+
+            curriculumOptions += `
+                <option
+                    value="${curriculum.curriculumId}"
+                    ${curriculum.curriculumId === batch.curriculum.curriculumId ? "selected" : ""}
+                >
+                    ${curriculum.name}
+                </option>
+            `;
+
+        });
+
+        content.innerHTML = `
+            <h2>Edit Batch</h2>
+
+            <div class="form-card">
+
+                <label for="editBatchInstitute">
+                    Institute
+                </label>
+
+                <select id="editBatchInstitute">
+                    ${instituteOptions}
+                </select>
+
+                <label for="editBatchCurriculum">
+                    Curriculum
+                </label>
+
+                <select id="editBatchCurriculum">
+                    ${curriculumOptions}
+                </select>
+
+                <label for="editBatchName">
+                    Batch Name
+                </label>
+
+                <input
+                    type="text"
+                    id="editBatchName"
+                    value="${batch.batchName}"
+                >
+
+                <label for="editMonthlyFee">
+                    Monthly Fee
+                </label>
+
+                <input
+                    type="number"
+                    id="editMonthlyFee"
+                    value="${batch.monthlyFee}"
+                >
+
+                <label for="editBatchActive">
+                    Status
+                </label>
+
+                <select id="editBatchActive">
+
+                    <option
+                        value="true"
+                        ${batch.active ? "selected" : ""}
+                    >
+                        Active
+                    </option>
+
+                    <option
+                        value="false"
+                        ${!batch.active ? "selected" : ""}
+                    >
+                        Inactive
+                    </option>
+
+                </select>
+
+                <button onclick="updateBatch(${batchId})">
+                    Save Changes
+                </button>
+
+                <button onclick="showBatches()">
+                    Cancel
+                </button>
+
+            </div>
+        `;
+
+    } catch (error) {
+
+        console.error(error);
+
+        content.innerHTML =
+            "<p>Unable to load batch information. Make sure the Spring Boot backend is running.</p>";
+    }
+}
+
+async function updateBatch(batchId) {
+
+    const instituteId =
+        document.getElementById("editBatchInstitute").value;
+
+    const curriculumId =
+        document.getElementById("editBatchCurriculum").value;
+
+    const batchName =
+        document.getElementById("editBatchName").value.trim();
+
+    const monthlyFee =
+        document.getElementById("editMonthlyFee").value;
+
+    const active =
+        document.getElementById("editBatchActive").value === "true";
+
+    if (batchName === "") {
+        alert("Please enter a batch name.");
+        return;
+    }
+
+    if (monthlyFee === "") {
+        alert("Please enter the monthly fee.");
+        return;
+    }
+
+    try {
+
+        const response = await fetch(
+            `http://localhost:8080/api/batches/${batchId}`,
+            {
+                method: "PUT",
+
+                headers: {
+                    "Content-Type": "application/json"
+                },
+
+                body: JSON.stringify({
+
+                    institute: {
+                        instituteId: Number(instituteId)
+                    },
+
+                    curriculum: {
+                        curriculumId: Number(curriculumId)
+                    },
+
+                    batchName: batchName,
+
+                    monthlyFee: Number(monthlyFee),
+
+                    active: active
+
+                })
+            }
+        );
+
+        if (!response.ok) {
+            throw new Error("Failed to update batch");
+        }
+
+        alert("Batch updated successfully!");
+
+        showBatches();
+
+    } catch (error) {
+
+        console.error(error);
+
+        alert(
+            "Unable to update batch. " +
+            "Make sure the Spring Boot backend is running."
+        );
     }
 }
 

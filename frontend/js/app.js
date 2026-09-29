@@ -297,3 +297,66 @@ async function addInstitute() {
         alert("Unable to add institute. Make sure the Spring Boot backend is running.");
     }
 }
+
+function showAddCurriculumForm() {
+
+    const content = document.getElementById("content");
+
+    content.innerHTML = `
+        <h2>Add Curriculum</h2>
+
+        <div class="form-card">
+
+            <label for="curriculumName">Curriculum Name</label>
+
+            <input
+                type="text"
+                id="curriculumName"
+                placeholder="Enter curriculum name"
+            >
+
+            <button onclick="addCurriculum()">Add Curriculum</button>
+
+        </div>
+    `;
+}
+
+async function addCurriculum() {
+
+    const name = document.getElementById("curriculumName").value.trim();
+
+    if (name === "") {
+        alert("Please enter a curriculum name.");
+        return;
+    }
+
+    try {
+
+        const response = await fetch("http://localhost:8080/api/curricula", {
+
+            method: "POST",
+
+            headers: {
+                "Content-Type": "application/json"
+            },
+
+            body: JSON.stringify({
+                name: name
+            })
+        });
+
+        if (!response.ok) {
+            throw new Error("Failed to add curriculum");
+        }
+
+        alert("Curriculum added successfully!");
+
+        showCurricula();
+
+    } catch (error) {
+
+        console.error(error);
+
+        alert("Unable to add curriculum. Make sure the Spring Boot backend is running.");
+    }
+}

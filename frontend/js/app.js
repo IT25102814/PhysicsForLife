@@ -360,3 +360,154 @@ async function addCurriculum() {
         alert("Unable to add curriculum. Make sure the Spring Boot backend is running.");
     }
 }
+
+async function showAddBatchForm() {
+
+    const content = document.getElementById("content");
+
+    content.innerHTML = "<p>Loading batch form...</p>";
+
+    try {
+
+        const [institutesResponse, curriculaResponse] = await Promise.all([
+            fetch("http://localhost:8080/api/institutes"),
+            fetch("http://localhost:8080/api/curricula")
+        ]);
+
+        if (!institutesResponse.ok || !curriculaResponse.ok) {
+            throw new Error("Failed to load institutes or curricula");
+        }
+
+        const institutes = await institutesResponse.json();
+        const curricula = await curriculaResponse.json();
+
+        let instituteOptions = "";
+
+        institutes.forEach(institute => {
+            instituteOptions += `
+                <option value="${institute.instituteId}">
+                    ${institute.name}
+                </option>
+            `;
+        });
+
+        let curriculumOptions = "";
+
+        curricula.forEach(curriculum => {
+            curriculumOptions += `
+                <option value="${curriculum.curriculumId}">
+                    ${curriculum.name}
+                </option>
+            `;
+        });
+
+        content.innerHTML = `
+            <h2>Add Batch</h2>
+
+            <div class="form-card">
+
+                <label for="batchInstitute">Institute</label>
+
+                <select id="batchInstitute">
+                    ${instituteOptions}
+                </select>
+
+                <label for="batchCurriculum">Curriculum</label>
+
+                <select id="batchCurriculum">
+                    ${curriculumOptions}
+                </select>
+
+                <label for="batchName">Batch Name</label>
+
+                <input
+                    type="text"
+                    id="batchName"
+                    placeholder="Example: 2029"
+                >
+
+                <label for="monthlyFee">Monthly Fee</label>
+
+                <input
+                    type="number"
+                    id="monthlyFee"
+                    placeholder="Example: 5000"
+                >
+
+                <label for="batchActive">Status</label>
+
+                <select id="batchActive">
+                    <option value="true">Active</option>
+                    <option value="false">Inactive</option>
+                </select>
+
+                <button onclick="addBatch()">Add Batch</button>
+
+            </div>
+        `;
+
+    } catch (error) {
+
+        console.error(error);
+
+        content.innerHTML =
+            "<p>Unable to load the batch form. Make sure the Spring Boot backend is running.</p>";
+    }
+}
+
+async function addBatch() {
+
+    const instituteId = document.getElementById("batchInstitute").value;
+    const curriculumId = document.getElementById("batchCurriculum").value;
+    const batchName = document.getElementById("batchName").value.trim();
+    const monthlyFee = document.getElementById("monthlyFee").value;
+    const active = document.getElementById("batchActive").value === "true";
+
+    if (batchName === "") {
+        alert("Please enter a batch name.");
+        return;
+    }
+
+    if (monthlyFee === "") {
+        alert("Please enter the monthly fee.");
+        return;
+    }
+
+    try {
+
+        const response = await fetch("http://localhost:8080/api/batches", {
+
+            method: "POST",
+
+            headers: {
+                "Content-Type": "application/json"
+            },
+
+            body: JSON.stringify({
+                institute: {
+                    instituteId: Number(instituteId)
+                },
+                curriculum: {
+                    curriculumId: Number(curriculumId)
+                },
+                batchName: batchName,
+                monthlyFee: Number(monthlyFee),
+                active: active
+            })
+        });
+
+        if (!response.ok) {
+            throw new Error("Failed to add batch");
+        }
+
+        alert("Batch added successfully!");
+
+        showBatches();
+
+    } catch (error) {
+
+        console.error(error);
+
+        alert("Unable to add batch. Make sure the Spring Boot backend is running.");
+    }
+}

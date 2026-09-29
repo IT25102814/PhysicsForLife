@@ -28,4 +28,17 @@ public class UserController {
     public ResponseEntity<List<AppUser>> getAllUsers() {
         return ResponseEntity.ok(userService.getAllUsers());
     }
+
+
+    @PostMapping("/login")
+    public ResponseEntity<?> loginUser(@RequestBody AppUser loginRequest) {
+        AppUser validUser = userService.loginUser(loginRequest.getEmail(), loginRequest.getPasswordHash());
+
+        if (validUser != null) {
+            return ResponseEntity.ok(validUser);
+        } else {
+            // Returns a 401 Unauthorized status if the login fails
+            return ResponseEntity.status(401).body("{\"error\": \"Invalid email or password\"}");
+        }
+    }
 }

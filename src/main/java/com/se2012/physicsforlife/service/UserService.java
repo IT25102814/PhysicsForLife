@@ -34,4 +34,16 @@ public class UserService {
     public List<AppUser> getAllUsers() {
         return userRepository.findAll();
     }
+
+
+    public AppUser loginUser(String email, String password) {
+        // Notice the .orElse(null) added to the end of this line!
+        AppUser user = userRepository.findByEmail(email).orElse(null);
+
+        // If the user exists and the password matches exactly
+        if (user != null && user.getPasswordHash().equals(password)) {
+            return user;
+        }
+        return null; // Login failed
+    }
 }

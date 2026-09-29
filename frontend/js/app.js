@@ -511,3 +511,170 @@ async function addBatch() {
         alert("Unable to add batch. Make sure the Spring Boot backend is running.");
     }
 }
+
+async function showAddMaterialForm() {
+
+    const content = document.getElementById("content");
+
+    content.innerHTML = "<p>Loading material form...</p>";
+
+    try {
+
+        const response = await fetch("http://localhost:8080/api/batches");
+
+        if (!response.ok) {
+            throw new Error("Failed to load batches");
+        }
+
+        const batches = await response.json();
+
+        let batchOptions = "";
+
+        batches.forEach(batch => {
+            batchOptions += `
+                <option value="${batch.batchId}">
+                    ${batch.batchName} - ${batch.institute.name} - ${batch.curriculum.name}
+                </option>
+            `;
+        });
+
+        content.innerHTML = `
+            <h2>Add Learning Material</h2>
+
+            <div class="form-card">
+
+                <label for="materialBatch">Batch</label>
+
+                <select id="materialBatch">
+                    ${batchOptions}
+                </select>
+
+                <label for="materialWeek">Week Number</label>
+
+                <input
+                    type="number"
+                    id="materialWeek"
+                    placeholder="Example: 1"
+                >
+
+                <label for="materialTitle">Title</label>
+
+                <input
+                    type="text"
+                    id="materialTitle"
+                    placeholder="Example: Introduction to Physics"
+                >
+
+                <label for="materialType">Material Type</label>
+
+                <select id="materialType">
+                    <option value="PDF">PDF</option>
+                    <option value="VIDEO">Video</option>
+                    <option value="DOCUMENT">Document</option>
+                    <option value="LINK">Link</option>
+                    <option value="OTHER">Other</option>
+                </select>
+
+                <label for="materialDescription">Description</label>
+
+                <input
+                    type="text"
+                    id="materialDescription"
+                    placeholder="Enter a description"
+                >
+
+                <label for="materialFileName">File Name</label>
+
+                <input
+                    type="text"
+                    id="materialFileName"
+                    placeholder="Example: lesson1.pdf"
+                >
+
+                <button onclick="addMaterial()">Add Material</button>
+
+            </div>
+        `;
+
+    } catch (error) {
+
+        console.error(error);
+
+        content.innerHTML =
+            "<p>Unable to load the material form. Make sure the Spring Boot backend is running.</p>";
+    }
+}
+
+async function addMaterial() {
+
+    const batchId = document.getElementById("materialBatch").value;
+    const weekNumber = document.getElementById("materialWeek").value;
+    const title = document.getElementById("materialTitle").value.trim();
+    const materialType = document.getElementById("materialType").value;
+    const description = document.getElementById("materialDescription").value.trim();
+    const fileName = document.getElementById("materialFileName").value.trim();
+
+    if (weekNumber === "") {
+        alert("Please enter the week number.");
+        return;
+    }
+
+    if (title === "") {
+        alert("Please enter a title.");
+        return;
+    }
+
+    try {
+
+        const response = await fetch("http://localhost:8080/api/learning-materials", {
+
+            method: "POST",
+
+            headers: {
+                "Content-Type": "application/json"
+            },
+
+            body: JSON.stringify({
+
+                batch: {
+                    batchId: Number(batchId)
+                },
+
+                weekNumber: Number(weekNumber),
+                title: title,
+                materialType: materialType,
+                description: description,
+                fileName: fileName,
+
+                filePath: fileName
+                    ? "/materials/" + fileName
+                    : null,
+
+                mimeType: materialType === "PDF"
+                    ? "application/pdf"
+                    : null,
+
+                fileSizeBytes: 0,
+                uploadedBy: 1
+
+            })
+        });
+
+        if (!response.ok) {
+            throw new Error("Failed to add learning material");
+        }
+
+        alert("Learning material added successfully!");
+
+        showMaterials();
+
+    } catch (error) {
+
+        console.error(error);
+
+        alert(
+            "Unable to add learning material. " +
+            "Make sure the Spring Boot backend is running."
+        );
+    }
+}

@@ -148,7 +148,89 @@ async function showBatches() {
      }
  }
 
-function showMaterials() {
-    document.getElementById("content").innerHTML =
-        "<h2>Learning Materials</h2><p>Learning material management will be added here.</p>";
+async function showMaterials() {
+
+    const content = document.getElementById("content");
+
+    content.innerHTML = "<p>Loading learning materials...</p>";
+
+    try {
+
+        const response = await fetch("http://localhost:8080/api/learning-materials");
+
+        if (!response.ok) {
+            throw new Error("Failed to load learning materials");
+        }
+
+        const materials = await response.json();
+
+        let html = "<h2>Learning Materials</h2>";
+
+        if (materials.length === 0) {
+
+            html += "<p>No learning materials found.</p>";
+
+        } else {
+
+            html += "<div class='material-list'>";
+
+            materials.forEach(material => {
+
+                html += `
+                    <div class="material-card">
+
+                        <h3>${material.title}</h3>
+
+                        <p>
+                            <strong>Batch:</strong>
+                            ${material.batch.batchName}
+                        </p>
+
+                        <p>
+                            <strong>Institute:</strong>
+                            ${material.batch.institute.name}
+                        </p>
+
+                        <p>
+                            <strong>Curriculum:</strong>
+                            ${material.batch.curriculum.name}
+                        </p>
+
+                        <p>
+                            <strong>Week:</strong>
+                            ${material.weekNumber}
+                        </p>
+
+                        <p>
+                            <strong>Type:</strong>
+                            ${material.materialType}
+                        </p>
+
+                        <p>
+                            <strong>Description:</strong>
+                            ${material.description || "No description"}
+                        </p>
+
+                        <p>
+                            <strong>File:</strong>
+                            ${material.fileName || "No file"}
+                        </p>
+
+                    </div>
+                `;
+
+            });
+
+            html += "</div>";
+        }
+
+        content.innerHTML = html;
+
+    } catch (error) {
+
+        console.error(error);
+
+        content.innerHTML =
+            "<p>Unable to load learning materials. Make sure the Spring Boot backend is running.</p>";
+    }
 }

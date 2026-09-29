@@ -11,9 +11,46 @@
 
 <body>
 
-<h1>Tuition Management System</h1>
+<header class="header">
+    <h1>Tuition Management System</h1>
+    <p>Physics Tuition Management System</p>
+</header>
 
-<p>Frontend is working!</p>
+<main class="dashboard">
+
+    <h2>Dashboard</h2>
+
+    <div class="cards">
+
+        <div class="card">
+            <h3>Institutes</h3>
+            <p>Manage tuition institutes</p>
+            <button onclick="showInstitutes()">View Institutes</button>
+        </div>
+
+        <div class="card">
+            <h3>Curricula</h3>
+            <p>Manage available curricula</p>
+            <button onclick="showCurricula()">View Curricula</button>
+        </div>
+
+        <div class="card">
+            <h3>Batches</h3>
+            <p>Manage student batches</p>
+            <button onclick="showBatches()">View Batches</button>
+        </div>
+
+        <div class="card">
+            <h3>Learning Materials</h3>
+            <p>Manage learning materials</p>
+            <button onclick="showMaterials()">View Materials</button>
+        </div>
+
+    </div>
+
+    <div id="content"></div>
+
+</main>
 
 <script src="js/app.js"></script>
 

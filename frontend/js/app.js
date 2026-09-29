@@ -17,7 +17,9 @@ async function showInstitutes() {
         let html = "<h2>Institutes</h2>";
 
         if (institutes.length === 0) {
+
             html += "<p>No institutes found.</p>";
+
         } else {
 
             html += "<div class='institute-list'>";
@@ -26,8 +28,22 @@ async function showInstitutes() {
 
                 html += `
                     <div class="institute-card">
+
                         <h3>${institute.name}</h3>
-                        <p><strong>Institute ID:</strong> ${institute.instituteId}</p>
+
+                        <p>
+                            <strong>Institute ID:</strong>
+                            ${institute.instituteId}
+                        </p>
+
+                        <button onclick="showEditInstituteForm(${institute.instituteId})">
+                            Edit
+                        </button>
+
+                        <button onclick="deleteInstitute(${institute.instituteId})">
+                            Delete
+                        </button>
+
                     </div>
                 `;
 
@@ -46,6 +62,83 @@ async function showInstitutes() {
             "<p>Unable to load institutes. Make sure the Spring Boot backend is running.</p>";
     }
 }
+
+
+function showEditInstituteForm(instituteId) {
+
+    const content = document.getElementById("content");
+
+    content.innerHTML = `
+        <h2>Edit Institute</h2>
+
+        <div class="form-card">
+
+            <label for="editInstituteName">Institute Name</label>
+
+            <input
+                type="text"
+                id="editInstituteName"
+                placeholder="Enter new institute name"
+            >
+
+            <button onclick="updateInstitute(${instituteId})">
+                Save Changes
+            </button>
+
+            <button onclick="showInstitutes()">
+                Cancel
+            </button>
+
+        </div>
+    `;
+}
+
+
+async function updateInstitute(instituteId) {
+
+    const name = document.getElementById("editInstituteName").value.trim();
+
+    if (name === "") {
+        alert("Please enter an institute name.");
+        return;
+    }
+
+    try {
+
+        const response = await fetch(
+            `http://localhost:8080/api/institutes/${instituteId}`,
+            {
+                method: "PUT",
+
+                headers: {
+                    "Content-Type": "application/json"
+                },
+
+                body: JSON.stringify({
+                    name: name
+                })
+            }
+        );
+
+        if (!response.ok) {
+            throw new Error("Failed to update institute");
+        }
+
+        alert("Institute updated successfully!");
+
+        showInstitutes();
+
+    } catch (error) {
+
+        console.error(error);
+
+        alert(
+            "Unable to update institute. " +
+            "Make sure the Spring Boot backend is running."
+        );
+    }
+}
+
 
 async function showCurricula() {
 
@@ -66,7 +159,9 @@ async function showCurricula() {
         let html = "<h2>Curricula</h2>";
 
         if (curricula.length === 0) {
+
             html += "<p>No curricula found.</p>";
+
         } else {
 
             html += "<div class='curriculum-list'>";
@@ -75,8 +170,14 @@ async function showCurricula() {
 
                 html += `
                     <div class="curriculum-card">
+
                         <h3>${curriculum.name}</h3>
-                        <p><strong>Curriculum ID:</strong> ${curriculum.curriculumId}</p>
+
+                        <p>
+                            <strong>Curriculum ID:</strong>
+                            ${curriculum.curriculumId}
+                        </p>
+
                     </div>
                 `;
 
@@ -96,57 +197,79 @@ async function showCurricula() {
     }
 }
 
+
 async function showBatches() {
 
-     const content = document.getElementById("content");
+    const content = document.getElementById("content");
 
-     content.innerHTML = "<p>Loading batches...</p>";
+    content.innerHTML = "<p>Loading batches...</p>";
 
-     try {
+    try {
 
-         const response = await fetch("http://localhost:8080/api/batches");
+        const response = await fetch("http://localhost:8080/api/batches");
 
-         if (!response.ok) {
-             throw new Error("Failed to load batches");
-         }
+        if (!response.ok) {
+            throw new Error("Failed to load batches");
+        }
 
-         const batches = await response.json();
+        const batches = await response.json();
 
-         let html = "<h2>Batches</h2>";
+        let html = "<h2>Batches</h2>";
 
-         if (batches.length === 0) {
-             html += "<p>No batches found.</p>";
-         } else {
+        if (batches.length === 0) {
 
-             html += "<div class='batch-list'>";
+            html += "<p>No batches found.</p>";
 
-             batches.forEach(batch => {
+        } else {
 
-                 html += `
-                     <div class="batch-card">
-                         <h3>${batch.batchName}</h3>
-                         <p><strong>Institute:</strong> ${batch.institute.name}</p>
-                         <p><strong>Curriculum:</strong> ${batch.curriculum.name}</p>
-                         <p><strong>Monthly Fee:</strong> Rs. ${batch.monthlyFee}</p>
-                         <p><strong>Status:</strong> ${batch.active ? "Active" : "Inactive"}</p>
-                     </div>
-                 `;
+            html += "<div class='batch-list'>";
 
-             });
+            batches.forEach(batch => {
 
-             html += "</div>";
-         }
+                html += `
+                    <div class="batch-card">
 
-         content.innerHTML = html;
+                        <h3>${batch.batchName}</h3>
 
-     } catch (error) {
+                        <p>
+                            <strong>Institute:</strong>
+                            ${batch.institute.name}
+                        </p>
 
-         console.error(error);
+                        <p>
+                            <strong>Curriculum:</strong>
+                            ${batch.curriculum.name}
+                        </p>
 
-         content.innerHTML =
-             "<p>Unable to load batches. Make sure the Spring Boot backend is running.</p>";
-     }
- }
+                        <p>
+                            <strong>Monthly Fee:</strong>
+                            Rs. ${batch.monthlyFee}
+                        </p>
+
+                        <p>
+                            <strong>Status:</strong>
+                            ${batch.active ? "Active" : "Inactive"}
+                        </p>
+
+                    </div>
+                `;
+
+            });
+
+            html += "</div>";
+        }
+
+        content.innerHTML = html;
+
+    } catch (error) {
+
+        console.error(error);
+
+        content.innerHTML =
+            "<p>Unable to load batches. Make sure the Spring Boot backend is running.</p>";
+    }
+}
+
 
 async function showMaterials() {
 
@@ -156,7 +279,9 @@ async function showMaterials() {
 
     try {
 
-        const response = await fetch("http://localhost:8080/api/learning-materials");
+        const response = await fetch(
+            "http://localhost:8080/api/learning-materials"
+        );
 
         if (!response.ok) {
             throw new Error("Failed to load learning materials");
@@ -235,6 +360,7 @@ async function showMaterials() {
     }
 }
 
+
 function showAddInstituteForm() {
 
     const content = document.getElementById("content");
@@ -252,11 +378,14 @@ function showAddInstituteForm() {
                 placeholder="Enter institute name"
             >
 
-            <button onclick="addInstitute()">Add Institute</button>
+            <button onclick="addInstitute()">
+                Add Institute
+            </button>
 
         </div>
     `;
 }
+
 
 async function addInstitute() {
 
@@ -269,18 +398,20 @@ async function addInstitute() {
 
     try {
 
-        const response = await fetch("http://localhost:8080/api/institutes", {
+        const response = await fetch(
+            "http://localhost:8080/api/institutes",
+            {
+                method: "POST",
 
-            method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
 
-            headers: {
-                "Content-Type": "application/json"
-            },
-
-            body: JSON.stringify({
-                name: name
-            })
-        });
+                body: JSON.stringify({
+                    name: name
+                })
+            }
+        );
 
         if (!response.ok) {
             throw new Error("Failed to add institute");
@@ -294,9 +425,13 @@ async function addInstitute() {
 
         console.error(error);
 
-        alert("Unable to add institute. Make sure the Spring Boot backend is running.");
+        alert(
+            "Unable to add institute. " +
+            "Make sure the Spring Boot backend is running."
+        );
     }
 }
+
 
 function showAddCurriculumForm() {
 
@@ -315,11 +450,14 @@ function showAddCurriculumForm() {
                 placeholder="Enter curriculum name"
             >
 
-            <button onclick="addCurriculum()">Add Curriculum</button>
+            <button onclick="addCurriculum()">
+                Add Curriculum
+            </button>
 
         </div>
     `;
 }
+
 
 async function addCurriculum() {
 
@@ -332,18 +470,20 @@ async function addCurriculum() {
 
     try {
 
-        const response = await fetch("http://localhost:8080/api/curricula", {
+        const response = await fetch(
+            "http://localhost:8080/api/curricula",
+            {
+                method: "POST",
 
-            method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
 
-            headers: {
-                "Content-Type": "application/json"
-            },
-
-            body: JSON.stringify({
-                name: name
-            })
-        });
+                body: JSON.stringify({
+                    name: name
+                })
+            }
+        );
 
         if (!response.ok) {
             throw new Error("Failed to add curriculum");
@@ -357,9 +497,13 @@ async function addCurriculum() {
 
         console.error(error);
 
-        alert("Unable to add curriculum. Make sure the Spring Boot backend is running.");
+        alert(
+            "Unable to add curriculum. " +
+            "Make sure the Spring Boot backend is running."
+        );
     }
 }
+
 
 async function showAddBatchForm() {
 
@@ -384,21 +528,25 @@ async function showAddBatchForm() {
         let instituteOptions = "";
 
         institutes.forEach(institute => {
+
             instituteOptions += `
                 <option value="${institute.instituteId}">
                     ${institute.name}
                 </option>
             `;
+
         });
 
         let curriculumOptions = "";
 
         curricula.forEach(curriculum => {
+
             curriculumOptions += `
                 <option value="${curriculum.curriculumId}">
                     ${curriculum.name}
                 </option>
             `;
+
         });
 
         content.innerHTML = `
@@ -441,7 +589,9 @@ async function showAddBatchForm() {
                     <option value="false">Inactive</option>
                 </select>
 
-                <button onclick="addBatch()">Add Batch</button>
+                <button onclick="addBatch()">
+                    Add Batch
+                </button>
 
             </div>
         `;
@@ -455,13 +605,23 @@ async function showAddBatchForm() {
     }
 }
 
+
 async function addBatch() {
 
-    const instituteId = document.getElementById("batchInstitute").value;
-    const curriculumId = document.getElementById("batchCurriculum").value;
-    const batchName = document.getElementById("batchName").value.trim();
-    const monthlyFee = document.getElementById("monthlyFee").value;
-    const active = document.getElementById("batchActive").value === "true";
+    const instituteId =
+        document.getElementById("batchInstitute").value;
+
+    const curriculumId =
+        document.getElementById("batchCurriculum").value;
+
+    const batchName =
+        document.getElementById("batchName").value.trim();
+
+    const monthlyFee =
+        document.getElementById("monthlyFee").value;
+
+    const active =
+        document.getElementById("batchActive").value === "true";
 
     if (batchName === "") {
         alert("Please enter a batch name.");
@@ -475,26 +635,33 @@ async function addBatch() {
 
     try {
 
-        const response = await fetch("http://localhost:8080/api/batches", {
+        const response = await fetch(
+            "http://localhost:8080/api/batches",
+            {
+                method: "POST",
 
-            method: "POST",
-
-            headers: {
-                "Content-Type": "application/json"
-            },
-
-            body: JSON.stringify({
-                institute: {
-                    instituteId: Number(instituteId)
+                headers: {
+                    "Content-Type": "application/json"
                 },
-                curriculum: {
-                    curriculumId: Number(curriculumId)
-                },
-                batchName: batchName,
-                monthlyFee: Number(monthlyFee),
-                active: active
-            })
-        });
+
+                body: JSON.stringify({
+
+                    institute: {
+                        instituteId: Number(instituteId)
+                    },
+
+                    curriculum: {
+                        curriculumId: Number(curriculumId)
+                    },
+
+                    batchName: batchName,
+
+                    monthlyFee: Number(monthlyFee),
+
+                    active: active
+                })
+            }
+        );
 
         if (!response.ok) {
             throw new Error("Failed to add batch");
@@ -508,9 +675,13 @@ async function addBatch() {
 
         console.error(error);
 
-        alert("Unable to add batch. Make sure the Spring Boot backend is running.");
+        alert(
+            "Unable to add batch. " +
+            "Make sure the Spring Boot backend is running."
+        );
     }
 }
+
 
 async function showAddMaterialForm() {
 
@@ -520,7 +691,9 @@ async function showAddMaterialForm() {
 
     try {
 
-        const response = await fetch("http://localhost:8080/api/batches");
+        const response = await fetch(
+            "http://localhost:8080/api/batches"
+        );
 
         if (!response.ok) {
             throw new Error("Failed to load batches");
@@ -531,11 +704,15 @@ async function showAddMaterialForm() {
         let batchOptions = "";
 
         batches.forEach(batch => {
+
             batchOptions += `
                 <option value="${batch.batchId}">
-                    ${batch.batchName} - ${batch.institute.name} - ${batch.curriculum.name}
+                    ${batch.batchName} -
+                    ${batch.institute.name} -
+                    ${batch.curriculum.name}
                 </option>
             `;
+
         });
 
         content.innerHTML = `
@@ -568,14 +745,32 @@ async function showAddMaterialForm() {
                 <label for="materialType">Material Type</label>
 
                 <select id="materialType">
-                    <option value="PDF">PDF</option>
-                    <option value="VIDEO">Video</option>
-                    <option value="DOCUMENT">Document</option>
-                    <option value="LINK">Link</option>
-                    <option value="OTHER">Other</option>
+
+                    <option value="PDF">
+                        PDF
+                    </option>
+
+                    <option value="VIDEO">
+                        Video
+                    </option>
+
+                    <option value="DOCUMENT">
+                        Document
+                    </option>
+
+                    <option value="LINK">
+                        Link
+                    </option>
+
+                    <option value="OTHER">
+                        Other
+                    </option>
+
                 </select>
 
-                <label for="materialDescription">Description</label>
+                <label for="materialDescription">
+                    Description
+                </label>
 
                 <input
                     type="text"
@@ -583,7 +778,9 @@ async function showAddMaterialForm() {
                     placeholder="Enter a description"
                 >
 
-                <label for="materialFileName">File Name</label>
+                <label for="materialFileName">
+                    File Name
+                </label>
 
                 <input
                     type="text"
@@ -591,7 +788,9 @@ async function showAddMaterialForm() {
                     placeholder="Example: lesson1.pdf"
                 >
 
-                <button onclick="addMaterial()">Add Material</button>
+                <button onclick="addMaterial()">
+                    Add Material
+                </button>
 
             </div>
         `;
@@ -605,14 +804,26 @@ async function showAddMaterialForm() {
     }
 }
 
+
 async function addMaterial() {
 
-    const batchId = document.getElementById("materialBatch").value;
-    const weekNumber = document.getElementById("materialWeek").value;
-    const title = document.getElementById("materialTitle").value.trim();
-    const materialType = document.getElementById("materialType").value;
-    const description = document.getElementById("materialDescription").value.trim();
-    const fileName = document.getElementById("materialFileName").value.trim();
+    const batchId =
+        document.getElementById("materialBatch").value;
+
+    const weekNumber =
+        document.getElementById("materialWeek").value;
+
+    const title =
+        document.getElementById("materialTitle").value.trim();
+
+    const materialType =
+        document.getElementById("materialType").value;
+
+    const description =
+        document.getElementById("materialDescription").value.trim();
+
+    const fileName =
+        document.getElementById("materialFileName").value.trim();
 
     if (weekNumber === "") {
         alert("Please enter the week number.");
@@ -626,39 +837,46 @@ async function addMaterial() {
 
     try {
 
-        const response = await fetch("http://localhost:8080/api/learning-materials", {
+        const response = await fetch(
+            "http://localhost:8080/api/learning-materials",
+            {
+                method: "POST",
 
-            method: "POST",
-
-            headers: {
-                "Content-Type": "application/json"
-            },
-
-            body: JSON.stringify({
-
-                batch: {
-                    batchId: Number(batchId)
+                headers: {
+                    "Content-Type": "application/json"
                 },
 
-                weekNumber: Number(weekNumber),
-                title: title,
-                materialType: materialType,
-                description: description,
-                fileName: fileName,
+                body: JSON.stringify({
 
-                filePath: fileName
-                    ? "/materials/" + fileName
-                    : null,
+                    batch: {
+                        batchId: Number(batchId)
+                    },
 
-                mimeType: materialType === "PDF"
-                    ? "application/pdf"
-                    : null,
+                    weekNumber: Number(weekNumber),
 
-                fileSizeBytes: 0,
-                uploadedBy: 1
+                    title: title,
 
-            })
-        });
+                    materialType: materialType,
+
+                    description: description,
+
+                    fileName: fileName,
+
+                    filePath: fileName
+                        ? "/materials/" + fileName
+                        : null,
+
+                    mimeType: materialType === "PDF"
+                        ? "application/pdf"
+                        : null,
+
+                    fileSizeBytes: 0,
+
+                    uploadedBy: 1
+
+                })
+            }
+        );
 
         if (!response.ok) {
             throw new Error("Failed to add learning material");
@@ -675,6 +893,45 @@ async function addMaterial() {
         alert(
             "Unable to add learning material. " +
             "Make sure the Spring Boot backend is running."
+        );
+    }
+}
+
+
+async function deleteInstitute(instituteId) {
+
+    const confirmed = confirm(
+        "Are you sure you want to delete this institute?"
+    );
+
+    if (!confirmed) {
+        return;
+    }
+
+    try {
+
+        const response = await fetch(
+            `http://localhost:8080/api/institutes/${instituteId}`,
+            {
+                method: "DELETE"
+            }
+        );
+
+        if (!response.ok) {
+            throw new Error("Failed to delete institute");
+        }
+
+        alert("Institute deleted successfully!");
+
+        showInstitutes();
+
+    } catch (error) {
+
+        console.error(error);
+
+        alert(
+            "Unable to delete institute. " +
+            "It may be used by an existing batch."
         );
     }
 }

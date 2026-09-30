@@ -8,6 +8,10 @@ body {
     background-color: #f4f6f8;
     color: #333;
     line-height: 1.5;
+
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 
 .header {
@@ -41,6 +45,8 @@ body {
     padding: 40px;
     max-width: 1400px;
     margin: 0 auto;
+    width: 100%;
+    flex: 1;
 }
 
 .dashboard h2 {
@@ -308,17 +314,40 @@ body {
    ========================= */
 
 .dashboard-button {
-    border: none;
-    background-color: #555;
-    color: white;
-    padding: 9px 15px;
-    border-radius: 6px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+
+    background-color: white;
+    color: #1f4e79;
+
+    border: 1px solid #d6dce2;
+    border-radius: 8px;
+
+    padding: 9px 16px;
+    margin-bottom: 18px;
+
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+
     cursor: pointer;
-    margin-bottom: 15px;
+
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
+
+    transition: all 0.2s ease;
 }
 
 .dashboard-button:hover {
-    background-color: #333;
+    background-color: #1f4e79;
+    color: white;
+    border-color: #1f4e79;
+    box-shadow: 0 4px 10px rgba(31, 78, 121, 0.25);
+    transform: translateY(-1px);
+}
+
+.dashboard-button:active {
+    transform: translateY(0);
 }
 
 /* =========================
@@ -424,21 +453,17 @@ body {
    ========================= */
 
 .footer {
-    margin-top: 50px;
-    padding: 25px 40px;
+    margin-top: auto;
+    padding: 20px 40px;
     background-color: #1f4e79;
     color: white;
     text-align: center;
 }
 
 .footer p {
-    margin: 0 0 5px;
-    font-weight: bold;
-}
-
-.footer span {
+    margin: 0;
     font-size: 13px;
-    opacity: 0.8;
+    opacity: 0.9;
 }
 
 /* =========================
@@ -484,4 +509,11 @@ button:active {
 #content {
     margin-top: 35px;
     margin-bottom: 40px;
+}
+
+#content h2 {
+    font-size: 26px;
+    margin-top: 0;
+    margin-bottom: 8px;
+    color: #1f4e79;
 }

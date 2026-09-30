@@ -15,7 +15,7 @@ async function showInstitutes() {
         const institutes = await response.json();
 
         let html = `
-            <button onclick="showDashboard()">← Dashboard</button>
+            <button class="dashboard-button" onclick="showDashboard()">← Back to Dashboard</button>
             <h2>Institutes</h2>
         `;
 
@@ -162,7 +162,7 @@ async function showCurricula() {
         const curricula = await response.json();
 
         let html = `
-            <button onclick="showDashboard()">← Dashboard</button>
+            <button class="dashboard-button" onclick="showDashboard()">← Back to Dashboard</button>
             <h2>Curricula</h2>
         `;
 
@@ -348,7 +348,7 @@ async function showBatches() {
         const batches = await response.json();
 
         let html = `
-            <button onclick="showDashboard()">← Dashboard</button>
+            <button class="dashboard-button" onclick="showDashboard()">← Back to Dashboard</button>
             <h2>Batches</h2>
         `;
 
@@ -689,7 +689,7 @@ async function showMaterials() {
         const materials = await response.json();
 
         let html = `
-            <button onclick="showDashboard()">← Dashboard</button>
+            <button class="dashboard-button" onclick="showDashboard()">← Back to Dashboard</button>
             <h2>Learning Materials</h2>
         `;
 

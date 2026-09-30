@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Payments</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<nav>
+    <a href="index.html">Home</a>
+    <a href="invoices.html">Invoices</a>
+    <a href="payments.html">Payments</a>
+    <a href="revision-proposals.html">Revision Proposals</a>
+</nav>
+<div class="container">
+    <h1>Payments</h1>
+
+    <form id="paymentForm">
+        <h3>Submit Payment Claim (Student)</h3>
+        <label>Invoice ID</label>
+        <input type="number" id="invoiceId" required>
+        <label>Amount</label>
+        <input type="number" step="0.01" id="amount" required>
+        <label>Reference No.</label>
+        <input type="text" id="referenceNo">
+        <label>Receipt File Path (temporary — until real file upload is added)</label>
+        <input type="text" id="receiptFilePath" placeholder="/uploads/receipts/example.jpg" required>
+        <label>Paid On</label>
+        <input type="date" id="paidOn" required>
+        <label>Your Student user_id</label>
+        <input type="number" id="uploadedBy" required>
+        <button type="submit">Submit Claim</button>
+    </form>
+
+    <h3>Pending Verification (Tutor)</h3>
+    <table>
+        <thead>
+        <tr><th>ID</th><th>Invoice</th><th>Amount</th><th>Paid On</th><th>Ref No</th><th>Actions</th></tr>
+        </thead>
+        <tbody id="pendingTableBody"></tbody>
+    </table>
+</div>
+
+<script src="js/api.js"></script>
+<script>
+    async function loadPending() {
+        const payments = await apiGet("/payments/pending");
+        const tbody = document.getElementById("pendingTableBody");
+        tbody.innerHTML = "";
+        payments.forEach(p => {
+            const row = document.createElement("tr");
+            row.innerHTML = `
+                <td>${p.paymentId}</td>
+                <td>${p.invoiceId}</td>
+                <td>${p.amount}</td>
+                <td>${p.paidOn}</td>
+                <td>${p.referenceNo ?? "-"}</td>
+                <td class="actions">
+                    <button onclick="verify(${p.paymentId})">Verify</button>
+                    <button class="reject-btn" onclick="reject(${p.paymentId})">Reject</button>
+                </td>
+            `;
+            tbody.appendChild(row);
+        });
+    }
+
+    async function verify(id) {
+        const tutorId = getCurrentUserId();
+        await apiPut(`/payments/${id}/verify?verifiedBy=${tutorId}`);
+        loadPending();
+    }
+
+    async function reject(id) {
+        const tutorId = getCurrentUserId();
+        const notes = prompt("Reason for rejection:") || "";
+        await apiPut(`/payments/${id}/reject?verifiedBy=${tutorId}&notes=${encodeURIComponent(notes)}`);
+        loadPending();
+    }
+
+    document.getElementById("paymentForm").addEventListener("submit", async (e) => {
+        e.preventDefault();
+        await apiPost("/payments", {
+            invoiceId: Number(document.getElementById("invoiceId").value),
+            amount: Number(document.getElementById("amount").value),
+            referenceNo: document.getElementById("referenceNo").value,
+            receiptFilePath: document.getElementById("receiptFilePath").value,
+            paidOn: document.getElementById("paidOn").value,
+            uploadedBy: Number(document.getElementById("uploadedBy").value)
+        });
+        e.target.reset();
+        loadPending();
+    });
+
+    loadPending();
+</script>
+</body>
+</html>

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Revision Proposals</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<nav>
+    <a href="index.html">Home</a>
+    <a href="invoices.html">Invoices</a>
+    <a href="payments.html">Payments</a>
+    <a href="revision-proposals.html">Revision Proposals</a>
+</nav>
+<div class="container">
+    <h1>Revision Proposals</h1>
+
+    <form id="proposalForm">
+        <h3>Submit Proposal (Student)</h3>
+        <label>Student user_id</label>
+        <input type="number" id="studentId" required>
+        <label>Batch ID</label>
+        <input type="number" id="batchId" required>
+        <label>Topic</label>
+        <input type="text" id="topic" required>
+        <label>Reason</label>
+        <textarea id="reason" rows="3"></textarea>
+        <label>Preferred Date</label>
+        <input type="date" id="preferredDate">
+        <button type="submit">Submit Proposal</button>
+    </form>
+
+    <h3>All Proposals (Tutor Review)</h3>
+    <table>
+        <thead>
+        <tr><th>ID</th><th>Student</th><th>Topic</th><th>Reason</th><th>Status</th><th>Actions</th></tr>
+        </thead>
+        <tbody id="proposalTableBody"></tbody>
+    </table>
+</div>
+
+<script src="js/api.js"></script>
+<script>
+    async function loadProposals() {
+        const proposals = await apiGet("/revision-proposals");
+        const tbody = document.getElementById("proposalTableBody");
+        tbody.innerHTML = "";
+        proposals.forEach(p => {
+            const row = document.createElement("tr");
+            row.innerHTML = `
+                <td>${p.proposalId}</td>
+                <td>${p.studentId}</td>
+                <td>${p.topic}</td>
+                <td>${p.reason ?? "-"}</td>
+                <td class="status-${p.status.toLowerCase()}">${p.status}</td>
+                <td class="actions">
+                    ${p.status === "PENDING" ? `
+                        <button onclick="review(${p.proposalId}, 'ACCEPTED')">Accept</button>
+                        <button onclick="review(${p.proposalId}, 'SCHEDULED')">Schedule</button>
+                        <button class="reject-btn" onclick="review(${p.proposalId}, 'DECLINED')">Decline</button>
+                    ` : "-"}
+                </td>
+            `;
+            tbody.appendChild(row);
+        });
+    }
+
+    async function review(id, decision) {
+        const tutorId = getCurrentUserId();
+        const response = prompt("Response to student (optional):") || "";
+        await apiPut(`/revision-proposals/${id}/review?decision=${decision}&tutorResponse=${encodeURIComponent(response)}&reviewedBy=${tutorId}`);
+        loadProposals();
+    }
+
+    document.getElementById("proposalForm").addEventListener("submit", async (e) => {
+        e.preventDefault();
+        await apiPost("/revision-proposals", {
+            studentId: Number(document.getElementById("studentId").value),
+            batchId: Number(document.getElementById("batchId").value),
+            topic: document.getElementById("topic").value,
+            reason: document.getElementById("reason").value,
+            preferredDate: document.getElementById("preferredDate").value || null
+        });
+        e.target.reset();
+        loadProposals();
+    });
+
+    loadProposals();
+</script>
+</body>
+</html>

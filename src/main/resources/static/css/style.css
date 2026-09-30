@@ -1,0 +1,21 @@
+* { box-sizing: border-box; font-family: Arial, sans-serif; }
+body { margin: 0; background: #f4f5f7; color: #222; }
+nav { background: #2c3e50; padding: 16px 24px; }
+nav a { color: white; text-decoration: none; margin-right: 20px; font-weight: bold; }
+nav a:hover { text-decoration: underline; }
+.container { max-width: 900px; margin: 24px auto; padding: 0 16px; }
+h1 { color: #2c3e50; }
+form { background: white; padding: 20px; border-radius: 8px; margin-bottom: 24px; box-shadow: 0 1px 4px rgba(0,0,0,0.1); }
+label { display: block; margin-top: 10px; font-size: 14px; font-weight: bold; }
+input, select, textarea { width: 100%; padding: 8px; margin-top: 4px; border: 1px solid #ccc; border-radius: 4px; }
+button { margin-top: 16px; padding: 10px 18px; background: #2c3e50; color: white; border: none; border-radius: 4px; cursor: pointer; }
+button:hover { background: #1a252f; }
+table { width: 100%; border-collapse: collapse; background: white; border-radius: 8px; overflow: hidden; }
+th, td { padding: 10px; text-align: left; border-bottom: 1px solid #eee; font-size: 14px; }
+th { background: #ecf0f1; }
+.status-pending, .status-unpaid, .status-pending_verification { color: #e67e22; font-weight: bold; }
+.status-verified, .status-paid, .status-accepted { color: #27ae60; font-weight: bold; }
+.status-rejected, .status-declined { color: #c0392b; font-weight: bold; }
+.actions button { margin: 2px; padding: 6px 10px; font-size: 13px; }
+.reject-btn { background: #c0392b; }
+.reject-btn:hover { background: #922b21; }

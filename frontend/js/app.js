@@ -14,7 +14,10 @@ async function showInstitutes() {
 
         const institutes = await response.json();
 
-        let html = "<h2>Institutes</h2>";
+        let html = `
+            <button onclick="showDashboard()">← Dashboard</button>
+            <h2>Institutes</h2>
+        `;
 
         if (institutes.length === 0) {
 
@@ -158,7 +161,10 @@ async function showCurricula() {
 
         const curricula = await response.json();
 
-        let html = "<h2>Curricula</h2>";
+        let html = `
+            <button onclick="showDashboard()">← Dashboard</button>
+            <h2>Curricula</h2>
+        `;
 
         if (curricula.length === 0) {
 
@@ -341,7 +347,10 @@ async function showBatches() {
 
         const batches = await response.json();
 
-        let html = "<h2>Batches</h2>";
+        let html = `
+            <button onclick="showDashboard()">← Dashboard</button>
+            <h2>Batches</h2>
+        `;
 
         if (batches.length === 0) {
 
@@ -679,7 +688,10 @@ async function showMaterials() {
 
         const materials = await response.json();
 
-        let html = "<h2>Learning Materials</h2>";
+        let html = `
+            <button onclick="showDashboard()">← Dashboard</button>
+            <h2>Learning Materials</h2>
+        `;
 
         if (materials.length === 0) {
 
@@ -1606,4 +1618,14 @@ async function deleteInstitute(instituteId) {
             "It may be used by an existing batch."
         );
     }
+}
+
+function showDashboard() {
+
+    document.getElementById("content").innerHTML = "";
+
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
 }

@@ -7,12 +7,26 @@ body {
     font-family: Arial, sans-serif;
     background-color: #f4f6f8;
     color: #333;
+    line-height: 1.5;
 }
 
 .header {
     background-color: #1f4e79;
     color: white;
-    padding: 25px 40px;
+    padding: 30px 40px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+}
+
+.header h1 {
+    margin: 0;
+    font-size: 30px;
+    letter-spacing: 0.3px;
+}
+
+.header p {
+    margin: 8px 0 0;
+    font-size: 15px;
+    opacity: 0.9;
 }
 
 .header h1 {
@@ -25,6 +39,8 @@ body {
 
 .dashboard {
     padding: 40px;
+    max-width: 1400px;
+    margin: 0 auto;
 }
 
 .dashboard h2 {
@@ -34,7 +50,8 @@ body {
 .cards {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 20px;
+    gap: 25px;
+    align-items: stretch;
 }
 
 .card {
@@ -172,4 +189,299 @@ body {
     border: 1px solid #ccc;
     border-radius: 5px;
     background-color: white;
+}
+
+/* =========================
+   BUTTON STYLING
+   ========================= */
+
+.card button,
+.form-card button,
+.institute-card button,
+.curriculum-card button,
+.batch-card button,
+.material-card button {
+    margin-right: 8px;
+    margin-top: 8px;
+    border: none;
+    background-color: #1f4e79;
+    color: white;
+    padding: 10px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.card button:hover,
+.form-card button:hover,
+.institute-card button:hover,
+.curriculum-card button:hover,
+.batch-card button:hover,
+.material-card button:hover {
+    opacity: 0.9;
+}
+
+/* Delete buttons */
+
+.institute-card button:last-child,
+.curriculum-card button:last-child,
+.batch-card button:last-child,
+.material-card button:last-child {
+    background-color: #c0392b;
+}
+
+.institute-card button:last-child:hover,
+.curriculum-card button:last-child:hover,
+.batch-card button:last-child:hover,
+.material-card button:last-child:hover {
+    background-color: #922b21;
+}
+
+/* =========================
+   CARD HOVER EFFECT
+   ========================= */
+
+.institute-card,
+.curriculum-card,
+.batch-card,
+.material-card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.institute-card:hover,
+.curriculum-card:hover,
+.batch-card:hover,
+.material-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* =========================
+   FORM IMPROVEMENTS
+   ========================= */
+
+.form-card input:focus,
+.form-card select:focus {
+    outline: none;
+    border-color: #1f4e79;
+    box-shadow: 0 0 0 2px rgba(31, 78, 121, 0.15);
+}
+
+.form-card button {
+    margin-top: 5px;
+}
+
+/* =========================
+   RESPONSIVE DESIGN
+   ========================= */
+
+@media (max-width: 900px) {
+
+    .cards {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+}
+
+@media (max-width: 600px) {
+
+    .header {
+        padding: 20px;
+    }
+
+    .header h1 {
+        font-size: 24px;
+    }
+
+    .dashboard {
+        padding: 20px;
+    }
+
+    .cards {
+        grid-template-columns: 1fr;
+    }
+
+}
+
+/* =========================
+   DASHBOARD NAVIGATION
+   ========================= */
+
+.dashboard-button {
+    border: none;
+    background-color: #555;
+    color: white;
+    padding: 9px 15px;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-bottom: 15px;
+}
+
+.dashboard-button:hover {
+    background-color: #333;
+}
+
+/* =========================
+   DASHBOARD CARD POLISH
+   ========================= */
+
+.cards {
+    align-items: stretch;
+}
+
+.card {
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 5px;
+    background-color: #1f4e79;
+}
+
+.card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+}
+
+.card h3 {
+    font-size: 20px;
+    margin-top: 5px;
+    margin-bottom: 10px;
+}
+
+.card p {
+    line-height: 1.5;
+    margin-bottom: 20px;
+}
+
+.dashboard > h2 {
+    font-size: 28px;
+    margin-top: 0;
+    margin-bottom: 30px;
+}
+
+/* =========================
+   SECTION HEADINGS
+   ========================= */
+
+#content h2 {
+    font-size: 26px;
+    margin-top: 10px;
+    margin-bottom: 20px;
+    color: #1f4e79;
+}
+
+#content > p {
+    background-color: white;
+    padding: 18px 20px;
+    border-radius: 8px;
+    color: #666;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+/* =========================
+   CARD TEXT
+   ========================= */
+
+.institute-card p,
+.curriculum-card p,
+.batch-card p,
+.material-card p {
+    margin: 8px 0;
+    line-height: 1.5;
+}
+
+.institute-card strong,
+.curriculum-card strong,
+.batch-card strong,
+.material-card strong {
+    color: #444;
+}
+
+/* =========================
+   FORM CARD
+   ========================= */
+
+.form-card h3 {
+    margin-top: 0;
+    color: #1f4e79;
+}
+
+.form-card input,
+.form-card select {
+    font-size: 14px;
+}
+
+/* =========================
+   FOOTER
+   ========================= */
+
+.footer {
+    margin-top: 50px;
+    padding: 25px 40px;
+    background-color: #1f4e79;
+    color: white;
+    text-align: center;
+}
+
+.footer p {
+    margin: 0 0 5px;
+    font-weight: bold;
+}
+
+.footer span {
+    font-size: 13px;
+    opacity: 0.8;
+}
+
+/* =========================
+   FINAL BUTTON POLISH
+   ========================= */
+
+button {
+    font-family: inherit;
+    font-weight: 500;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+button:active {
+    transform: scale(0.98);
+}
+
+.form-card button {
+    min-width: 120px;
+}
+
+/* =========================
+   FORM LAYOUT
+   ========================= */
+
+.form-card {
+    width: 100%;
+    max-width: 550px;
+}
+
+.form-card input,
+.form-card select {
+    margin-bottom: 18px;
+}
+
+.form-card label {
+    margin-top: 5px;
+}
+
+/* =========================
+   CONTENT AREA
+   ========================= */
+
+#content {
+    margin-top: 35px;
+    margin-bottom: 40px;
 }

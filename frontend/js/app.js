@@ -670,6 +670,7 @@ async function updateBatch(batchId) {
 }
 
 
+
 async function showMaterials() {
 
     const content = document.getElementById("content");
@@ -689,7 +690,9 @@ async function showMaterials() {
         const materials = await response.json();
 
         let html = `
-            <button class="dashboard-button" onclick="showDashboard()">← Back to Dashboard</button>
+            <button class="dashboard-button" onclick="showDashboard()">
+                ← Back to Dashboard
+            </button>
             <h2>Learning Materials</h2>
         `;
 
@@ -703,44 +706,73 @@ async function showMaterials() {
 
             materials.forEach(material => {
 
+                let fileDisplay = "No file or link";
+
+                if (material.filePath) {
+
+                    if (
+                        material.filePath.startsWith("http://") ||
+                        material.filePath.startsWith("https://")
+                    ) {
+                        // External link, such as a long video recording
+                        fileDisplay = `
+                            <a href="${escapeAttribute(material.filePath)}"
+                               target="_blank"
+                               rel="noopener noreferrer">
+                                ${escapeHtml(material.fileName || "Open learning material")}
+                            </a>
+                        `;
+
+                    } else if (material.fileName) {
+                        // Actual file stored by our upload endpoint
+                        fileDisplay = `
+                            <a href="http://localhost:8080/api/learning-materials/files/${material.materialId}"
+                               target="_blank"
+                               rel="noopener noreferrer">
+                                ${escapeHtml(material.fileName)}
+                            </a>
+                        `;
+                    }
+                }
+
                 html += `
                     <div class="material-card">
 
-                        <h3>${material.title}</h3>
+                        <h3>${escapeHtml(material.title || "Untitled material")}</h3>
 
                         <p>
                             <strong>Batch:</strong>
-                            ${material.batch.batchName}
+                            ${escapeHtml(material.batch?.batchName || "Unknown")}
                         </p>
 
                         <p>
                             <strong>Institute:</strong>
-                            ${material.batch.institute.name}
+                            ${escapeHtml(material.batch?.institute?.name || "Unknown")}
                         </p>
 
                         <p>
                             <strong>Curriculum:</strong>
-                            ${material.batch.curriculum.name}
+                            ${escapeHtml(material.batch?.curriculum?.name || "Unknown")}
                         </p>
 
                         <p>
                             <strong>Week:</strong>
-                            ${material.weekNumber}
+                            ${material.weekNumber ?? ""}
                         </p>
 
                         <p>
                             <strong>Type:</strong>
-                            ${material.materialType}
+                            ${escapeHtml(material.materialType || "")}
                         </p>
 
                         <p>
                             <strong>Description:</strong>
-                            ${material.description || "No description"}
+                            ${escapeHtml(material.description || "No description")}
                         </p>
 
                         <p>
-                            <strong>File:</strong>
-                            ${material.fileName || "No file"}
+                            <strong>File / Link:</strong>
+                            ${fileDisplay}
                         </p>
 
                         <button onclick="showEditMaterialForm(${material.materialId})">
@@ -769,6 +801,23 @@ async function showMaterials() {
             "<p>Unable to load learning materials. Make sure the Spring Boot backend is running.</p>";
     }
 }
+
+
+function escapeHtml(value) {
+    return String(value).replace(/[&<>"']/g, character => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;"
+    })[character]);
+}
+
+
+function escapeAttribute(value) {
+    return escapeHtml(value);
+}
+
 
 async function deleteMaterial(materialId) {
 
@@ -1367,220 +1416,221 @@ async function addBatch() {
 }
 
 
+
 async function showAddMaterialForm() {
-
     const content = document.getElementById("content");
-
     content.innerHTML = "<p>Loading material form...</p>";
 
     try {
-
-        const response = await fetch(
-            "http://localhost:8080/api/batches"
-        );
-
-        if (!response.ok) {
-            throw new Error("Failed to load batches");
-        }
+        const response = await fetch("http://localhost:8080/api/batches");
+        if (!response.ok) throw new Error("Failed to load batches");
 
         const batches = await response.json();
 
         let batchOptions = "";
-
         batches.forEach(batch => {
-
             batchOptions += `
                 <option value="${batch.batchId}">
-                    ${batch.batchName} -
-                    ${batch.institute.name} -
-                    ${batch.curriculum.name}
-                </option>
-            `;
-
+                    ${batch.batchName} - ${batch.institute.name} - ${batch.curriculum.name}
+                </option>`;
         });
 
         content.innerHTML = `
             <h2>Add Learning Material</h2>
 
             <div class="form-card">
-
                 <label for="materialBatch">Batch</label>
-
-                <select id="materialBatch">
-                    ${batchOptions}
-                </select>
+                <select id="materialBatch">${batchOptions}</select>
 
                 <label for="materialWeek">Week Number</label>
+                <input type="number" id="materialWeek" min="1"
+                       placeholder="Example: 1">
 
-                <input
-                    type="number"
-                    id="materialWeek"
-                    placeholder="Example: 1"
-                >
-
-                <label for="materialTitle">Title</label>
-
+                <label for="materialTitle">Title (Optional)</label>
                 <input
                     type="text"
                     id="materialTitle"
-                    placeholder="Example: Introduction to Physics"
+                    placeholder="Leave blank for an automatic title"
                 >
 
                 <label for="materialType">Material Type</label>
-
                 <select id="materialType">
-
-                    <option value="PDF">
-                        PDF
-                    </option>
-
-                    <option value="VIDEO">
-                        Video
-                    </option>
-
-                    <option value="DOCUMENT">
-                        Document
-                    </option>
-
-                    <option value="LINK">
-                        Link
-                    </option>
-
-                    <option value="OTHER">
-                        Other
-                    </option>
-
+                    <option value="PDF">PDF</option>
+                    <option value="VIDEO">Video</option>
+                    <option value="DOCUMENT">Document</option>
+                    <option value="LINK">Link</option>
+                    <option value="OTHER">Other</option>
                 </select>
 
-                <label for="materialDescription">
-                    Description
-                </label>
+                <label for="materialDescription">Description</label>
+                <input type="text" id="materialDescription"
+                       placeholder="Enter a description">
 
-                <input
-                    type="text"
-                    id="materialDescription"
-                    placeholder="Enter a description"
-                >
+                <label for="materialSource">How will you add the material?</label>
+                <select id="materialSource" onchange="toggleMaterialSource()">
+                    <option value="upload">Upload a file</option>
+                    <option value="link">Paste a link</option>
+                </select>
 
-                <label for="materialFileName">
-                    File Name
-                </label>
+                <div id="fileUploadSection">
+                    <label for="materialFile">Choose File</label>
+                    <input type="file" id="materialFile"
+                           accept=".pdf,.doc,.docx,.ppt,.pptx,.mp4,.mov,.txt">
 
-                <input
-                    type="text"
-                    id="materialFileName"
-                    placeholder="Example: lesson1.pdf"
-                >
+                    <p>Maximum file size: 100 MB.</p>
+                </div>
 
-                <button onclick="addMaterial()">
-                    Add Material
-                </button>
+                <div id="videoLinkSection" style="display:none">
+                    <label for="materialUrl">Material / Video URL</label>
+                    <input type="url" id="materialUrl"
+                           placeholder="https://drive.google.com/...">
 
+                    <p>For long recordings, paste a shareable link.
+                       Make sure your students have permission to view it.</p>
+                </div>
+
+                <button onclick="addMaterial()">Add Material</button>
+                <button onclick="showMaterials()">Cancel</button>
             </div>
         `;
 
     } catch (error) {
-
         console.error(error);
-
         content.innerHTML =
-            "<p>Unable to load the material form. Make sure the Spring Boot backend is running.</p>";
+            "<p>Unable to load the form. Check that the backend is running.</p>";
     }
+}
+
+
+function toggleMaterialSource() {
+    const source = document.getElementById("materialSource").value;
+
+    document.getElementById("fileUploadSection").style.display =
+        source === "upload" ? "block" : "none";
+
+    document.getElementById("videoLinkSection").style.display =
+        source === "link" ? "block" : "none";
 }
 
 
 async function addMaterial() {
-
-    const batchId =
-        document.getElementById("materialBatch").value;
-
-    const weekNumber =
-        document.getElementById("materialWeek").value;
-
-    const title =
-        document.getElementById("materialTitle").value.trim();
-
-    const materialType =
-        document.getElementById("materialType").value;
-
+    const batchId = document.getElementById("materialBatch").value;
+    const weekNumber = document.getElementById("materialWeek").value;
+    let title = document.getElementById("materialTitle").value.trim();
+    const materialType = document.getElementById("materialType").value;
     const description =
         document.getElementById("materialDescription").value.trim();
+    const source = document.getElementById("materialSource").value;
 
-    const fileName =
-        document.getElementById("materialFileName").value.trim();
-
-    if (weekNumber === "") {
-        alert("Please enter the week number.");
-        return;
+    if (!title) {
+        if (materialType === "VIDEO") {
+            title = `Week ${weekNumber} Recording`;
+        } else if (materialType === "PDF") {
+            title = `Week ${weekNumber} Notes`;
+        } else if (materialType === "DOCUMENT") {
+            title = `Week ${weekNumber} Document`;
+        } else {
+            title = `Week ${weekNumber} Learning Material`;
+        }
     }
 
-    if (title === "") {
-        alert("Please enter a title.");
+    if (!weekNumber || Number(weekNumber) < 1) {
+        alert("Please enter a valid week number.");
         return;
     }
 
     try {
+        let response;
 
-        const response = await fetch(
-            "http://localhost:8080/api/learning-materials",
-            {
-                method: "POST",
+        if (source === "upload") {
+            const file = document.getElementById("materialFile").files[0];
 
-                headers: {
-                    "Content-Type": "application/json"
-                },
-
-                body: JSON.stringify({
-
-                    batch: {
-                        batchId: Number(batchId)
-                    },
-
-                    weekNumber: Number(weekNumber),
-
-                    title: title,
-
-                    materialType: materialType,
-
-                    description: description,
-
-                    fileName: fileName,
-
-                    filePath: fileName
-                        ? "/materials/" + fileName
-                        : null,
-
-                    mimeType: materialType === "PDF"
-                        ? "application/pdf"
-                        : null,
-
-                    fileSizeBytes: 0,
-
-                    uploadedBy: 1
-
-                })
+            if (!file) {
+                alert("Please choose a file to upload.");
+                return;
             }
-        );
+
+            if (file.size > 100 * 1024 * 1024) {
+                alert("The file exceeds the 100 MB upload limit. Use a link for large files.");
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append("file", file);
+            formData.append("batchId", batchId);
+            formData.append("weekNumber", weekNumber);
+            formData.append("title", title);
+            formData.append("materialType", materialType);
+            formData.append("description", description);
+
+            response = await fetch(
+                "http://localhost:8080/api/learning-materials/upload",
+                {
+                    method: "POST",
+                    body: formData
+                }
+            );
+
+        } else {
+            const url = document.getElementById("materialUrl").value.trim();
+
+            if (!url) {
+                alert("Please paste the material or video link.");
+                return;
+            }
+
+            let parsedUrl;
+            try {
+                parsedUrl = new URL(url);
+            } catch {
+                alert("Please enter a valid URL.");
+                return;
+            }
+
+            if (!["http:", "https:"].includes(parsedUrl.protocol)) {
+                alert("The link must start with http:// or https://");
+                return;
+            }
+
+            response = await fetch(
+                "http://localhost:8080/api/learning-materials",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        batch: { batchId: Number(batchId) },
+                        weekNumber: Number(weekNumber),
+                        title,
+                        materialType,
+                        description,
+                        fileName: null,
+                        filePath: url,
+                        mimeType: null,
+                        fileSizeBytes: null,
+                        uploadedBy: 1
+                    })
+                }
+            );
+        }
 
         if (!response.ok) {
-            throw new Error("Failed to add learning material");
+            const errorMessage = await response.text();
+            throw new Error(errorMessage || "Failed to save learning material");
         }
 
         alert("Learning material added successfully!");
-
         showMaterials();
 
     } catch (error) {
-
         console.error(error);
-
         alert(
-            "Unable to add learning material. " +
-            "Make sure the Spring Boot backend is running."
+            "Unable to save the material. Check that the backend is running, " +
+            "the selected batch exists, and the file is within the upload limit."
         );
     }
 }
-
 
 async function deleteInstitute(instituteId) {
 

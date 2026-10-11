@@ -11,6 +11,13 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.http.HttpStatus;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.Files;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -143,6 +150,55 @@ public class LearningMaterialController {
         try {
             learningMaterialService.deleteLearningMaterial(id);
             return ResponseEntity.noContent().build();
+        } catch (Exception e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+
+    @GetMapping("/files/{id}")
+    public ResponseEntity<Resource> viewLearningMaterialFile(
+            @PathVariable Long id) {
+
+        try {
+            LearningMaterial material = learningMaterialService
+                    .getLearningMaterialById(id)
+                    .orElseThrow(() -> new java.io.FileNotFoundException(
+                            "Learning material not found"));
+
+            String storedFileName = material.getFilePath();
+
+            if (storedFileName == null || storedFileName.isBlank()
+                    || storedFileName.contains("/")
+                    || storedFileName.contains("\\")) {
+                return ResponseEntity.notFound().build();
+            }
+
+            Path uploadDirectory = Paths.get("uploads", "materials")
+                    .toAbsolutePath().normalize();
+
+            Path filePath = uploadDirectory.resolve(storedFileName).normalize();
+
+            if (!filePath.startsWith(uploadDirectory)
+                    || !Files.isRegularFile(filePath)) {
+                return ResponseEntity.notFound().build();
+            }
+
+            Resource resource = new UrlResource(filePath.toUri());
+
+            String contentType = material.getMimeType();
+
+            if (contentType == null || contentType.isBlank()) {
+                contentType = "application/octet-stream";
+            }
+
+            return ResponseEntity.ok()
+                    .contentType(MediaType.parseMediaType(contentType))
+                    .header(HttpHeaders.CONTENT_DISPOSITION,
+                            "inline; filename=\"" +
+                                    material.getFileName().replace("\"", "") + "\"")
+                    .body(resource);
+
         } catch (Exception e) {
             return ResponseEntity.notFound().build();
         }

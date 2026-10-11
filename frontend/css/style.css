@@ -1,257 +1,675 @@
+
+/* =========================================
+   PHYSICS FOR LIFE - TUITION MANAGEMENT
+   Main stylesheet
+========================================= */
+
+/* ---------- Global ---------- */
+
 * {
     box-sizing: border-box;
 }
 
+:root {
+    --navy: #17365d;
+    --blue: #1f4e79;
+    --blue-light: #eaf3ff;
+    --cyan: #39bde8;
+    --purple: #8067e8;
+    --background: #f4f7fc;
+    --white: #ffffff;
+    --text: #243247;
+    --muted: #77849a;
+    --border: #e4eaf3;
+    --green: #159b72;
+    --red: #dc4c64;
+    --shadow: 0 8px 25px rgba(32, 57, 93, 0.07);
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
 body {
     margin: 0;
-    font-family: Arial, sans-serif;
-    background-color: #f4f6f8;
-    color: #333;
-    line-height: 1.5;
-
     min-height: 100vh;
     display: flex;
     flex-direction: column;
+    font-family: "Inter", "Segoe UI", Arial, sans-serif;
+    background: var(--background);
+    color: var(--text);
+    line-height: 1.6;
 }
 
-.header {
-    background-color: #1f4e79;
-    color: white;
-    padding: 30px 40px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+button,
+input,
+select,
+textarea {
+    font: inherit;
 }
 
-.header h1 {
-    margin: 0;
-    font-size: 30px;
-    letter-spacing: 0.3px;
-}
-
-.header p {
-    margin: 8px 0 0;
-    font-size: 15px;
-    opacity: 0.9;
-}
-
-.header h1 {
-    margin: 0;
-}
-
-.header p {
-    margin: 8px 0 0;
-}
-
-.dashboard {
-    padding: 40px;
-    max-width: 1400px;
-    margin: 0 auto;
-    width: 100%;
-    flex: 1;
-}
-
-.dashboard h2 {
-    margin-bottom: 25px;
-}
-
-.cards {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 25px;
-    align-items: stretch;
-}
-
-.card {
-    background-color: white;
-    padding: 25px;
-    border-radius: 10px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
-
-.card h3 {
-    margin-top: 0;
-}
-
-.card p {
-    color: #666;
-    min-height: 40px;
-}
-
-.card button {
-    border: none;
-    background-color: #1f4e79;
-    color: white;
-    padding: 10px 15px;
-    border-radius: 5px;
+button {
     cursor: pointer;
 }
 
-.card button:hover {
-    background-color: #163a5c;
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+    outline: 3px solid rgba(57, 189, 232, 0.35);
+    outline-offset: 2px;
+}
+
+button:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+}
+
+/* ---------- Header ---------- */
+
+.header {
+    min-height: 82px;
+    padding: 15px 35px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    color: white;
+    background: linear-gradient(115deg, #142e50, #1f4e79 65%, #28699a);
+    box-shadow: 0 4px 18px rgba(20, 46, 80, 0.16);
+    position: relative;
+    z-index: 2;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+}
+
+.brand-icon {
+    width: 48px;
+    height: 48px;
+    display: grid;
+    place-items: center;
+    border-radius: 15px;
+    font-size: 29px;
+    color: white;
+    background: rgba(255, 255, 255, 0.14);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.brand h1 {
+    margin: 0;
+    font-size: 23px;
+    line-height: 1.3;
+    font-weight: 750;
+    letter-spacing: 0.2px;
+}
+
+.brand p {
+    margin: 3px 0 0;
+    color: #d4e5f7;
+    font-size: 12px;
+    letter-spacing: 0.5px;
+}
+
+.header-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 7px 13px;
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    border-radius: 30px;
+    color: #e0fff2;
+    background: rgba(255, 255, 255, 0.08);
+    font-size: 12px;
+    white-space: nowrap;
+}
+
+/* ---------- Main layout ---------- */
+
+.app-container {
+    width: 100%;
+    max-width: 1600px;
+    flex: 1;
+    margin: 0 auto;
+    padding: 27px 30px;
+    display: grid;
+    grid-template-columns: 235px minmax(0, 1fr);
+    gap: 27px;
+    align-items: start;
+}
+
+.sidebar {
+    position: sticky;
+    top: 20px;
+    padding: 22px 15px;
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    box-shadow: var(--shadow);
+}
+
+.sidebar-title {
+    margin: 0 10px 15px;
+    color: #9aa5b6;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 1.8px;
+}
+
+.sidebar-item {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 13px;
+    margin: 4px 0;
+    border: 0;
+    border-radius: 10px;
+    background: transparent;
+    color: #65738a;
+    text-align: left;
+    font-size: 13px;
+    font-weight: 600;
+    transition: background 0.2s, color 0.2s, transform 0.2s;
+}
+
+.sidebar-item:hover {
+    color: var(--blue);
+    background: #f1f6ff;
+    transform: translateX(2px);
+}
+
+.sidebar-item.active {
+    color: white;
+    background: linear-gradient(110deg, #1f4e79, #397fb5);
+    box-shadow: 0 5px 13px rgba(31, 78, 121, 0.2);
+}
+
+.sidebar-icon {
+    min-width: 23px;
+    font-size: 19px;
+    text-align: center;
+}
+
+.sidebar-divider {
+    height: 1px;
+    margin: 20px 5px;
+    background: var(--border);
+}
+
+.sidebar-info {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 13px 10px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #edf5ff, #f6f2ff);
+}
+
+.sidebar-info-icon {
+    font-size: 21px;
+}
+
+.sidebar-info strong {
+    display: block;
+    font-size: 12px;
+    color: var(--navy);
+}
+
+.sidebar-info p {
+    margin: 4px 0 0;
+    font-size: 10px;
+    line-height: 1.5;
+    color: var(--muted);
+}
+
+/* ---------- Main content ---------- */
+
+.main-content {
+    min-width: 0;
+    padding: 2px 0 20px;
+}
+
+#dashboard-view {
+    min-width: 0;
 }
 
 #content {
-    margin-top: 30px;
+    min-width: 0;
+    margin-top: 28px;
+    margin-bottom: 35px;
 }
 
-.batch-list {
+#content:empty {
+    display: none;
+}
+
+#content h2 {
+    margin: 0 0 20px;
+    color: var(--navy);
+    font-size: 25px;
+    line-height: 1.35;
+}
+
+#content h3 {
+    color: var(--navy);
+}
+
+#content > p {
+    padding: 16px 19px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: white;
+    color: #596a81;
+}
+
+/* ---------- Welcome section ---------- */
+
+.welcome-section {
+    position: relative;
+    overflow: hidden;
+    min-height: 230px;
+    padding: 34px 35px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    border-radius: 20px;
+    color: white;
+    background:
+        radial-gradient(circle at 85% 15%,
+            rgba(79, 196, 255, 0.22), transparent 30%),
+        linear-gradient(115deg, #17365d, #235c91 65%, #347db1);
+    box-shadow: 0 12px 30px rgba(31, 78, 121, 0.17);
+}
+
+.welcome-section::after {
+    content: "";
+    position: absolute;
+    width: 250px;
+    height: 250px;
+    right: -110px;
+    bottom: -160px;
+    border: 1px solid rgba(255, 255, 255, 0.13);
+    border-radius: 50%;
+    box-shadow:
+        0 0 0 25px rgba(255, 255, 255, 0.035),
+        0 0 0 50px rgba(255, 255, 255, 0.025);
+}
+
+.welcome-section > div:first-child {
+    position: relative;
+    z-index: 1;
+    max-width: 560px;
+}
+
+.welcome-label {
+    color: #9ddfff;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 2px;
+}
+
+.welcome-section h2 {
+    margin: 12px 0;
+    color: white;
+    font-size: clamp(24px, 3vw, 34px);
+    line-height: 1.25;
+    letter-spacing: -0.6px;
+}
+
+.welcome-section h2 span {
+    color: #80dcff;
+}
+
+.welcome-section p {
+    max-width: 470px;
+    margin: 0;
+    color: #d7e7f7;
+    font-size: 13px;
+    line-height: 1.8;
+}
+
+/* ---------- Physics atom illustration ---------- */
+
+.physics-visual {
+    position: relative;
+    flex: 0 0 165px;
+    width: 165px;
+    height: 165px;
     display: grid;
-    gap: 15px;
+    place-items: center;
+    z-index: 1;
 }
 
-.batch-card {
-    background-color: white;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-}
-
-.batch-card h3 {
-    margin-top: 0;
-}
-
-.institute-list {
+.atom {
+    width: 65px;
+    height: 65px;
     display: grid;
+    place-items: center;
+    border-radius: 50%;
+    color: white;
+    background: rgba(255, 255, 255, 0.13);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    font-size: 45px;
+    text-shadow: 0 0 20px #75ddff;
+}
+
+.orbit {
+    position: absolute;
+    width: 145px;
+    height: 57px;
+    border: 1.5px solid rgba(139, 225, 255, 0.75);
+    border-radius: 50%;
+}
+
+.orbit-one {
+    transform: rotate(0deg);
+}
+
+.orbit-two {
+    transform: rotate(60deg);
+}
+
+.orbit-three {
+    transform: rotate(-60deg);
+}
+
+/* ---------- Section headings ---------- */
+
+.section-heading {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
     gap: 15px;
+    margin: 31px 0 17px;
 }
 
-.institute-card {
-    background-color: white;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+.section-heading span {
+    color: #8291a8;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 1.8px;
 }
 
-.institute-card h3 {
-    margin-top: 0;
+.section-heading h2 {
+    margin: 5px 0 0;
+    color: var(--navy);
+    font-size: 21px;
+    line-height: 1.35;
 }
 
-.curriculum-list {
+/* ---------- Dashboard cards ---------- */
+
+.dashboard-cards {
     display: grid;
-    gap: 15px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 17px;
 }
 
-.curriculum-card {
-    background-color: white;
+.dashboard-card {
+    position: relative;
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    gap: 14px;
     padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    border: 1px solid var(--border);
+    border-radius: 15px;
+    background: white;
+    box-shadow: 0 4px 15px rgba(32, 57, 93, 0.035);
+    transition: transform 0.2s, box-shadow 0.2s;
 }
 
-.curriculum-card h3 {
-    margin-top: 0;
+.dashboard-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow);
 }
 
-.material-list {
+.stat-icon {
+    flex: 0 0 48px;
+    width: 48px;
+    height: 48px;
     display: grid;
-    gap: 15px;
+    place-items: center;
+    border-radius: 13px;
+    font-size: 23px;
+    background: #edf4ff;
 }
 
-.material-card {
-    background-color: white;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+.institute-stat .stat-icon {
+    background: #e8f2ff;
 }
 
-.material-card h3 {
-    margin-top: 0;
+.curriculum-stat .stat-icon {
+    background: #f0ebff;
 }
 
-.form-card {
-    background-color: white;
-    padding: 25px;
-    border-radius: 8px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-    max-width: 500px;
+.batch-stat .stat-icon {
+    background: #e3f8f2;
 }
 
-.form-card label {
+.material-stat .stat-icon {
+    background: #fff2df;
+}
+
+.stat-info {
+    min-width: 0;
+    flex: 1;
+}
+
+.stat-info span {
     display: block;
-    margin-bottom: 8px;
-    font-weight: bold;
+    color: #718096;
+    font-size: 12px;
+    font-weight: 600;
 }
 
-.form-card input {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 15px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
+.stat-info strong {
+    display: block;
+    margin-top: 3px;
+    color: var(--navy);
+    font-size: 19px;
+    line-height: 1.35;
 }
 
-.form-card button {
-    border: none;
-    background-color: #1f4e79;
+.stat-info p {
+    margin: 4px 0 0;
+    color: #96a1b2;
+    font-size: 11px;
+}
+
+.dashboard-card > button {
+    flex: 0 0 34px;
+    width: 34px;
+    height: 34px;
+    border: 0;
+    border-radius: 10px;
     color: white;
-    padding: 10px 15px;
-    border-radius: 5px;
-    cursor: pointer;
+    background: linear-gradient(135deg, #1f4e79, #438bc1);
+    font-size: 21px;
+    transition: transform 0.2s, box-shadow 0.2s;
 }
 
-.form-card select {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 15px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    background-color: white;
+.dashboard-card > button:hover {
+    transform: translateX(3px);
+    box-shadow: 0 4px 12px rgba(31, 78, 121, 0.25);
 }
 
-/* =========================
-   BUTTON STYLING
-   ========================= */
+/* ---------- Quick actions ---------- */
 
-.card button,
-.form-card button,
-.institute-card button,
-.curriculum-card button,
-.batch-card button,
-.material-card button {
-    margin-right: 8px;
-    margin-top: 8px;
-    border: none;
-    background-color: #1f4e79;
+.quick-heading {
+    margin-top: 36px;
+}
+
+.quick-actions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 13px;
+}
+
+.quick-action {
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 15px;
+    border: 1px solid var(--border);
+    border-radius: 13px;
+    background: white;
+    text-align: left;
+    transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+}
+
+.quick-action:hover {
+    transform: translateY(-3px);
+    border-color: #a9c8e9;
+    box-shadow: var(--shadow);
+}
+
+.quick-action-icon {
+    flex: 0 0 34px;
+    width: 34px;
+    height: 34px;
+    display: grid;
+    place-items: center;
+    border-radius: 10px;
+    color: #27679f;
+    background: #eaf3ff;
+    font-size: 23px;
+    font-weight: 400;
+}
+
+.quick-action > div:nth-child(2) {
+    min-width: 0;
+    flex: 1;
+}
+
+.quick-action strong {
+    display: block;
+    color: var(--navy);
+    font-size: 12px;
+}
+
+.quick-action span {
+    display: block;
+    margin-top: 3px;
+    color: #8794a8;
+    font-size: 10px;
+    line-height: 1.5;
+}
+
+.quick-action > b {
+    color: #4281b4;
+    font-size: 18px;
+}
+
+/* ---------- Information banner ---------- */
+
+.info-banner {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    margin-top: 25px;
+    padding: 19px 21px;
+    border: 1px solid #d9e8ff;
+    border-radius: 14px;
+    background: linear-gradient(110deg, #eaf3ff, #f5f4ff);
+}
+
+.info-banner-icon {
+    font-size: 24px;
+}
+
+.info-banner strong {
+    display: block;
+    color: var(--navy);
+    font-size: 13px;
+}
+
+.info-banner p {
+    margin: 5px 0 0;
+    color: #687b94;
+    font-size: 11px;
+    line-height: 1.8;
+}
+
+/* ---------- General buttons ---------- */
+
+button {
+    font-family: inherit;
+    font-weight: 600;
+    transition:
+        background 0.2s ease,
+        color 0.2s ease,
+        border-color 0.2s ease,
+        box-shadow 0.2s ease,
+        transform 0.15s ease;
+}
+
+button:active {
+    transform: scale(0.98);
+}
+
+/* Main action buttons */
+
+#content button:not(.dashboard-button):not(.sidebar-item) {
+    min-height: 37px;
+    padding: 9px 15px;
+    border: 0;
+    border-radius: 8px;
     color: white;
-    padding: 10px 16px;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 14px;
+    background: linear-gradient(115deg, #1f4e79, #347fb5);
+    box-shadow: 0 3px 8px rgba(31, 78, 121, 0.12);
+    font-size: 12px;
 }
 
-.card button:hover,
-.form-card button:hover,
-.institute-card button:hover,
-.curriculum-card button:hover,
-.batch-card button:hover,
-.material-card button:hover {
-    opacity: 0.9;
+#content button:not(.dashboard-button):not(.sidebar-item):hover {
+    background: linear-gradient(115deg, #17365d, #24679c);
+    box-shadow: 0 5px 12px rgba(31, 78, 121, 0.2);
 }
 
-/* Delete buttons */
+/* ---------- Dashboard navigation button ---------- */
 
-.institute-card button:last-child,
-.curriculum-card button:last-child,
-.batch-card button:last-child,
-.material-card button:last-child {
-    background-color: #c0392b;
+.dashboard-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 19px;
+    padding: 9px 15px;
+    border: 1px solid #d9e5f2;
+    border-radius: 9px;
+    color: var(--blue);
+    background: white;
+    font-size: 12px;
+    font-weight: 700;
 }
 
-.institute-card button:last-child:hover,
-.curriculum-card button:last-child:hover,
-.batch-card button:last-child:hover,
-.material-card button:last-child:hover {
-    background-color: #922b21;
+.dashboard-button:hover {
+    color: white;
+    border-color: var(--blue);
+    background: var(--blue);
 }
 
-/* =========================
-   CARD HOVER EFFECT
-   ========================= */
+/* ---------- Management cards ---------- */
 
 .institute-card,
 .curriculum-card,
 .batch-card,
 .material-card {
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 15px;
+    padding: 22px;
+    border: 1px solid var(--border);
+    border-left: 5px solid var(--blue);
+    border-radius: 13px;
+    background: white;
+    box-shadow: 0 4px 15px rgba(32, 57, 93, 0.045);
+    transition: transform 0.2s, box-shadow 0.2s;
 }
 
 .institute-card:hover,
@@ -259,261 +677,493 @@ body {
 .batch-card:hover,
 .material-card:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    box-shadow: var(--shadow);
 }
 
-/* =========================
-   FORM IMPROVEMENTS
-   ========================= */
-
-.form-card input:focus,
-.form-card select:focus {
-    outline: none;
-    border-color: #1f4e79;
-    box-shadow: 0 0 0 2px rgba(31, 78, 121, 0.15);
+.institute-card h3,
+.curriculum-card h3,
+.batch-card h3,
+.material-card h3 {
+    margin: 0 0 10px;
+    color: var(--navy);
+    font-size: 17px;
 }
-
-.form-card button {
-    margin-top: 5px;
-}
-
-/* =========================
-   RESPONSIVE DESIGN
-   ========================= */
-
-@media (max-width: 900px) {
-
-    .cards {
-        grid-template-columns: repeat(2, 1fr);
-    }
-
-}
-
-@media (max-width: 600px) {
-
-    .header {
-        padding: 20px;
-    }
-
-    .header h1 {
-        font-size: 24px;
-    }
-
-    .dashboard {
-        padding: 20px;
-    }
-
-    .cards {
-        grid-template-columns: 1fr;
-    }
-
-}
-
-/* =========================
-   DASHBOARD NAVIGATION
-   ========================= */
-
-.dashboard-button {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-
-    background-color: white;
-    color: #1f4e79;
-
-    border: 1px solid #d6dce2;
-    border-radius: 8px;
-
-    padding: 9px 16px;
-    margin-bottom: 18px;
-
-    font-family: inherit;
-    font-size: 14px;
-    font-weight: 600;
-
-    cursor: pointer;
-
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
-
-    transition: all 0.2s ease;
-}
-
-.dashboard-button:hover {
-    background-color: #1f4e79;
-    color: white;
-    border-color: #1f4e79;
-    box-shadow: 0 4px 10px rgba(31, 78, 121, 0.25);
-    transform: translateY(-1px);
-}
-
-.dashboard-button:active {
-    transform: translateY(0);
-}
-
-/* =========================
-   DASHBOARD CARD POLISH
-   ========================= */
-
-.cards {
-    align-items: stretch;
-}
-
-.card {
-    position: relative;
-    overflow: hidden;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.card::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 5px;
-    background-color: #1f4e79;
-}
-
-.card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
-}
-
-.card h3 {
-    font-size: 20px;
-    margin-top: 5px;
-    margin-bottom: 10px;
-}
-
-.card p {
-    line-height: 1.5;
-    margin-bottom: 20px;
-}
-
-.dashboard > h2 {
-    font-size: 28px;
-    margin-top: 0;
-    margin-bottom: 30px;
-}
-
-/* =========================
-   SECTION HEADINGS
-   ========================= */
-
-#content h2 {
-    font-size: 26px;
-    margin-top: 10px;
-    margin-bottom: 20px;
-    color: #1f4e79;
-}
-
-#content > p {
-    background-color: white;
-    padding: 18px 20px;
-    border-radius: 8px;
-    color: #666;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
-}
-
-/* =========================
-   CARD TEXT
-   ========================= */
 
 .institute-card p,
 .curriculum-card p,
 .batch-card p,
 .material-card p {
-    margin: 8px 0;
-    line-height: 1.5;
+    margin: 6px 0;
+    color: #697991;
+    font-size: 13px;
+    overflow-wrap: anywhere;
 }
 
-.institute-card strong,
-.curriculum-card strong,
-.batch-card strong,
-.material-card strong {
-    color: #444;
+/* Edit button - blue/purple gradient */
+
+.institute-card button:first-of-type,
+.curriculum-card button:first-of-type,
+.batch-card button:first-of-type,
+.material-card button:first-of-type {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    min-width: 85px;
+    min-height: 35px;
+    margin-top: 13px;
+    margin-right: 8px;
+    padding: 8px 13px;
+    border: 0;
+    border-radius: 8px;
+    color: white;
+    background: linear-gradient(120deg, #4776e6, #8067e8);
+    box-shadow: 0 4px 10px rgba(94, 108, 226, 0.19);
+    font-size: 11px;
 }
 
-/* =========================
-   FORM CARD
-   ========================= */
+.institute-card button:first-of-type:hover,
+.curriculum-card button:first-of-type:hover,
+.batch-card button:first-of-type:hover,
+.material-card button:first-of-type:hover {
+    background: linear-gradient(120deg, #345ed0, #6951d4);
+    box-shadow: 0 6px 13px rgba(94, 108, 226, 0.27);
+}
 
+/* Document-and-pencil edit icon */
+
+.institute-card button:first-of-type::before,
+.curriculum-card button:first-of-type::before,
+.batch-card button:first-of-type::before,
+.material-card button:first-of-type::before {
+    content: "";
+    width: 16px;
+    height: 16px;
+    flex: 0 0 16px;
+    display: inline-block;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z'/%3E%3Cpath d='M14 2v6h6'/%3E%3Cpath d='M8 13h2'/%3E%3Cpath d='M8 17h3'/%3E%3Cpath d='M14 17l5-5 2 2-5 5-3 1z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+}
+
+/* Delete button - red gradient */
+
+.institute-card button:last-of-type,
+.curriculum-card button:last-of-type,
+.batch-card button:last-of-type,
+.material-card button:last-of-type {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    min-width: 85px;
+    min-height: 35px;
+    margin-top: 13px;
+    padding: 8px 13px;
+    border: 0;
+    border-radius: 8px;
+    color: white;
+    background: linear-gradient(120deg, #e34f69, #c93654);
+    box-shadow: 0 4px 10px rgba(220, 76, 100, 0.16);
+    font-size: 11px;
+}
+
+.institute-card button:last-of-type:hover,
+.curriculum-card button:last-of-type:hover,
+.batch-card button:last-of-type:hover,
+.material-card button:last-of-type:hover {
+    background: linear-gradient(120deg, #c93654, #aa2845);
+    box-shadow: 0 6px 13px rgba(220, 76, 100, 0.24);
+}
+
+/* Outline trash-can icon */
+
+.institute-card button:last-of-type::before,
+.curriculum-card button:last-of-type::before,
+.batch-card button:last-of-type::before,
+.material-card button:last-of-type::before {
+    content: "";
+    width: 15px;
+    height: 15px;
+    flex: 0 0 15px;
+    display: inline-block;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 6h18'/%3E%3Cpath d='M8 6V4h8v2'/%3E%3Cpath d='M19 6l-1 14H6L5 6'/%3E%3Cpath d='M10 11v5'/%3E%3Cpath d='M14 11v5'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+}
+
+/* ---------- Forms ---------- */
+
+.form-card {
+    width: 100%;
+    max-width: 620px;
+    margin: 0 auto;
+    padding: 28px;
+    border: 1px solid var(--border);
+    border-radius: 17px;
+    background: white;
+    box-shadow: var(--shadow);
+}
+
+.form-card h2,
 .form-card h3 {
     margin-top: 0;
-    color: #1f4e79;
+    color: var(--navy);
+}
+
+.form-card label {
+    display: block;
+    margin: 13px 0 6px;
+    color: #465873;
+    font-size: 12px;
+    font-weight: 700;
 }
 
 .form-card input,
-.form-card select {
-    font-size: 14px;
+.form-card select,
+.form-card textarea,
+#content input,
+#content select,
+#content textarea {
+    width: 100%;
+    min-height: 42px;
+    padding: 10px 12px;
+    border: 1px solid #dbe3ef;
+    border-radius: 9px;
+    outline: none;
+    color: var(--text);
+    background: #fcfdff;
+    font-size: 13px;
+    transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
 }
 
-/* =========================
-   FOOTER
-   ========================= */
+.form-card input,
+.form-card select,
+.form-card textarea {
+    margin-bottom: 8px;
+}
+
+.form-card textarea,
+#content textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+.form-card input:focus,
+.form-card select:focus,
+.form-card textarea:focus,
+#content input:focus,
+#content select:focus,
+#content textarea:focus {
+    border-color: #5794d0;
+    background: white;
+    box-shadow: 0 0 0 3px rgba(57, 126, 181, 0.1);
+}
+
+.form-card input::placeholder,
+.form-card textarea::placeholder,
+#content input::placeholder,
+#content textarea::placeholder {
+    color: #a2adbd;
+}
+
+.form-card button {
+    min-width: 120px;
+    margin-top: 14px;
+    margin-right: 8px;
+}
+
+.form-card button:last-child {
+    margin-right: 0;
+}
+
+/* ---------- Tables, if used in app.js ---------- */
+
+#content table {
+    width: 100%;
+    margin: 15px 0 22px;
+    border-collapse: separate;
+    border-spacing: 0;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: white;
+    font-size: 12px;
+}
+
+#content th {
+    padding: 13px 14px;
+    color: var(--navy);
+    background: #eaf2fc;
+    text-align: left;
+    font-weight: 750;
+}
+
+#content td {
+    padding: 12px 14px;
+    border-top: 1px solid var(--border);
+    color: #56677e;
+    overflow-wrap: anywhere;
+}
+
+#content tr:hover td {
+    background: #f8fbff;
+}
+
+/* ---------- Footer ---------- */
 
 .footer {
     margin-top: auto;
-    padding: 20px 40px;
-    background-color: #1f4e79;
-    color: white;
+    padding: 20px 25px;
+    color: #dce9f8;
+    background: linear-gradient(110deg, #142e50, #1f4e79);
     text-align: center;
 }
 
 .footer p {
     margin: 0;
-    font-size: 13px;
-    opacity: 0.9;
+    font-size: 11px;
+    letter-spacing: 0.2px;
 }
 
-/* =========================
-   FINAL BUTTON POLISH
-   ========================= */
+/* ---------- Responsive: tablets ---------- */
 
-button {
-    font-family: inherit;
-    font-weight: 500;
-    transition: background-color 0.2s ease, transform 0.1s ease;
+@media (max-width: 1050px) {
+    .app-container {
+        grid-template-columns: 195px minmax(0, 1fr);
+        gap: 18px;
+        padding: 22px 18px;
+    }
+
+    .sidebar {
+        padding: 17px 10px;
+    }
+
+    .welcome-section {
+        padding: 27px;
+    }
+
+    .physics-visual {
+        transform: scale(0.85);
+        margin: -10px;
+    }
+
+    .dashboard-card {
+        padding: 16px;
+        gap: 10px;
+    }
+
+    .stat-icon {
+        width: 42px;
+        height: 42px;
+        flex-basis: 42px;
+    }
 }
 
-button:active {
-    transform: scale(0.98);
+/* ---------- Responsive: small tablets ---------- */
+
+@media (max-width: 760px) {
+    .header {
+        min-height: 72px;
+        padding: 13px 18px;
+    }
+
+    .brand-icon {
+        width: 42px;
+        height: 42px;
+        font-size: 25px;
+    }
+
+    .brand h1 {
+        font-size: 19px;
+    }
+
+    .header-status {
+        padding: 6px 9px;
+        font-size: 10px;
+    }
+
+    .app-container {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        padding: 18px 15px;
+    }
+
+    .sidebar {
+        position: static;
+        width: 100%;
+        padding: 12px;
+        overflow: hidden;
+    }
+
+    .sidebar-title,
+    .sidebar-divider,
+    .sidebar-info {
+        display: none;
+    }
+
+    .sidebar-item {
+        width: auto;
+        flex: 0 0 auto;
+        margin: 0;
+        padding: 10px 12px;
+        font-size: 11px;
+    }
+
+    .sidebar {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        overflow-x: auto;
+    }
+
+    .sidebar-icon {
+        min-width: auto;
+        font-size: 15px;
+    }
+
+    .main-content {
+        width: 100%;
+    }
+
+    .welcome-section {
+        min-height: 205px;
+        padding: 24px;
+    }
+
+    .welcome-section h2 {
+        font-size: 25px;
+    }
+
+    .physics-visual {
+        flex-basis: 115px;
+        transform: scale(0.7);
+        margin: -15px;
+    }
+
+    .section-heading h2 {
+        font-size: 19px;
+    }
 }
 
-.form-card button {
-    min-width: 120px;
-}
+/* ---------- Responsive: phones ---------- */
 
-/* =========================
-   FORM LAYOUT
-   ========================= */
+@media (max-width: 520px) {
+    .header {
+        align-items: flex-start;
+        gap: 10px;
+        padding: 13px;
+    }
 
-.form-card {
-    width: 100%;
-    max-width: 550px;
-}
+    .brand {
+        gap: 9px;
+    }
 
-.form-card input,
-.form-card select {
-    margin-bottom: 18px;
-}
+    .brand h1 {
+        font-size: 17px;
+    }
 
-.form-card label {
-    margin-top: 5px;
-}
+    .brand p {
+        font-size: 10px;
+    }
 
-/* =========================
-   CONTENT AREA
-   ========================= */
+    .brand-icon {
+        width: 37px;
+        height: 37px;
+        border-radius: 11px;
+        font-size: 22px;
+    }
 
-#content {
-    margin-top: 35px;
-    margin-bottom: 40px;
-}
+    .header-status {
+        font-size: 0;
+        padding: 9px;
+    }
 
-#content h2 {
-    font-size: 26px;
-    margin-top: 0;
-    margin-bottom: 8px;
-    color: #1f4e79;
+    .header-status::first-letter {
+        font-size: 12px;
+    }
+
+    .app-container {
+        padding: 13px 11px;
+    }
+
+    .sidebar {
+        gap: 3px;
+    }
+
+    .sidebar-item {
+        padding: 9px 10px;
+        white-space: nowrap;
+    }
+
+    .welcome-section {
+        min-height: 190px;
+        padding: 22px 19px;
+    }
+
+    .welcome-section h2 {
+        font-size: 23px;
+    }
+
+    .welcome-section p {
+        font-size: 11px;
+    }
+
+    .welcome-label {
+        font-size: 8px;
+        letter-spacing: 1.3px;
+    }
+
+    .physics-visual {
+        display: none;
+    }
+
+    .dashboard-cards,
+    .quick-actions {
+        grid-template-columns: 1fr;
+    }
+
+    .dashboard-card {
+        padding: 17px;
+    }
+
+    .section-heading {
+        margin-top: 25px;
+    }
+
+    .section-heading h2 {
+        font-size: 18px;
+    }
+
+    #content h2 {
+        font-size: 22px;
+    }
+
+    .institute-card,
+    .curriculum-card,
+    .batch-card,
+    .material-card {
+        padding: 17px;
+    }
+
+    .form-card {
+        padding: 20px 16px;
+    }
+
+    .form-card button {
+        min-width: 100px;
+    }
+
+    #content table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+
+    .footer {
+        padding: 17px 12px;
+    }
 }

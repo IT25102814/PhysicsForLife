@@ -669,8 +669,6 @@ async function updateBatch(batchId) {
     }
 }
 
-
-
 async function showMaterials() {
 
     const content = document.getElementById("content");
@@ -1605,7 +1603,7 @@ async function addMaterial() {
                         title,
                         materialType,
                         description,
-                        fileName: null,
+                        fileName: title,
                         filePath: url,
                         mimeType: null,
                         fileSizeBytes: null,
@@ -1616,20 +1614,21 @@ async function addMaterial() {
         }
 
         if (!response.ok) {
-            const errorMessage = await response.text();
-            throw new Error(errorMessage || "Failed to save learning material");
+            const errorText = await response.text();
+            console.error("Backend response:", errorText);
+
+            throw new Error(
+                `Server returned ${response.status}: ${errorText || "Failed to save learning material"}`
+            );
         }
 
         alert("Learning material added successfully!");
         showMaterials();
 
     } catch (error) {
-        console.error(error);
-        alert(
-            "Unable to save the material. Check that the backend is running, " +
-            "the selected batch exists, and the file is within the upload limit."
-        );
-    }
+          console.error("Error saving learning material:", error);
+          alert("Unable to save material: " + error.message);
+      }
 }
 
 async function deleteInstitute(instituteId) {

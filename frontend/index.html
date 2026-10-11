@@ -1,70 +1,440 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Tuition Management System</title>
+    <title>PhysicsForLife | Tuition Management System</title>
 
     <link rel="stylesheet" href="css/style.css">
 </head>
 
 <body>
 
+<!-- =========================
+     TOP HEADER
+     ========================= -->
+
 <header class="header">
-    <h1>Tuition Management System</h1>
-    <p>Physics Tuition Management System</p>
-</header>
 
-<main class="dashboard">
+    <div class="brand">
+        <div class="brand-icon">⚛</div>
 
-    <h2>Dashboard</h2>
-
-    <div class="cards">
-
-        <div class="card">
-            <h3>Institutes</h3>
-            <p>Manage tuition institutes</p>
-
-            <button onclick="showInstitutes()">View Institutes</button>
-            <button onclick="showAddInstituteForm()">Add Institute</button>
+        <div>
+            <h1>PhysicsForLife</h1>
+            <p>Tuition Management System</p>
         </div>
-
-        <div class="card">
-            <h3>Curricula</h3>
-            <p>Manage available curricula</p>
-
-            <button onclick="showCurricula()">View Curricula</button>
-            <button onclick="showAddCurriculumForm()">Add Curriculum</button>
-        </div>
-
-        <div class="card">
-            <h3>Batches</h3>
-            <p>Manage student batches</p>
-
-            <button onclick="showBatches()">View Batches</button>
-            <button onclick="showAddBatchForm()">Add Batch</button>
-        </div>
-
-        <div class="card">
-            <h3>Learning Materials</h3>
-            <p>Manage learning materials</p>
-
-            <button onclick="showMaterials()">View Materials</button>
-            <button onclick="showAddMaterialForm()">Add Material</button>
-        </div>
-
     </div>
 
-    <div id="content"></div>
+    <div class="header-right">
+        <span class="header-status">
+            ● System Online
+        </span>
+    </div>
+
+</header>
+
+
+<!-- =========================
+     MAIN APPLICATION
+     ========================= -->
+
+<main class="app-container">
+
+
+    <!-- =========================
+         SIDEBAR
+         ========================= -->
+
+    <aside class="sidebar">
+
+        <div class="sidebar-title">
+            <span>MENU</span>
+        </div>
+
+        <button class="sidebar-item active"
+                onclick="showDashboard()">
+
+            <span class="sidebar-icon">⌂</span>
+            <span>Dashboard</span>
+
+        </button>
+
+
+        <button class="sidebar-item"
+                onclick="showInstitutes()">
+
+            <span class="sidebar-icon">▣</span>
+            <span>Institutes</span>
+
+        </button>
+
+
+        <button class="sidebar-item"
+                onclick="showCurricula()">
+
+            <span class="sidebar-icon">▤</span>
+            <span>Curricula</span>
+
+        </button>
+
+
+        <button class="sidebar-item"
+                onclick="showBatches()">
+
+            <span class="sidebar-icon">♙</span>
+            <span>Batches</span>
+
+        </button>
+
+
+        <button class="sidebar-item"
+                onclick="showMaterials()">
+
+            <span class="sidebar-icon">▧</span>
+            <span>Learning Materials</span>
+
+        </button>
+
+
+        <div class="sidebar-divider"></div>
+
+
+        <div class="sidebar-info">
+
+            <div class="sidebar-info-icon">
+                ⚡
+            </div>
+
+            <div>
+                <strong>Physics Hub</strong>
+                <p>Manage your learning system</p>
+            </div>
+
+        </div>
+
+    </aside>
+
+
+
+    <!-- =========================
+         CONTENT AREA
+         ========================= -->
+
+    <section class="main-content">
+
+
+        <!-- =========================
+             DASHBOARD
+             ========================= -->
+
+        <div id="dashboard-view">
+
+
+            <!-- Welcome -->
+
+            <div class="welcome-section">
+
+                <div>
+
+                    <span class="welcome-label">
+                        PHYSICS TUITION MANAGEMENT
+                    </span>
+
+                    <h2>
+                        Welcome to your
+                        <span>Physics Hub</span> 👋
+                    </h2>
+
+                    <p>
+                        Manage institutes, curricula, batches and
+                        learning resources from one place.
+                    </p>
+
+                </div>
+
+
+                <div class="physics-visual">
+
+                    <div class="orbit orbit-one"></div>
+                    <div class="orbit orbit-two"></div>
+                    <div class="orbit orbit-three"></div>
+
+                    <div class="atom">
+                        ⚛
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- =========================
+                 QUICK STAT CARDS
+                 ========================= -->
+
+            <div class="section-heading">
+
+                <div>
+                    <span>OVERVIEW</span>
+                    <h2>System Management</h2>
+                </div>
+
+            </div>
+
+
+            <div class="dashboard-cards">
+
+
+                <div class="dashboard-card institute-stat">
+
+                    <div class="stat-icon">
+                        🏢
+                    </div>
+
+                    <div class="stat-info">
+
+                        <span>Institutes</span>
+
+                        <strong>Manage</strong>
+
+                        <p>Tuition institutes</p>
+
+                    </div>
+
+                    <button onclick="showInstitutes()">
+                        →
+                    </button>
+
+                </div>
+
+
+
+                <div class="dashboard-card curriculum-stat">
+
+                    <div class="stat-icon">
+                        📚
+                    </div>
+
+                    <div class="stat-info">
+
+                        <span>Curricula</span>
+
+                        <strong>Manage</strong>
+
+                        <p>Available curricula</p>
+
+                    </div>
+
+                    <button onclick="showCurricula()">
+                        →
+                    </button>
+
+                </div>
+
+
+
+                <div class="dashboard-card batch-stat">
+
+                    <div class="stat-icon">
+                        👥
+                    </div>
+
+                    <div class="stat-info">
+
+                        <span>Batches</span>
+
+                        <strong>Manage</strong>
+
+                        <p>Student batches</p>
+
+                    </div>
+
+                    <button onclick="showBatches()">
+                        →
+                    </button>
+
+                </div>
+
+
+
+                <div class="dashboard-card material-stat">
+
+                    <div class="stat-icon">
+                        📖
+                    </div>
+
+                    <div class="stat-info">
+
+                        <span>Learning Materials</span>
+
+                        <strong>Manage</strong>
+
+                        <p>Study resources</p>
+
+                    </div>
+
+                    <button onclick="showMaterials()">
+                        →
+                    </button>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- =========================
+                 QUICK ACTIONS
+                 ========================= -->
+
+            <div class="section-heading quick-heading">
+
+                <div>
+                    <span>QUICK ACTIONS</span>
+                    <h2>What would you like to manage?</h2>
+                </div>
+
+            </div>
+
+
+            <div class="quick-actions">
+
+
+                <button class="quick-action"
+                        onclick="showAddInstituteForm()">
+
+                    <div class="quick-action-icon">
+                        +
+                    </div>
+
+                    <div>
+                        <strong>Add Institute</strong>
+                        <span>Create a new tuition institute</span>
+                    </div>
+
+                    <b>→</b>
+
+                </button>
+
+
+
+                <button class="quick-action"
+                        onclick="showAddCurriculumForm()">
+
+                    <div class="quick-action-icon">
+                        +
+                    </div>
+
+                    <div>
+                        <strong>Add Curriculum</strong>
+                        <span>Add an academic curriculum</span>
+                    </div>
+
+                    <b>→</b>
+
+                </button>
+
+
+
+                <button class="quick-action"
+                        onclick="showAddBatchForm()">
+
+                    <div class="quick-action-icon">
+                        +
+                    </div>
+
+                    <div>
+                        <strong>Add Batch</strong>
+                        <span>Create a student batch</span>
+                    </div>
+
+                    <b>→</b>
+
+                </button>
+
+
+
+                <button class="quick-action"
+                        onclick="showAddMaterialForm()">
+
+                    <div class="quick-action-icon">
+                        +
+                    </div>
+
+                    <div>
+                        <strong>Add Learning Material</strong>
+                        <span>Add a study resource</span>
+                    </div>
+
+                    <b>→</b>
+
+                </button>
+
+            </div>
+
+
+
+            <!-- =========================
+                 INFORMATION BANNER
+                 ========================= -->
+
+            <div class="info-banner">
+
+                <div class="info-banner-icon">
+                    💡
+                </div>
+
+                <div>
+
+                    <strong>
+                        Keep your learning resources organized
+                    </strong>
+
+                    <p>
+                        Assign materials to the correct batch and week
+                        so students can easily access the resources
+                        relevant to their classes.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =========================
+             DYNAMIC CONTENT
+             ========================= -->
+
+        <div id="content"></div>
+
+
+    </section>
 
 </main>
 
+
+
+<!-- =========================
+     FOOTER
+     ========================= -->
+
 <footer class="footer">
-    <p>© 2026 PhysicsForLife. All rights reserved.</p>
+
+    <p>
+        © 2026 PhysicsForLife. All rights reserved.
+    </p>
+
 </footer>
+
 
 <script src="js/app.js"></script>
 
 </body>
+
 </html>

@@ -1,14 +1,38 @@
-package com.physicsforlife.assessmentengine;
+package com.physicsforlife.assessmentengine.service; 
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
+import com.physicsforlife.assessmentengine.entity.Question;
+import com.physicsforlife.assessmentengine.entity.Quiz;
+import com.physicsforlife.assessmentengine.repository.QuestionRepository;
+import com.physicsforlife.assessmentengine.repository.QuizRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-@SpringBootApplication
-public class AssessmentengineApplication {
+import java.util.Optional;
 
-	public static void main(String[] args) {
-		SpringApplication.run(AssessmentengineApplication.class, args);
-	}
+@Service
+public class QuizService {
 
+    @Autowired
+    private QuizRepository quizRepository;
+
+    @Autowired
+    private QuestionRepository questionRepository;
+
+    public Quiz saveQuizConfig(Quiz quiz) {
+        return quizRepository.save(quiz);
+    }
+
+    public Question addQuestion(Long quizId, Question question) {
+        Optional<Quiz> optionalQuiz = quizRepository.findById(quizId);
+
+        if (optionalQuiz.isPresent()) {
+            question.setQuiz(optionalQuiz.get());
+            return questionRepository.save(question);
+        }
+        throw new RuntimeException("Quiz not found");
+    }
+
+    public Quiz getLatestQuizForStudent() {
+        return quizRepository.findTopByOrderByQuizIdDesc();
+    }
 }
-

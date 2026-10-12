@@ -45,5 +45,4 @@ public class Assessment {
     private String description;
     private Date create_date;
 
-    // Generate Getters and Setters here
 }

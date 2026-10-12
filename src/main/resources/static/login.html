@@ -3,28 +3,100 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student Login | Physics for Life</title>
+    <title>Sign In | Physics for Life</title>
     <link rel="stylesheet" href="style.css">
 </head>
-<body>
-<div class="container">
-    <h2>Student Login</h2>
-    <form id="loginForm">
-        <div class="form-group">
-            <label for="loginEmail">Email Address</label>
-            <input type="email" id="loginEmail" required>
+<body class="login-page-body">
+
+<div class="login-split-container">
+    <!-- LEFT SIDE: Physics Banner Image -->
+    <div class="login-image-panel">
+        <img src="physics-bg-banner.png" alt="Physics for Life" class="tutor-banner-img">
+    </div>
+
+    <!-- RIGHT SIDE: Login Form Panel -->
+    <div class="login-form-panel">
+        <div class="container">
+            <h2>Sign In</h2>
+
+            <div id="loginMessage" class="alert-banner" style="margin-bottom: 15px;"></div>
+
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="loginEmail">Email Address</label>
+                    <input type="email" id="loginEmail" required placeholder="Enter your email">
+                </div>
+
+                <div class="form-group">
+                    <label for="loginPassword">Password</label>
+                    <input type="password" id="loginPassword" required placeholder="Enter password">
+                </div>
+
+                <button type="submit" id="loginBtn">Login</button>
+            </form>
+
+            <p style="text-align: center; margin-top: 15px; font-size: 13px; color: #64748b;">
+                Don't have an account? <a href="index.html" style="color: var(--primary); text-decoration: none; font-weight: 600;">Register here</a>
+            </p>
         </div>
-        <div class="form-group">
-            <label for="loginPassword">Password</label>
-            <input type="password" id="loginPassword" required>
-        </div>
-        <button type="submit">Login</button>
-        <p id="loginMessage"></p>
-        <p style="text-align: center; margin-top: 15px; font-size: 14px;">
-            <a href="index.html">Need an account? Register here</a>
-        </p>
-    </form>
+    </div>
 </div>
+
 <script src="app.js"></script>
+<script>
+    document.getElementById('loginForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const email = document.getElementById('loginEmail').value;
+        const passwordHash = document.getElementById('loginPassword').value;
+        const msgDiv = document.getElementById('loginMessage');
+        msgDiv.style.display = 'none';
+
+        try {
+            const res = await fetch('/api/users/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, passwordHash })
+            });
+
+            if (res.ok) {
+                const user = await res.json();
+                localStorage.setItem('userId', user.userId);
+                localStorage.setItem('userName', user.fullName);
+                localStorage.setItem('userEmail', user.email);
+                localStorage.setItem('userRole', user.role);
+                if (user.phone) localStorage.setItem('userPhone', user.phone);
+
+                msgDiv.className = 'alert-banner alert-success';
+                msgDiv.textContent = 'Login successful! Redirecting...';
+                msgDiv.style.display = 'block';
+
+                setTimeout(() => {
+                    if (user.role === 'ADMIN') {
+                        window.location.href = 'admin-dashboard.html';
+                    } else if (user.role === 'TUTOR') {
+                        window.location.href = 'tutor-dashboard.html';
+                    } else {
+                        window.location.href = 'dashboard.html';
+                    }
+                }, 800);
+            } else {
+                const errText = await res.text();
+                let errMsg = 'Invalid email or password.';
+                try {
+                    const errJson = JSON.parse(errText);
+                    errMsg = errJson.error || errMsg;
+                } catch(e) {}
+                msgDiv.className = 'alert-banner alert-error';
+                msgDiv.textContent = errMsg;
+                msgDiv.style.display = 'block';
+            }
+        } catch (err) {
+            console.error('Login error:', err);
+            msgDiv.className = 'alert-banner alert-error';
+            msgDiv.textContent = 'An error occurred during login.';
+            msgDiv.style.display = 'block';
+        }
+    });
+</script>
 </body>
 </html>

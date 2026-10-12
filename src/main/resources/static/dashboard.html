@@ -12,16 +12,11 @@
 <div class="sidebar">
   <h2>Physics for Life</h2>
   <ul class="nav-links">
-    <li><a href="#" class="active">📊 Dashboard</a></li>
-    <li><a href="#">⭐ Exam Ratings</a></li>
+    <li><a href="#" class="active" onclick="switchTab('dashboard', event)">📊 Dashboard</a></li>
+    <li><a href="#" onclick="switchTab('classes', event)">📚 My Enrolled Classes</a></li>
+    <li><a href="#" onclick="switchTab('purchase', event)">💳 Purchase Classes</a></li>
     <li class="section-title">STUDENT</li>
-    <li><a href="#">👤 My Profile</a></li>
-    <li><a href="#">🔔 My Notifications</a></li>
-    <li><a href="#">🆔 My Student ID</a></li>
-    <li class="section-title">CLASSES</li>
-    <li><a href="#">📚 My Classes</a></li>
-    <li><a href="#">💳 Purchase Classes</a></li>
-    <li><a href="#">📈 My Performance</a></li>
+    <li><a href="#" onclick="openEditProfileModal()">👤 My Profile</a></li>
   </ul>
   <div class="sidebar-footer">
     <button id="logoutBtn" class="logout-btn">Logout</button>
@@ -33,8 +28,7 @@
   <!-- Top Greeting Banner -->
   <div class="welcome-card">
     <div class="welcome-text">
-      <!-- Added id="welcomeHeading" here -->
-      <h3 id="welcomeHeading">Good Evening, Rasindu!</h3>
+      <h3 id="welcomeHeading">Good Evening, Student!</h3>
       <p>Let's Start Learning Physics</p>
     </div>
     <div class="avatar-box">
@@ -42,33 +36,297 @@
     </div>
   </div>
 
-  <!-- Quick Action Cards Grid -->
-  <div class="card-grid">
-    <div class="portal-card">
-      <span class="card-icon">📖</span>
-      <h4>MY CLASSES</h4>
+  <!-- General Message Banner -->
+  <div id="studentMessage" class="alert-banner" style="margin-bottom: 20px; display: none;"></div>
+
+  <!-- DASHBOARD HOME TAB -->
+  <div id="dashboardTab" class="student-tab-content">
+    <div class="card-grid">
+      <div class="portal-card" onclick="switchTab('classes', event)" style="cursor: pointer;">
+        <span class="card-icon">📖</span>
+        <h4>MY CLASSES</h4>
+      </div>
+      <div class="portal-card" onclick="openEditProfileModal()" style="cursor: pointer;">
+        <span class="card-icon">👤</span>
+        <h4>EDIT PROFILE</h4>
+      </div>
+      <div class="portal-card" onclick="switchTab('purchase', event)" style="cursor: pointer;">
+        <span class="card-icon">💳</span>
+        <h4>PURCHASE CLASSES</h4>
+      </div>
     </div>
-    <div class="portal-card">
-      <span class="card-icon">💻</span>
-      <h4>PURCHASE CLASSES</h4>
+  </div>
+
+  <!-- MY CLASSES TAB -->
+  <div id="classesTab" class="student-tab-content" style="display: none;">
+    <div class="card" style="background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+      <h3>My Enrolled Course Batches</h3>
+      <table border="1" style="width: 100%; border-collapse: collapse; margin-top: 15px; text-align: left;">
+        <thead>
+        <tr style="background: #f8f9fa;">
+          <th style="padding: 10px;">Batch Name</th>
+          <th style="padding: 10px;">Institute</th>
+          <th style="padding: 10px;">Curriculum</th>
+          <th style="padding: 10px;">Syllabus</th>
+          <th style="padding: 10px;">Exam Level</th>
+          <th style="padding: 10px;">Fee (LKR)</th>
+          <th style="padding: 10px;">Status</th>
+        </tr>
+        </thead>
+        <tbody id="myEnrollmentsTableBody">
+        <!-- Populated via JS -->
+        </tbody>
+      </table>
     </div>
-    <div class="portal-card">
-      <span class="card-icon">💬</span>
-      <h4>TELEGRAM SUPPORT</h4>
+  </div>
+
+  <!-- PURCHASE CLASSES TAB -->
+  <div id="purchaseTab" class="student-tab-content" style="display: none;">
+    <div class="card" style="background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+      <h3>Available Course Batches for Enrollment</h3>
+      <table border="1" style="width: 100%; border-collapse: collapse; margin-top: 15px; text-align: left;">
+        <thead>
+        <tr style="background: #f8f9fa;">
+          <th style="padding: 10px;">Batch Name</th>
+          <th style="padding: 10px;">Year</th>
+          <th style="padding: 10px;">Institute</th>
+          <th style="padding: 10px;">Curriculum</th>
+          <th style="padding: 10px;">Syllabus</th>
+          <th style="padding: 10px;">Exam Level</th>
+          <th style="padding: 10px;">Fee (LKR)</th>
+          <th style="padding: 10px;">Action</th>
+        </tr>
+        </thead>
+        <tbody id="availableBatchesTableBody">
+        <!-- Populated via JS -->
+        </tbody>
+      </table>
     </div>
+  </div>
+
+  <!-- EDIT PROFILE CARD SECTION -->
+  <div id="editProfileCard" class="card" style="background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); margin-top: 30px; display: none;">
+    <h3>Edit Profile Details</h3>
+    <div id="profileMessage" class="alert-banner" style="margin-top: 15px; margin-bottom: 15px;"></div>
+    <form id="editProfileForm" style="margin-top: 15px;">
+      <div class="form-group" style="margin-bottom: 15px;">
+        <label for="editFullName">Full Name</label>
+        <input type="text" id="editFullName" required style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px;">
+      </div>
+      <div class="form-group" style="margin-bottom: 15px;">
+        <label for="editEmail">Email Address</label>
+        <input type="email" id="editEmail" required style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px;">
+      </div>
+      <div class="form-group" style="margin-bottom: 15px;">
+        <label for="editPhone">Phone Number</label>
+        <input type="text" id="editPhone" placeholder="Enter phone number" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px;">
+      </div>
+      <div class="form-group" style="margin-bottom: 15px;">
+        <label for="currentPassword">Current Password (required if changing password)</label>
+        <input type="password" id="currentPassword" placeholder="Enter current password" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px;">
+      </div>
+      <div class="form-group" style="margin-bottom: 15px;">
+        <label for="newPassword">New Password (optional)</label>
+        <input type="password" id="newPassword" placeholder="Enter new password" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px;">
+      </div>
+      <button type="submit" style="padding: 10px 20px; background: #28a745; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;">Save Changes</button>
+      <button type="button" onclick="document.getElementById('editProfileCard').style.display='none'" style="padding: 10px 20px; background: #6c757d; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; margin-left: 10px;">Cancel</button>
+    </form>
   </div>
 </div>
 
 <script src="app.js"></script>
 
-<!-- Dynamic Greeting Script -->
 <script>
   document.addEventListener("DOMContentLoaded", () => {
     const savedName = localStorage.getItem('userName');
+    const savedEmail = localStorage.getItem('userEmail');
+    const savedPhone = localStorage.getItem('userPhone');
     const welcomeHeading = document.getElementById('welcomeHeading');
 
     if (savedName && welcomeHeading) {
       welcomeHeading.textContent = `Good Evening, ${savedName}!`;
+    }
+
+    if (savedName) document.getElementById('editFullName').value = savedName;
+    if (savedEmail) document.getElementById('editEmail').value = savedEmail;
+    if (savedPhone) document.getElementById('editPhone').value = savedPhone;
+
+    loadStudentData();
+  });
+
+  function switchTab(tabName, event) {
+    if (event) event.preventDefault();
+    document.querySelectorAll('.nav-links a').forEach(el => el.classList.remove('active'));
+
+    document.getElementById('dashboardTab').style.display = 'none';
+    document.getElementById('classesTab').style.display = 'none';
+    document.getElementById('purchaseTab').style.display = 'none';
+
+    if (tabName === 'dashboard') {
+      document.getElementById('dashboardTab').style.display = 'block';
+    } else if (tabName === 'classes') {
+      document.getElementById('classesTab').style.display = 'block';
+      loadStudentEnrollments();
+    } else if (tabName === 'purchase') {
+      document.getElementById('purchaseTab').style.display = 'block';
+      loadAvailableBatches();
+    }
+  }
+
+  function showMessage(text, isSuccess = true) {
+    const msgDiv = document.getElementById('studentMessage');
+    msgDiv.className = `alert-banner ${isSuccess ? 'alert-success' : 'alert-error'}`;
+    msgDiv.textContent = text;
+    msgDiv.style.display = 'block';
+    setTimeout(() => { msgDiv.style.display = 'none'; }, 4000);
+  }
+
+  async function loadStudentData() {
+    loadStudentEnrollments();
+    loadAvailableBatches();
+  }
+
+  async function loadStudentEnrollments() {
+    const studentId = localStorage.getItem('userId');
+    if (!studentId) return;
+
+    try {
+      const res = await fetch(`/api/enrollments/student/${studentId}`);
+      if (res.ok) {
+        const enrollments = await res.json();
+        const tbody = document.getElementById('myEnrollmentsTableBody');
+        tbody.innerHTML = '';
+        if (enrollments.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="7" style="padding: 12px; text-align: center; color: #666;">You are not enrolled in any classes yet.</td></tr>`;
+          return;
+        }
+        enrollments.forEach(en => {
+          const b = en.courseBatch;
+          tbody.innerHTML += `
+            <tr>
+              <td style="padding: 8px;">${b ? b.batchName : 'N/A'}</td>
+              <td style="padding: 8px;">${b && b.institute ? b.institute.name : 'N/A'}</td>
+              <td style="padding: 8px;">${b && b.curriculum ? b.curriculum.name : 'N/A'}</td>
+              <td style="padding: 8px;">${b ? b.syllabusType : 'N/A'}</td>
+              <td style="padding: 8px;">${b ? b.examLevel : 'N/A'}</td>
+              <td style="padding: 8px;">${b ? b.monthlyFee : 'N/A'}</td>
+              <td style="padding: 8px; font-weight: bold; color: ${en.status === 'ACTIVE' ? 'green' : 'red'};">${en.status}</td>
+            </tr>`;
+        });
+      }
+    } catch (err) {
+      console.error('Error loading student enrollments:', err);
+    }
+  }
+
+  async function loadAvailableBatches() {
+    try {
+      const res = await fetch('/api/management/batches');
+      if (res.ok) {
+        const batches = await res.json();
+        const tbody = document.getElementById('availableBatchesTableBody');
+        tbody.innerHTML = '';
+        batches.forEach(b => {
+          tbody.innerHTML += `
+            <tr>
+              <td style="padding: 8px;">${b.batchName}</td>
+              <td style="padding: 8px;">${b.batchYear}</td>
+              <td style="padding: 8px;">${b.institute ? b.institute.name : 'N/A'}</td>
+              <td style="padding: 8px;">${b.curriculum ? b.curriculum.name : 'N/A'}</td>
+              <td style="padding: 8px;">${b.syllabusType}</td>
+              <td style="padding: 8px;">${b.examLevel}</td>
+              <td style="padding: 8px;">${b.monthlyFee}</td>
+              <td style="padding: 8px;"><button onclick="enrollInBatch(${b.batchId})" style="padding: 6px 12px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: 600;">Enroll</button></td>
+            </tr>`;
+        });
+      }
+    } catch (err) {
+      console.error('Error loading available batches:', err);
+    }
+  }
+
+  async function enrollInBatch(batchId) {
+    const studentId = localStorage.getItem('userId');
+    if (!studentId) {
+      showMessage('User session not found. Please log in again.', false);
+      return;
+    }
+
+    try {
+      const res = await fetch(`/api/enrollments/enroll?studentId=${studentId}&batchId=${batchId}`, {
+        method: 'POST'
+      });
+      if (res.ok) {
+        showMessage('Successfully enrolled in course batch!', true);
+        loadStudentEnrollments();
+      } else {
+        const errText = await res.text();
+        showMessage(errText || 'You are already enrolled in this batch.', false);
+      }
+    } catch (err) {
+      console.error('Error enrolling:', err);
+      showMessage('You are already enrolled in this batch.', false);
+    }
+  }
+
+  function openEditProfileModal() {
+    const card = document.getElementById('editProfileCard');
+    card.style.display = card.style.display === 'none' ? 'block' : 'none';
+  }
+
+  document.getElementById('editProfileForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const userId = localStorage.getItem('userId');
+    const messageElement = document.getElementById('profileMessage');
+
+    messageElement.style.display = 'none';
+
+    try {
+      const updatedPayload = {
+        fullName: document.getElementById('editFullName').value,
+        email: document.getElementById('editEmail').value,
+        phone: document.getElementById('editPhone').value,
+        currentPassword: document.getElementById('currentPassword').value,
+        newPassword: document.getElementById('newPassword').value
+      };
+
+      const updateRes = await fetch(`/api/users/${userId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updatedPayload)
+      });
+
+      if (updateRes.ok) {
+        const updatedUser = await updateRes.json();
+        localStorage.setItem('userName', updatedUser.fullName);
+        localStorage.setItem('userEmail', updatedUser.email);
+        if (updatedUser.phone) localStorage.setItem('userPhone', updatedUser.phone);
+
+        messageElement.className = 'alert-banner alert-success';
+        messageElement.textContent = 'Profile updated successfully! Reloading...';
+        messageElement.style.display = 'block';
+
+        setTimeout(() => { location.reload(); }, 1200);
+      } else {
+        const errText = await updateRes.text();
+        let errMsg = 'Failed to update profile.';
+        try {
+          const errJson = JSON.parse(errText);
+          errMsg = errJson.error || errMsg;
+        } catch(e) {
+          if (errText) errMsg = errText;
+        }
+
+        messageElement.className = 'alert-banner alert-error';
+        messageElement.textContent = errMsg;
+        messageElement.style.display = 'block';
+      }
+    } catch (err) {
+      console.error('Error updating profile:', err);
+      messageElement.className = 'alert-banner alert-error';
+      messageElement.textContent = 'An error occurred while updating profile.';
+      messageElement.style.display = 'block';
     }
   });
 </script>

@@ -6,26 +6,86 @@
     <title>Student Registration | Physics for Life</title>
     <link rel="stylesheet" href="style.css">
 </head>
-<body>
-<div class="container">
-    <h2>Student Registration</h2>
-    <form id="registrationForm">
-        <div class="form-group">
-            <label for="fullName">Full Name</label>
-            <input type="text" id="fullName" required>
+<body class="register-page-body">
+
+<div class="login-split-container">
+    <!-- LEFT SIDE: Physics Banner Image -->
+    <div class="login-image-panel">
+        <img src="physics-bg-banner.png" alt="Physics for Life" class="tutor-banner-img">
+    </div>
+
+    <!-- RIGHT SIDE: Registration Form Panel -->
+    <div class="login-form-panel">
+        <div class="container">
+            <h2>Student Registration</h2>
+
+            <div id="registerMessage" class="alert-banner" style="margin-bottom: 15px;"></div>
+
+            <form id="registrationForm">
+                <div class="form-group">
+                    <label for="fullName">Full Name</label>
+                    <input type="text" id="fullName" required placeholder="Enter your full name">
+                </div>
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" required placeholder="Enter your email">
+                </div>
+                <div class="form-group">
+                    <label for="passwordHash">Password</label>
+                    <input type="password" id="passwordHash" required placeholder="Create a password">
+                </div>
+                <button type="submit">Register</button>
+            </form>
+
+            <p style="text-align: center; margin-top: 15px; font-size: 13px; color: #64748b;">
+                Already have an account? <a href="login.html" style="color: var(--primary); text-decoration: none; font-weight: 600;">Sign in here</a>
+            </p>
         </div>
-        <div class="form-group">
-            <label for="email">Email Address</label>
-            <input type="email" id="email" required>
-        </div>
-        <div class="form-group">
-            <label for="passwordHash">Password</label>
-            <input type="password" id="passwordHash" required>
-        </div>
-        <button type="submit">Register</button>
-        <p id="message"></p>
-    </form>
+    </div>
 </div>
+
 <script src="app.js"></script>
+<script>
+    document.getElementById('registrationForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const fullName = document.getElementById('fullName').value;
+        const email = document.getElementById('email').value;
+        const passwordHash = document.getElementById('passwordHash').value;
+        const msgDiv = document.getElementById('registerMessage');
+        msgDiv.style.display = 'none';
+
+        try {
+            const res = await fetch('/api/users/register', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ fullName, email, passwordHash, role: 'STUDENT' })
+            });
+
+            if (res.ok) {
+                msgDiv.className = 'alert-banner alert-success';
+                msgDiv.textContent = 'Registration successful! Redirecting to login...';
+                msgDiv.style.display = 'block';
+                setTimeout(() => {
+                    window.location.href = 'login.html';
+                }, 1200);
+            } else {
+                const errText = await res.text();
+                let errMsg = 'Registration failed.';
+                try {
+                    const errJson = JSON.parse(errText);
+                    errMsg = errJson.error || errMsg;
+                } catch(e) {}
+                msgDiv.className = 'alert-banner alert-error';
+                msgDiv.textContent = errMsg;
+                msgDiv.style.display = 'block';
+            }
+        } catch (err) {
+            console.error('Registration error:', err);
+            msgDiv.className = 'alert-banner alert-error';
+            msgDiv.textContent = 'An error occurred during registration.';
+            msgDiv.style.display = 'block';
+        }
+    });
+</script>
 </body>
 </html>

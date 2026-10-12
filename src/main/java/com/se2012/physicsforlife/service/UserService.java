@@ -12,12 +12,10 @@ public class UserService {
 
     private final UserRepository userRepository;
 
-    // Spring Boot automatically injects the UserRepository here
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
-    // 1. Register a new user with validation
     public AppUser registerUser(AppUser user) {
         if (userRepository.existsByEmail(user.getEmail())) {
             throw new IllegalArgumentException("A user with this email already exists!");
@@ -25,25 +23,24 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    // 2. Fetch a single user by their ID
+    // NEW: Safe update method for login timestamp and existing users
+    public AppUser updateUser(AppUser user) {
+        return userRepository.save(user);
+    }
+
     public Optional<AppUser> getUserById(Long id) {
         return userRepository.findById(id);
     }
 
-    // 3. Fetch all registered users
     public List<AppUser> getAllUsers() {
         return userRepository.findAll();
     }
 
-
     public AppUser loginUser(String email, String password) {
-        // Notice the .orElse(null) added to the end of this line!
         AppUser user = userRepository.findByEmail(email).orElse(null);
-
-        // If the user exists and the password matches exactly
         if (user != null && user.getPasswordHash().equals(password)) {
             return user;
         }
-        return null; // Login failed
+        return null;
     }
 }

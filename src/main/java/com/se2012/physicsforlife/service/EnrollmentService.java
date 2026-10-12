@@ -3,6 +3,7 @@ package com.se2012.physicsforlife.service;
 import com.se2012.physicsforlife.entity.AppUser;
 import com.se2012.physicsforlife.entity.CourseBatch;
 import com.se2012.physicsforlife.entity.Enrollment;
+import com.se2012.physicsforlife.entity.EnrollmentStatus;
 import com.se2012.physicsforlife.repository.CourseBatchRepository;
 import com.se2012.physicsforlife.repository.EnrollmentRepository;
 import com.se2012.physicsforlife.repository.UserRepository;
@@ -17,7 +18,6 @@ public class EnrollmentService {
     private final UserRepository userRepository;
     private final CourseBatchRepository courseBatchRepository;
 
-    // Injecting all three repositories to cross-reference data
     public EnrollmentService(EnrollmentRepository enrollmentRepository,
                              UserRepository userRepository,
                              CourseBatchRepository courseBatchRepository) {
@@ -35,12 +35,13 @@ public class EnrollmentService {
                 .orElseThrow(() -> new IllegalArgumentException("Course batch not found."));
 
         if (enrollmentRepository.findByStudentAndCourseBatch(student, batch).isPresent()) {
-            throw new IllegalStateException("Student is already enrolled in this batch.");
+            throw new IllegalStateException("You are already enrolled in this batch!");
         }
 
         Enrollment enrollment = new Enrollment();
         enrollment.setStudent(student);
         enrollment.setCourseBatch(batch);
+        enrollment.setStatus(EnrollmentStatus.ACTIVE); // Default status
 
         return enrollmentRepository.save(enrollment);
     }
@@ -51,5 +52,22 @@ public class EnrollmentService {
                 .orElseThrow(() -> new IllegalArgumentException("Student not found."));
 
         return enrollmentRepository.findByStudent(student);
+    }
+
+    // Update enrollment status (e.g., ACTIVE to SUSPENDED)
+    public Enrollment updateEnrollmentStatus(Long enrollmentId, EnrollmentStatus status) {
+        Enrollment enrollment = enrollmentRepository.findById(enrollmentId)
+                .orElseThrow(() -> new IllegalArgumentException("Enrollment not found."));
+
+        enrollment.setStatus(status);
+        return enrollmentRepository.save(enrollment);
+    }
+
+    // Delete / Remove an enrollment
+    public void deleteEnrollment(Long enrollmentId) {
+        if (!enrollmentRepository.existsById(enrollmentId)) {
+            throw new IllegalArgumentException("Enrollment not found.");
+        }
+        enrollmentRepository.deleteById(enrollmentId);
     }
 }

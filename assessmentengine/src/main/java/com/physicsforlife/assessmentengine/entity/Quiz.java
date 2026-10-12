@@ -2,34 +2,31 @@ package com.physicsforlife.assessmentengine.entity;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Table(name = "quizzes")
 public class Quiz {
+
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "quiz_id")
-    private Integer quizId;
+    private Long quizId;
 
     private String title;
-
-    @Column(name = "time_limit_minutes")
     private Integer timeLimitMinutes;
-
-    @Column(name = "max_questions")
     private Integer maxQuestions;
-
-    @Column(name = "is_active")
     private Boolean isActive;
-
-    @Column(name = "created_at")
     private LocalDateTime createdAt;
 
-    @OneToMany(mappedBy = "quiz", cascade = CascadeType.ALL)
-    private List<Question> questions;
+    @OneToMany(mappedBy = "quiz", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Question> questions = new ArrayList<>();
 
-    public Integer getQuizId() { return quizId; }
-    public void setQuizId(Integer quizId) { this.quizId = quizId; }
+    public Quiz() {}
+
+    public Long getQuizId() { return quizId; }
+    public void setQuizId(Long quizId) { this.quizId = quizId; }
     public String getTitle() { return title; }
     public void setTitle(String title) { this.title = title; }
     public Integer getTimeLimitMinutes() { return timeLimitMinutes; }

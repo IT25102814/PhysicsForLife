@@ -1,0 +1,306 @@
+
+/* =========================================
+   STUDENT DASHBOARD
+   ========================================= */
+
+.student-filter-card {
+    position: relative;
+    z-index: 1;
+    background: #ffffff;
+    border: 1px solid #e5eaf1;
+    border-radius: 16px;
+    padding: 26px;
+    margin-bottom: 32px;
+    box-shadow: 0 5px 18px rgba(31, 78, 121, 0.06);
+}
+
+.student-filter-card > p {
+    color: #64748b;
+    font-size: 14px;
+    line-height: 1.7;
+    margin: 0 0 22px;
+}
+
+.student-filter-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 20px;
+    margin-bottom: 24px;
+}
+
+.student-form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+    min-width: 0;
+}
+
+.student-form-group label {
+    color: #26364a;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.student-form-group select {
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+    padding: 12px 14px;
+    border: 1px solid #d7e0eb;
+    border-radius: 9px;
+    background: #ffffff;
+    color: #26364a;
+    font-size: 14px;
+    cursor: pointer;
+    outline: none;
+}
+
+.student-form-group select:focus {
+    border-color: #397fb5;
+    box-shadow: 0 0 0 3px rgba(57, 127, 181, 0.12);
+}
+
+
+/* =========================================
+   BUTTONS
+   ========================================= */
+
+.student-primary-button,
+.student-secondary-button {
+    position: relative;
+    z-index: 2;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 18px;
+    border-radius: 9px;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    pointer-events: auto;
+    transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.student-primary-button {
+    color: #ffffff;
+    background: linear-gradient(110deg, #1f4e79, #397fb5);
+    border: none;
+}
+
+.student-primary-button:hover {
+    background: linear-gradient(110deg, #183c60, #2d6d9d);
+    transform: translateY(-1px);
+}
+
+.student-primary-button:focus-visible,
+.student-secondary-button:focus-visible {
+    outline: 3px solid rgba(57, 127, 181, 0.35);
+    outline-offset: 3px;
+}
+
+.student-secondary-button {
+    color: #1f4e79;
+    background: #ffffff;
+    border: 1px solid #d7e0eb;
+    margin-bottom: 22px;
+}
+
+.student-secondary-button:hover {
+    background: #f0f6fc;
+}
+
+.student-message {
+    margin: 14px 0 0;
+    color: #64748b;
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+
+/* =========================================
+   COURSE CARDS
+   ========================================= */
+
+.student-course-list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 22px;
+    margin-bottom: 28px;
+}
+
+.student-feature-card {
+    background: #ffffff;
+    border: 1px solid #e5eaf1;
+    border-radius: 15px;
+    padding: 24px;
+    box-shadow: 0 5px 18px rgba(31, 78, 121, 0.05);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.student-feature-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 9px 24px rgba(31, 78, 121, 0.1);
+}
+
+.student-feature-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    flex-shrink: 0;
+    margin-bottom: 16px;
+    border-radius: 12px;
+    background: #edf5fc;
+    font-size: 24px;
+}
+
+.student-feature-card h3 {
+    color: #1f3550;
+    margin: 0 0 12px;
+    font-size: 18px;
+    overflow-wrap: anywhere;
+}
+
+.student-feature-card p {
+    color: #64748b;
+    font-size: 14px;
+    line-height: 1.7;
+    margin: 7px 0;
+    overflow-wrap: anywhere;
+}
+
+.student-feature-card .student-primary-button {
+    margin-top: 16px;
+}
+
+
+/* =========================================
+   COURSE INFORMATION
+   ========================================= */
+
+.student-course-info {
+    background: #f0f6fc;
+    border: 1px solid #dce9f6;
+    border-radius: 12px;
+    padding: 18px 22px;
+    margin-bottom: 28px;
+}
+
+.student-course-info p {
+    margin: 7px 0;
+    color: #40536a;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+
+/* =========================================
+   WEEKLY LEARNING MATERIALS
+   ========================================= */
+
+.student-week-section {
+    margin: 28px 0;
+}
+
+.student-week-section > h3 {
+    padding-bottom: 12px;
+    margin-bottom: 18px;
+    color: #1f4e79;
+    border-bottom: 2px solid #e5edf6;
+    font-size: 19px;
+}
+
+.student-material-list {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.student-material-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 18px;
+    padding: 20px;
+    background: #ffffff;
+    border: 1px solid #e5eaf1;
+    border-radius: 13px;
+    box-shadow: 0 4px 14px rgba(31, 78, 121, 0.04);
+}
+
+.student-material-card .student-feature-icon {
+    margin-bottom: 0;
+}
+
+.student-material-details {
+    flex: 1;
+    min-width: 0;
+}
+
+.student-material-details h4 {
+    color: #1f3550;
+    font-size: 16px;
+    margin: 2px 0 9px;
+    overflow-wrap: anywhere;
+}
+
+.student-material-details p {
+    color: #64748b;
+    font-size: 13px;
+    line-height: 1.6;
+    margin: 6px 0;
+    overflow-wrap: anywhere;
+}
+
+.student-material-link {
+    display: inline-block;
+    margin-top: 10px;
+    color: #286da5;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    overflow-wrap: anywhere;
+}
+
+.student-material-link:hover {
+    color: #1f4e79;
+    text-decoration: underline;
+}
+
+
+/* =========================================
+   RESPONSIVE DESIGN
+   ========================================= */
+
+@media (max-width: 900px) {
+    .student-filter-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .student-course-list {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 600px) {
+    .student-filter-card {
+        padding: 18px;
+    }
+
+    .student-feature-card {
+        padding: 20px;
+    }
+
+    .student-material-card {
+        gap: 12px;
+        padding: 15px;
+    }
+
+    .student-material-card .student-feature-icon {
+        width: 40px;
+        height: 40px;
+        font-size: 20px;
+    }
+}

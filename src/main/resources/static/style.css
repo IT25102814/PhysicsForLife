@@ -1,0 +1,193 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f4f6f8;
+    color: #333;
+    line-height: 1.5;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.header {
+    background-color: #1f4e79;
+    color: white;
+    padding: 30px 40px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header h1 { margin: 0; font-size: 30px; letter-spacing: 0.3px; }
+.header p { margin: 8px 0 0; font-size: 15px; opacity: 0.9; }
+
+.dashboard-button {
+    display: inline-flex; align-items: center; gap: 8px;
+    background-color: white; color: #1f4e79;
+    border: 1px solid #d6dce2; border-radius: 8px;
+    padding: 9px 16px; margin-bottom: 18px;
+    font-family: inherit; font-size: 14px; font-weight: 600;
+    cursor: pointer; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
+    transition: all 0.2s ease;
+}
+
+.dashboard-button:hover, .dashboard-button.active {
+    background-color: #1f4e79; color: white; border-color: #1f4e79;
+    box-shadow: 0 4px 10px rgba(31, 78, 121, 0.25); transform: translateY(-1px);
+}
+
+.dashboard-button:active {
+    transform: translateY(0);
+}
+
+.dashboard {
+    padding: 40px; max-width: 1400px; margin: 0 auto; width: 100%; flex: 1;
+}
+
+.dashboard h2 { font-size: 28px; margin-top: 0; margin-bottom: 30px; color: #1f4e79; }
+
+.cards {
+    display: grid; grid-template-columns: repeat(2, 1fr); gap: 25px; align-items: stretch;
+}
+
+.card {
+    background-color: white; padding: 25px; border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); position: relative;
+    overflow: hidden; transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card::before { content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 5px; background-color: #1f4e79; }
+.card:hover { transform: translateY(-4px); box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15); }
+.card h3 { margin-top: 0; font-size: 20px; margin-bottom: 10px; }
+.card p { color: #666; min-height: 40px; line-height: 1.5; margin-bottom: 20px; }
+
+.form-card {
+    background-color: white; padding: 30px; border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1); width: 100%; max-width: 800px; margin: 0 auto 30px auto;
+}
+
+.form-card h3 { margin-top: 0; color: #1f4e79; }
+.form-card label { display: block; margin-bottom: 8px; font-weight: bold; }
+.form-card input, .form-card select {
+    width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #ccc;
+    border-radius: 5px; font-size: 14px; background-color: white;
+}
+.form-card input:focus, .form-card select:focus, textarea:focus {
+    outline: none; border-color: #1f4e79; box-shadow: 0 0 0 2px rgba(31, 78, 121, 0.15);
+}
+
+.card button, .form-card button {
+    border: none; background-color: #1f4e79; color: white; padding: 12px 18px;
+    border-radius: 6px; cursor: pointer; font-family: inherit; font-weight: 500;
+    font-size: 15px; transition: background-color 0.2s ease, transform 0.1s ease;
+}
+.card button:hover, .form-card button:hover { background-color: #163a5c; opacity: 0.9; }
+.card button:active, .form-card button:active { transform: scale(0.98); }
+
+.hidden { display: none !important; }
+
+.question-title {
+    margin-bottom: 25px;
+    color: #333;
+    font-size: 18px;
+    font-weight: normal;
+    line-height: 2.4;
+}
+
+/* MCQ PATTERNS (UNTOUCHED) */
+.opt-cb-label {
+    display: flex; align-items: center; padding: 15px 20px; border: 1px solid #ccc;
+    background: #fff; border-radius: 5px; font-size: 15px; color: #333; cursor: pointer; transition: all 0.2s ease;
+}
+.opt-cb-label:hover { border-color: #1f4e79; box-shadow: 0 2px 8px rgba(31, 78, 121, 0.1); }
+.opt-cb-label input { width: auto !important; margin: 0 15px 0 0; transform: scale(1.2); flex-shrink: 0; }
+.opt-cb-label.correct { background-color: #d4edda; border-color: #28a745; color: #155724; font-weight: bold; }
+.opt-cb-label.incorrect { background-color: #f8d7da; border-color: #dc3545; color: #721c24; font-weight: bold; }
+
+/* DRAG AND DROP - CLEAN WHITE SQUARE STYLE */
+.drop-zone {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 80px;
+    height: 32px;
+    border: 1px solid #888;
+    background-color: #fff;
+    margin: 0 5px;
+    vertical-align: middle;
+    border-radius: 2px;
+    overflow: hidden;
+    transition: all 0.2s ease;
+}
+
+.drop-zone.empty {
+    background-color: #e0e0e0; /* Grey background indicates it's a blank space */
+    border: 1px solid #888;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.drop-zone .dnd-pill {
+    width: 100%;
+    height: 100%;
+    border-radius: 0;
+    border: none;
+    margin: 0;
+    padding: 0 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: none;
+    background-color: transparent;
+    color: inherit;
+}
+
+.dnd-tray {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 25px;
+    padding: 5px 0;
+    background: transparent;
+    border: none;
+    min-height: 50px;
+    align-items: center;
+}
+
+.dnd-pill {
+    padding: 5px 15px;
+    background-color: #fff;
+    color: #333;
+    border: 1px solid #888;
+    border-radius: 2px;
+    cursor: grab;
+    font-weight: normal;
+    font-size: 15px;
+    user-select: none;
+    box-shadow: 1px 1px 3px rgba(0,0,0,0.1);
+    transition: transform 0.1s;
+}
+
+.dnd-pill:active {
+    transform: scale(0.96);
+    cursor: grabbing;
+}
+
+.footer {
+    margin-top: auto; padding: 20px 40px; background-color: #1f4e79; color: white; text-align: center;
+}
+.footer p { margin: 0; font-size: 13px; opacity: 0.9; }
+
+@media (max-width: 900px) { .cards { grid-template-columns: 1fr; } }
+@media (max-width: 600px) {
+    .header { padding: 20px; flex-direction: column; gap: 15px; text-align: center; }
+    .header h1 { font-size: 24px; }
+    .dashboard { padding: 20px; }
+}
+
+@keyframes slideFadeUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+.fade-in-up { animation: slideFadeUp 0.3s ease-out forwards; }

@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Physics Assessment Portal</title>
+    <!-- Cache buster updated to v=16.0 to strictly enforce the new text parser -->
+    <link rel="stylesheet" href="style.css?v=16.0">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+<header class="header">
+    <div>
+        <h1>Physics Assessment Portal</h1>
+        <p>Interactive Learning Management</p>
+    </div>
+    <div style="display: flex; gap: 15px; align-items: center;">
+        <button id="btn-student-view" class="dashboard-button active" style="margin-bottom: 0;" onclick="switchView('student')">Student View</button>
+        <button id="btn-admin-view" class="dashboard-button" style="margin-bottom: 0;" onclick="switchView('admin')">Admin View</button>
+        <button id="logoutBtn" class="dashboard-button hidden" style="margin-bottom: 0; background-color: #c0392b; color: white; border: none;" onclick="logoutAdmin()">Logout</button>
+    </div>
+</header>
+
+<div class="dashboard" id="content">
+    <section id="student-section">
+        <div id="student-start-card">
+            <h2>Dashboard</h2>
+            <div class="cards">
+                <div class="card">
+                    <h3>Assessment Tools</h3>
+                    <p>Manage your physics quizzes and track academic progress</p>
+                    <button onclick="startStudentQuiz()">Start Quiz</button>
+                    <button onclick="viewProgress()">View Progress</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="student-quiz-card" class="hidden">
+            <h2>Active Assessment</h2>
+            <div class="form-card">
+                <div style="display: flex; justify-content: space-between; border-bottom: 1px solid #eee; padding-bottom: 15px; margin-bottom: 20px;">
+                    <strong style="color: #1f4e79; font-size: 16px;" id="q-counter">Question 1</strong>
+                    <strong style="color: #c0392b; font-size: 16px;">Time Left: <span id="time-left">00:00</span></strong>
+                </div>
+
+                <h3 id="display-quiz-title" style="color: #1f4e79; margin-top: 0;">Quiz Title</h3>
+                <h4 id="question-text" class="question-title">Question goes here</h4>
+
+                <div id="options-list" style="display: flex; flex-direction: column; gap: 12px;"></div>
+
+                <div id="explanation-box" class="hidden" style="background-color: #f4f6f8; border-left: 4px solid #1f4e79; padding: 20px; margin-top: 30px; border-radius: 4px;">
+                    <h5 style="color: #1f4e79; margin: 0 0 10px 0; font-size: 16px;">Theory / Explanation:</h5>
+                    <p id="explanation-text" style="margin: 0; color: #444; line-height: 1.6;"></p>
+                </div>
+
+                <div style="margin-top: 20px;">
+                    <button id="next-q-btn" class="hidden" style="width: 100%;" onclick="nextQuestion()">Next Question</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="student-result-card" class="hidden">
+            <h2>Results</h2>
+            <div class="form-card" style="text-align: center;">
+                <h3 style="margin-top: 0; color: #1f4e79;">Quiz Completed successfully</h3>
+                <p style="font-size: 24px; font-weight: bold; color: #333; margin: 20px 0;">Marks: <span id="final-score">0</span> / 100</p>
+                <button onclick="location.reload()">Return to Dashboard</button>
+            </div>
+        </div>
+
+        <div id="progress-card" class="hidden">
+            <h2>Performance Metrics</h2>
+            <div class="form-card">
+                <canvas id="progressChart" width="400" height="200"></canvas>
+                <button style="margin-top: 20px; width: 100%;" onclick="document.getElementById('progress-card').classList.add('hidden')">Close Graph</button>
+            </div>
+        </div>
+    </section>
+
+    <section id="admin-section" class="hidden">
+        <div id="admin-login-card">
+            <h2>System Access</h2>
+            <div class="form-card" style="max-width: 450px;">
+                <h3>Administrator Login</h3>
+                <label>Secure Username</label>
+                <input type="text" id="admin-user-input" placeholder="Enter Username (default: admin)">
+                <label>Secure Password</label>
+                <input type="password" id="admin-pass-input" placeholder="Enter Admin Password">
+                <button style="width: 100%; margin-top: 10px;" onclick="loginAdmin()">Login</button>
+                <p id="admin-error" class="hidden" style="color: #c0392b; font-weight: bold; margin-top: 15px; margin-bottom: 0;"></p>
+            </div>
+        </div>
+
+        <div id="admin-dashboard" class="hidden">
+            <h2>Dashboard</h2>
+
+            <div class="cards" style="margin-bottom: 40px;">
+                <div class="card">
+                    <h3>Security Keys</h3>
+                    <p>Manage administrator access credentials</p>
+                    <input type="password" id="old-pass" placeholder="Current password" style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 5px;">
+                    <input type="password" id="new-pass" placeholder="New password" style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 5px;">
+                    <button onclick="changeAdminPassword()">Update Password</button>
+                </div>
+
+                <div class="card">
+                    <h3>Quiz Settings</h3>
+                    <p>Database automatically assigns Quiz IDs.</p>
+                    <input type="text" id="title-input" placeholder="Enter Quiz Title" style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 5px;">
+                    <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+                        <input type="number" id="time-input" placeholder="Time (Mins)" min="1" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
+                        <input type="number" id="count-input" placeholder="Max Questions" min="1" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
+                    </div>
+                    <button onclick="saveFullQuizConfig()">Save Configuration</button>
+                </div>
+            </div>
+
+            <h2>Assessment Database</h2>
+            <div class="form-card">
+                <h3>Add New Question</h3>
+
+                <label>Question Type</label>
+                <select id="q-type" onchange="toggleQuestionType()">
+                    <option value="mcq-single">Single Choice MCQ (One correct answer)</option>
+                    <option value="mcq-multi">Multiple Answer MCQ (Select multiple)</option>
+                    <option value="tf">True / False</option>
+                    <option value="dnd">Drag & Drop (Fill in Blanks)</option>
+                </select>
+
+                <label>Question Text</label>
+                <input type="text" id="q-input" placeholder="Enter the physics problem here...">
+
+                <div style="display: flex; gap: 15px;">
+                    <div style="flex: 1;">
+                        <label>Option A</label>
+                        <input type="text" id="opt-a" placeholder="Answer choice A">
+                    </div>
+                    <div style="flex: 1;">
+                        <label>Option B</label>
+                        <input type="text" id="opt-b" placeholder="Answer choice B">
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: 15px;" id="row-cd">
+                    <div style="flex: 1;">
+                        <label>Option C</label>
+                        <input type="text" id="opt-c" placeholder="Answer choice C">
+                    </div>
+                    <div style="flex: 1;">
+                        <label>Option D</label>
+                        <input type="text" id="opt-d" placeholder="Answer choice D">
+                    </div>
+                </div>
+
+                <label>Correct Answer Definition</label>
+
+                <select id="correct-single-opt">
+                    <option value="A">Option A</option>
+                    <option value="B">Option B</option>
+                    <option value="C" id="opt-c-val">Option C</option>
+                    <option value="D" id="opt-d-val">Option D</option>
+                </select>
+
+                <div id="mcq-multi-options" class="hidden" style="display: none; gap: 15px; margin-top: 5px;">
+                    <label style="font-weight: normal;"><input type="checkbox" class="mcq-cb" value="A"> Option A</label>
+                    <label style="font-weight: normal;"><input type="checkbox" class="mcq-cb" value="B"> Option B</label>
+                    <label style="font-weight: normal;"><input type="checkbox" class="mcq-cb" value="C"> Option C</label>
+                    <label style="font-weight: normal;"><input type="checkbox" class="mcq-cb" value="D"> Option D</label>
+                </div>
+
+                <input type="text" id="correct-dnd-input" class="hidden" placeholder="Type correct order with commas (e.g., A,B,C)">
+                <p id="dnd-hint" class="hidden" style="font-size: 13px; color: #666; margin-top: -10px; margin-bottom: 15px;">
+                    *For Drag & Drop, type <b>[blank]</b> or <b>[]</b> in your Question Text where you want the drop zones to appear.
+                </p>
+
+                <label>Theory & Explanation</label>
+                <textarea id="q-explanation" placeholder="Provide the underlying physics theory..." rows="4" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px;"></textarea>
+
+                <div style="margin-top: 20px; display: flex; gap: 10px;">
+                    <button onclick="addQuestion()">Add Question</button>
+                    <button style="background-color: #6c757d;" onclick="clearQuestionForm()">Clear Fields</button>
+                    <button style="background-color: #c0392b;" onclick="clearAllQuestions()">Delete All Questions</button>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<footer class="footer">
+    <p>© 2026 Physics Assessment Portal</p>
+</footer>
+
+<script src="script.js?v=16.0"></script>
+</body>
+</html>

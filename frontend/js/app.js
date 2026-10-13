@@ -1,3 +1,20 @@
+function navigateToSection(section, renderFunction) {
+    // Hide the dashboard and show the selected page.
+    document.getElementById("dashboard-view").style.display = "none";
+    document.getElementById("content").style.display = "block";
+
+    // Highlight the selected sidebar button.
+    document.querySelectorAll(".sidebar-item").forEach(button => {
+        button.classList.toggle(
+            "active",
+            button.dataset.section === section
+        );
+    });
+
+    // Load the selected section using your existing function.
+    renderFunction();
+}
+
 async function showInstitutes() {
 
     const content = document.getElementById("content");
@@ -669,14 +686,12 @@ async function updateBatch(batchId) {
     }
 }
 
+
 async function showMaterials() {
-
     const content = document.getElementById("content");
-
     content.innerHTML = "<p>Loading learning materials...</p>";
 
     try {
-
         const response = await fetch(
             "http://localhost:8080/api/learning-materials"
         );
@@ -687,119 +702,306 @@ async function showMaterials() {
 
         const materials = await response.json();
 
+        // Sort newest uploads first.
+        materials.sort((a, b) =>
+            new Date(b.createdAt || 0) - new Date(a.createdAt || 0)
+        );
+
+        const institutes = [...new Set(
+            materials.map(m => m.batch?.institute?.name).filter(Boolean)
+        )].sort();
+
+        const curricula = [...new Set(
+            materials.map(m => m.batch?.curriculum?.name).filter(Boolean)
+        )].sort();
+
+        const batches = [...new Set(
+            materials.map(m => m.batch?.batchName).filter(Boolean)
+        )].sort();
+
+        const months = [...new Set(
+            materials.map(m => {
+                if (!m.createdAt) return null;
+                const date = new Date(m.createdAt);
+                return Number.isNaN(date.getTime())
+                    ? null
+                    : date.getFullYear() + "-" +
+                      String(date.getMonth() + 1).padStart(2, "0");
+            }).filter(Boolean)
+        )].sort().reverse();
+
+        function optionList(values) {
+            return values.map(value =>
+                `<option value="${escapeAttribute(value)}">${escapeHtml(value)}</option>`
+            ).join("");
+        }
+
         let html = `
             <button class="dashboard-button" onclick="showDashboard()">
                 ← Back to Dashboard
             </button>
+
             <h2>Learning Materials</h2>
+
+            <div class="form-card material-filters">
+                <label for="materialSearch">Search materials</label>
+                <input id="materialSearch" type="text"
+                    placeholder="Search title, filename or description">
+
+                <label for="filterInstitute">Institute</label>
+                <select id="filterInstitute">
+                    <option value="">All Institutes</option>
+                    ${optionList(institutes)}
+                </select>
+
+                <label for="filterCurriculum">Curriculum</label>
+                <select id="filterCurriculum">
+                    <option value="">All Curricula</option>
+                    ${optionList(curricula)}
+                </select>
+
+                <label for="filterBatch">Batch</label>
+                <select id="filterBatch">
+                    <option value="">All Batches</option>
+                    ${optionList(batches)}
+                </select>
+
+                <label for="filterMonth">Upload Month</label>
+                <select id="filterMonth">
+                    <option value="">All Months</option>
+                    ${months.map(month => {
+                        const [year, number] = month.split("-");
+                        const label = new Date(
+                            Number(year), Number(number) - 1, 1
+                        ).toLocaleDateString("en", {
+                            month: "long",
+                            year: "numeric"
+                        });
+
+                        return `<option value="${month}">${label}</option>`;
+                    }).join("")}
+                </select>
+
+                <label for="filterType">Material Type</label>
+                <select id="filterType">
+                    <option value="">All Types</option>
+                    ${optionList([...new Set(
+                        materials.map(m => m.materialType).filter(Boolean)
+                    )].sort())}
+                </select>
+
+
+            <button type="button" onclick="resetMaterialFilters()">
+                 Clear Filters
+            </button>
+
+            </div>
+
+            <p id="materialCount"></p>
+            <div id="groupedMaterials"></div>
         `;
-
-        if (materials.length === 0) {
-
-            html += "<p>No learning materials found.</p>";
-
-        } else {
-
-            html += "<div class='material-list'>";
-
-            materials.forEach(material => {
-
-                let fileDisplay = "No file or link";
-
-                if (material.filePath) {
-
-                    if (
-                        material.filePath.startsWith("http://") ||
-                        material.filePath.startsWith("https://")
-                    ) {
-                        // External link, such as a long video recording
-                        fileDisplay = `
-                            <a href="${escapeAttribute(material.filePath)}"
-                               target="_blank"
-                               rel="noopener noreferrer">
-                                ${escapeHtml(material.fileName || "Open learning material")}
-                            </a>
-                        `;
-
-                    } else if (material.fileName) {
-                        // Actual file stored by our upload endpoint
-                        fileDisplay = `
-                            <a href="http://localhost:8080/api/learning-materials/files/${material.materialId}"
-                               target="_blank"
-                               rel="noopener noreferrer">
-                                ${escapeHtml(material.fileName)}
-                            </a>
-                        `;
-                    }
-                }
-
-                html += `
-                    <div class="material-card">
-
-                        <h3>${escapeHtml(material.title || "Untitled material")}</h3>
-
-                        <p>
-                            <strong>Batch:</strong>
-                            ${escapeHtml(material.batch?.batchName || "Unknown")}
-                        </p>
-
-                        <p>
-                            <strong>Institute:</strong>
-                            ${escapeHtml(material.batch?.institute?.name || "Unknown")}
-                        </p>
-
-                        <p>
-                            <strong>Curriculum:</strong>
-                            ${escapeHtml(material.batch?.curriculum?.name || "Unknown")}
-                        </p>
-
-                        <p>
-                            <strong>Week:</strong>
-                            ${material.weekNumber ?? ""}
-                        </p>
-
-                        <p>
-                            <strong>Type:</strong>
-                            ${escapeHtml(material.materialType || "")}
-                        </p>
-
-                        <p>
-                            <strong>Description:</strong>
-                            ${escapeHtml(material.description || "No description")}
-                        </p>
-
-                        <p>
-                            <strong>File / Link:</strong>
-                            ${fileDisplay}
-                        </p>
-
-                        <button onclick="showEditMaterialForm(${material.materialId})">
-                            Edit
-                        </button>
-
-                        <button onclick="deleteMaterial(${material.materialId})">
-                            Delete
-                        </button>
-
-                    </div>
-                `;
-
-            });
-
-            html += "</div>";
-        }
 
         content.innerHTML = html;
 
+        // Keep the loaded records available to the rendering function.
+        window.learningMaterialsData = materials;
+
+        document.getElementById("materialSearch")
+            .addEventListener("input", renderMaterialsGrouped);
+
+        [
+            "filterInstitute",
+            "filterCurriculum",
+            "filterBatch",
+            "filterMonth",
+            "filterType"
+        ].forEach(id => {
+            document.getElementById(id)
+                .addEventListener("change", renderMaterialsGrouped);
+        });
+
+        renderMaterialsGrouped();
+
     } catch (error) {
-
         console.error(error);
-
         content.innerHTML =
             "<p>Unable to load learning materials. Make sure the Spring Boot backend is running.</p>";
     }
 }
 
+function renderMaterialsGrouped() {
+    const materials = window.learningMaterialsData || [];
+    const container = document.getElementById("groupedMaterials");
+
+    if (!container) return;
+
+    const search = document.getElementById("materialSearch").value
+        .trim().toLowerCase();
+    const instituteFilter = document.getElementById("filterInstitute").value;
+    const curriculumFilter = document.getElementById("filterCurriculum").value;
+    const batchFilter = document.getElementById("filterBatch").value;
+    const monthFilter = document.getElementById("filterMonth").value;
+    const typeFilter = document.getElementById("filterType").value;
+
+    const filtered = materials.filter(m => {
+        const institute = m.batch?.institute?.name || "Unknown";
+        const curriculum = m.batch?.curriculum?.name || "Unknown";
+        const batch = m.batch?.batchName || "Unknown";
+        const date = m.createdAt ? new Date(m.createdAt) : null;
+
+        const month = date && !Number.isNaN(date.getTime())
+            ? date.getFullYear() + "-" +
+              String(date.getMonth() + 1).padStart(2, "0")
+            : "";
+
+        const searchable = [
+            m.title, m.fileName, m.description, institute, curriculum, batch
+        ].join(" ").toLowerCase();
+
+        return searchable.includes(search)
+            && (!instituteFilter || institute === instituteFilter)
+            && (!curriculumFilter || curriculum === curriculumFilter)
+            && (!batchFilter || batch === batchFilter)
+            && (!monthFilter || month === monthFilter)
+            && (!typeFilter || m.materialType === typeFilter);
+    });
+
+    document.getElementById("materialCount").textContent =
+        `Showing ${filtered.length} of ${materials.length} materials`;
+
+    if (filtered.length === 0) {
+        container.innerHTML = "<p>No materials match your filters.</p>";
+        return;
+    }
+
+    // Group by institute, then batch, then upload month.
+    const groups = {};
+
+    filtered.forEach(m => {
+        const institute = m.batch?.institute?.name || "Unknown Institute";
+        const batch = m.batch?.batchName || "Unknown Batch";
+        const curriculum = m.batch?.curriculum?.name || "Unknown Curriculum";
+
+        const date = m.createdAt ? new Date(m.createdAt) : null;
+        const validDate = date && !Number.isNaN(date.getTime());
+        const monthKey = validDate
+            ? date.getFullYear() + "-" +
+              String(date.getMonth() + 1).padStart(2, "0")
+            : "unknown";
+
+        const monthLabel = validDate
+            ? date.toLocaleDateString("en", {
+                month: "long",
+                year: "numeric"
+            })
+            : "Upload date unavailable";
+
+        if (!groups[institute]) groups[institute] = {};
+        if (!groups[institute][batch]) {
+            groups[institute][batch] = { curriculum, months: {} };
+        }
+        if (!groups[institute][batch].months[monthKey]) {
+            groups[institute][batch].months[monthKey] = {
+                label: monthLabel,
+                materials: []
+            };
+        }
+
+        groups[institute][batch].months[monthKey].materials.push(m);
+    });
+
+    let html = "";
+
+    Object.keys(groups).sort().forEach(institute => {
+        html += `
+            <section class="material-institute-group">
+                <h2>🏫 ${escapeHtml(institute)}</h2>
+        `;
+
+        Object.keys(groups[institute]).sort().forEach(batch => {
+            const group = groups[institute][batch];
+
+            html += `
+                <div class="material-batch-group">
+                    <h3>📁 ${escapeHtml(batch)}</h3>
+                    <p><strong>Curriculum:</strong>
+                        ${escapeHtml(group.curriculum)}</p>
+            `;
+
+            Object.keys(group.months).sort().reverse().forEach(monthKey => {
+                const month = group.months[monthKey];
+
+                html += `
+                    <div class="material-month-group">
+                        <h4>📅 ${escapeHtml(month.label)}</h4>
+                        <div class="material-list">
+                `;
+
+                month.materials.forEach(material => {
+                    let fileDisplay = "No file or link";
+
+                    if (material.filePath) {
+                        if (/^https?:\/\//i.test(material.filePath)) {
+                            fileDisplay = `
+                                <a href="${escapeAttribute(material.filePath)}"
+                                   target="_blank" rel="noopener noreferrer">
+                                    ${escapeHtml(material.fileName || "Open learning material")}
+                                </a>
+                            `;
+                        } else if (material.fileName) {
+                            fileDisplay = `
+                                <a href="http://localhost:8080/api/learning-materials/files/${material.materialId}"
+                                   target="_blank" rel="noopener noreferrer">
+                                    ${escapeHtml(material.fileName)}
+                                </a>
+                            `;
+                        }
+                    }
+
+                    html += `
+                        <div class="material-card">
+                            <h3>${escapeHtml(material.title || "Untitled material")}</h3>
+                            <p><strong>Week:</strong> ${material.weekNumber ?? ""}</p>
+                            <p><strong>Type:</strong> ${escapeHtml(material.materialType || "")}</p>
+                            <p><strong>Description:</strong>
+                                ${escapeHtml(material.description || "No description")}</p>
+                            <p><strong>File / Link:</strong> ${fileDisplay}</p>
+
+                            <button onclick="showEditMaterialForm(${material.materialId})">
+                                Edit
+                            </button>
+                            <button onclick="deleteMaterial(${material.materialId})">
+                                Delete
+                            </button>
+                        </div>
+                    `;
+                });
+
+                html += `
+                        </div>
+                    </div>
+                `;
+            });
+
+            html += `</div>`;
+        });
+
+        html += `</section>`;
+    });
+
+    container.innerHTML = html;
+}
+
+function resetMaterialFilters() {
+    document.getElementById("materialSearch").value = "";
+    document.getElementById("filterInstitute").value = "";
+    document.getElementById("filterCurriculum").value = "";
+    document.getElementById("filterBatch").value = "";
+    document.getElementById("filterMonth").value = "";
+    document.getElementById("filterType").value = "";
+
+    renderMaterialsGrouped();
+}
 
 function escapeHtml(value) {
     return String(value).replace(/[&<>"']/g, character => ({
@@ -1670,11 +1872,13 @@ async function deleteInstitute(instituteId) {
 }
 
 function showDashboard() {
+    document.getElementById("dashboard-view").style.display = "block";
+    document.getElementById("content").style.display = "none";
 
-    document.getElementById("content").innerHTML = "";
-
-    window.scrollTo({
-        top: 0,
-        behavior: "smooth"
+    document.querySelectorAll(".sidebar-item").forEach(button => {
+        button.classList.toggle(
+            "active",
+            button.dataset.section === "dashboard"
+        );
     });
 }

@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -12,10 +13,7 @@
 
 <body>
 
-<!-- =========================
-     TOP HEADER
-     ========================= -->
-
+<!-- TOP HEADER -->
 <header class="header">
 
     <div class="brand">
@@ -28,25 +26,16 @@
     </div>
 
     <div class="header-right">
-        <span class="header-status">
-            ● System Online
-        </span>
+        <span class="header-status">● System Online</span>
     </div>
 
 </header>
 
 
-<!-- =========================
-     MAIN APPLICATION
-     ========================= -->
-
+<!-- MAIN APPLICATION -->
 <main class="app-container">
 
-
-    <!-- =========================
-         SIDEBAR
-         ========================= -->
-
+    <!-- SIDEBAR -->
     <aside class="sidebar">
 
         <div class="sidebar-title">
@@ -54,90 +43,64 @@
         </div>
 
         <button class="sidebar-item active"
+                data-section="dashboard"
                 onclick="showDashboard()">
-
             <span class="sidebar-icon">⌂</span>
             <span>Dashboard</span>
-
         </button>
 
-
         <button class="sidebar-item"
-                onclick="showInstitutes()">
-
+                data-section="institutes"
+                onclick="navigateToSection('institutes', showInstitutes)">
             <span class="sidebar-icon">▣</span>
             <span>Institutes</span>
-
         </button>
 
-
         <button class="sidebar-item"
-                onclick="showCurricula()">
-
+                data-section="curricula"
+                onclick="navigateToSection('curricula', showCurricula)">
             <span class="sidebar-icon">▤</span>
             <span>Curricula</span>
-
         </button>
 
-
         <button class="sidebar-item"
-                onclick="showBatches()">
-
+                data-section="batches"
+                onclick="navigateToSection('batches', showBatches)">
             <span class="sidebar-icon">♙</span>
             <span>Batches</span>
-
         </button>
-
 
         <button class="sidebar-item"
-                onclick="showMaterials()">
-
+                data-section="materials"
+                onclick="navigateToSection('materials', showMaterials)">
             <span class="sidebar-icon">▧</span>
             <span>Learning Materials</span>
-
         </button>
-
 
         <div class="sidebar-divider"></div>
 
-
         <div class="sidebar-info">
-
-            <div class="sidebar-info-icon">
-                ⚡
-            </div>
+            <div class="sidebar-info-icon">⚡</div>
 
             <div>
                 <strong>Physics Hub</strong>
                 <p>Manage your learning system</p>
             </div>
-
         </div>
 
     </aside>
 
 
-
-    <!-- =========================
-         CONTENT AREA
-         ========================= -->
-
+    <!-- CONTENT AREA -->
     <section class="main-content">
 
-
-        <!-- =========================
-             DASHBOARD
-             ========================= -->
-
+        <!-- DASHBOARD -->
         <div id="dashboard-view">
 
-
-            <!-- Welcome -->
-
+            <!-- WELCOME SECTION -->
             <div class="welcome-section">
 
                 <div>
-
                     <span class="welcome-label">
                         PHYSICS TUITION MANAGEMENT
                     </span>
@@ -151,132 +114,105 @@
                         Manage institutes, curricula, batches and
                         learning resources from one place.
                     </p>
-
                 </div>
 
-
                 <div class="physics-visual">
-
                     <div class="orbit orbit-one"></div>
                     <div class="orbit orbit-two"></div>
                     <div class="orbit orbit-three"></div>
 
-                    <div class="atom">
-                        ⚛
-                    </div>
-
+                    <div class="atom">⚛</div>
                 </div>
 
             </div>
 
 
-
-            <!-- =========================
-                 QUICK STAT CARDS
-                 ========================= -->
-
+            <!-- SYSTEM MANAGEMENT -->
             <div class="section-heading">
-
                 <div>
                     <span>OVERVIEW</span>
                     <h2>System Management</h2>
                 </div>
-
             </div>
 
 
+            <!-- DASHBOARD CARDS -->
             <div class="dashboard-cards">
 
-
+                <!-- Institutes -->
                 <div class="dashboard-card institute-stat">
 
-                    <div class="stat-icon">
-                        🏢
-                    </div>
+                    <div class="stat-icon">🏢</div>
 
                     <div class="stat-info">
-
                         <span>Institutes</span>
-
                         <strong>Manage</strong>
-
                         <p>Tuition institutes</p>
-
                     </div>
 
-                    <button onclick="showInstitutes()">
+                    <button
+                            onclick="navigateToSection('institutes', showInstitutes)"
+                            aria-label="Manage Institutes">
                         →
                     </button>
 
                 </div>
 
 
-
+                <!-- Curricula -->
                 <div class="dashboard-card curriculum-stat">
 
-                    <div class="stat-icon">
-                        📚
-                    </div>
+                    <div class="stat-icon">📚</div>
 
                     <div class="stat-info">
-
                         <span>Curricula</span>
-
                         <strong>Manage</strong>
-
                         <p>Available curricula</p>
-
                     </div>
 
-                    <button onclick="showCurricula()">
+                    <button
+                            onclick="navigateToSection('curricula', showCurricula)"
+                            aria-label="Manage Curricula">
                         →
                     </button>
 
                 </div>
 
 
-
+                <!-- Batches -->
                 <div class="dashboard-card batch-stat">
 
-                    <div class="stat-icon">
-                        👥
-                    </div>
+                    <div class="stat-icon">👥</div>
 
                     <div class="stat-info">
-
                         <span>Batches</span>
-
                         <strong>Manage</strong>
-
                         <p>Student batches</p>
-
                     </div>
 
-                    <button onclick="showBatches()">
+                    <button
+                            onclick="navigateToSection('batches', showBatches)"
+                            aria-label="Manage Batches">
                         →
                     </button>
 
                 </div>
 
 
-
+                <!-- Learning Materials -->
                 <div class="dashboard-card material-stat">
 
-                    <div class="stat-icon">
-                        📖
-                    </div>
+                    <div class="stat-icon">📖</div>
 
                     <div class="stat-info">
-
                         <span>Learning Materials</span>
-
                         <strong>Manage</strong>
-
                         <p>Study resources</p>
-
                     </div>
 
-                    <button onclick="showMaterials()">
+                    <button
+                            onclick="navigateToSection('materials', showMaterials)"
+                            aria-label="Manage Learning Materials">
                         →
                     </button>
 
@@ -285,11 +221,7 @@
             </div>
 
 
-
-            <!-- =========================
-                 QUICK ACTIONS
-                 ========================= -->
-
+            <!-- QUICK ACTIONS -->
             <div class="section-heading quick-heading">
 
                 <div>
@@ -302,13 +234,11 @@
 
             <div class="quick-actions">
 
-
+                <!-- Add Institute -->
                 <button class="quick-action"
-                        onclick="showAddInstituteForm()">
+                        onclick="navigateToSection('institutes', showAddInstituteForm)">
 
-                    <div class="quick-action-icon">
-                        +
-                    </div>
+                    <div class="quick-action-icon">+</div>
 
                     <div>
                         <strong>Add Institute</strong>
@@ -320,13 +250,11 @@
                 </button>
 
 
-
+                <!-- Add Curriculum -->
                 <button class="quick-action"
-                        onclick="showAddCurriculumForm()">
+                        onclick="navigateToSection('curricula', showAddCurriculumForm)">
 
-                    <div class="quick-action-icon">
-                        +
-                    </div>
+                    <div class="quick-action-icon">+</div>
 
                     <div>
                         <strong>Add Curriculum</strong>
@@ -338,13 +266,11 @@
                 </button>
 
 
-
+                <!-- Add Batch -->
                 <button class="quick-action"
-                        onclick="showAddBatchForm()">
+                        onclick="navigateToSection('batches', showAddBatchForm)">
 
-                    <div class="quick-action-icon">
-                        +
-                    </div>
+                    <div class="quick-action-icon">+</div>
 
                     <div>
                         <strong>Add Batch</strong>
@@ -356,13 +282,11 @@
                 </button>
 
 
-
+                <!-- Add Learning Material -->
                 <button class="quick-action"
-                        onclick="showAddMaterialForm()">
+                        onclick="navigateToSection('materials', showAddMaterialForm)">
 
-                    <div class="quick-action-icon">
-                        +
-                    </div>
+                    <div class="quick-action-icon">+</div>
 
                     <div>
                         <strong>Add Learning Material</strong>
@@ -376,19 +300,12 @@
             </div>
 
 
-
-            <!-- =========================
-                 INFORMATION BANNER
-                 ========================= -->
-
+            <!-- INFORMATION BANNER -->
             <div class="info-banner">
 
-                <div class="info-banner-icon">
-                    💡
-                </div>
+                <div class="info-banner-icon">💡</div>
 
                 <div>
-
                     <strong>
                         Keep your learning resources organized
                     </strong>
@@ -398,7 +315,6 @@
                         so students can easily access the resources
                         relevant to their classes.
                     </p>
-
                 </div>
 
             </div>
@@ -406,35 +322,22 @@
         </div>
 
 
-
-        <!-- =========================
-             DYNAMIC CONTENT
-             ========================= -->
-
-        <div id="content"></div>
-
+        <!-- DYNAMIC CONTENT FOR OTHER PAGES -->
+        <div id="content" style="display: none;"></div>
 
     </section>
 
 </main>
 
 
-
-<!-- =========================
-     FOOTER
-     ========================= -->
-
+<!-- FOOTER -->
 <footer class="footer">
-
-    <p>
-        © 2026 PhysicsForLife. All rights reserved.
-    </p>
-
+    <p>© 2026 PhysicsForLife. All rights reserved.</p>
 </footer>
 
 
+<!-- JAVASCRIPT -->
 <script src="js/app.js"></script>
 
 </body>
-
 </html>

@@ -10,7 +10,7 @@ public class CourseBatch {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "batch_id")
-    private Long batchId;
+    private Integer batchId;
 
     @Column(name = "batch_name", nullable = false)
     private String batchName;
@@ -19,11 +19,11 @@ public class CourseBatch {
     private Integer batchYear;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "syllabus_type", nullable = false)
+    @Column(name = "syllabus_type")
     private SyllabusType syllabusType;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "exam_level", nullable = false)
+    @Column(name = "exam_level")
     private ExamLevel examLevel;
 
     @Column(name = "monthly_fee", nullable = false, precision = 10, scale = 2)
@@ -41,8 +41,8 @@ public class CourseBatch {
     private Curriculum curriculum;
 
     // Getters and Setters
-    public Long getBatchId() { return batchId; }
-    public void setBatchId(Long batchId) { this.batchId = batchId; }
+    public Integer getBatchId() { return batchId; }
+    public void setBatchId(Integer batchId) { this.batchId = batchId; }
 
     public String getBatchName() { return batchName; }
     public void setBatchName(String batchName) { this.batchName = batchName; }

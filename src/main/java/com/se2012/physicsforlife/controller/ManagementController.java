@@ -30,6 +30,17 @@ public class ManagementController {
         return ResponseEntity.ok(managementService.saveInstitute(institute));
     }
 
+    @PutMapping("/institutes/{id}")
+    public ResponseEntity<Institute> updateInstitute(@PathVariable Long id, @RequestBody Institute institute) {
+        return ResponseEntity.ok(managementService.updateInstitute(id, institute));
+    }
+
+    @DeleteMapping("/institutes/{id}")
+    public ResponseEntity<Void> deleteInstitute(@PathVariable Long id) {
+        managementService.deleteInstitute(id);
+        return ResponseEntity.noContent().build();
+    }
+
     // --- CURRICULA ---
     @GetMapping("/curricula")
     public ResponseEntity<List<Curriculum>> getCurricula() {
@@ -41,6 +52,17 @@ public class ManagementController {
         return ResponseEntity.ok(managementService.saveCurriculum(curriculum));
     }
 
+    @PutMapping("/curricula/{id}")
+    public ResponseEntity<Curriculum> updateCurriculum(@PathVariable Long id, @RequestBody Curriculum curriculum) {
+        return ResponseEntity.ok(managementService.updateCurriculum(id, curriculum));
+    }
+
+    @DeleteMapping("/curricula/{id}")
+    public ResponseEntity<Void> deleteCurriculum(@PathVariable Long id) {
+        managementService.deleteCurriculum(id);
+        return ResponseEntity.noContent().build();
+    }
+
     // --- BATCHES ---
     @GetMapping("/batches")
     public ResponseEntity<List<CourseBatch>> getBatches() {
@@ -50,5 +72,16 @@ public class ManagementController {
     @PostMapping("/batches")
     public ResponseEntity<CourseBatch> createBatch(@RequestBody CourseBatch batch) {
         return ResponseEntity.ok(managementService.saveBatch(batch));
+    }
+
+    @PutMapping("/batches/{id}")
+    public ResponseEntity<CourseBatch> updateBatch(@PathVariable Integer id, @RequestBody CourseBatch batch) {
+        return ResponseEntity.ok(managementService.updateBatch(id, batch));
+    }
+
+    @DeleteMapping("/batches/{id}")
+    public ResponseEntity<Void> deleteBatch(@PathVariable Integer id) {
+        managementService.deleteBatch(id);
+        return ResponseEntity.noContent().build();
     }
 }

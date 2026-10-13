@@ -7,37 +7,177 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body class="dashboard-body">
-<div class="sidebar">
-    <h2>Tutor Portal</h2>
-    <ul class="nav-links">
-        <li><a href="#" class="active">老师 Tutor Dashboard</a></li>
-        <li><a href="#">📖 My Assigned Classes</a></li>
-        <li><a href="#">📝 Upload Tutes & Materials</a></li>
-        <li><a href="#">⭐ Student Exam Ratings</a></li>
-    </ul>
-    <div class="sidebar-footer">
-        <button id="logoutBtn" class="logout-btn">Logout</button>
-    </div>
-</div>
-<div class="main-content">
-    <div class="welcome-card">
-        <div class="welcome-text">
-            <h3>Welcome, Tutor</h3>
-            <p>Manage Your Physics Classes and Learning Materials</p>
-        </div>
-        <div class="avatar-box"><span style="font-size: 40px;">👨‍🏫</span></div>
-    </div>
-    <div class="card-grid">
-        <div class="portal-card">
-            <span class="card-icon">📁</span>
-            <h4>UPLOAD MATERIALS</h4>
-        </div>
-        <div class="portal-card">
-            <span class="card-icon">⭐</span>
-            <h4>VIEW RATINGS</h4>
+
+<!-- TOP HEADER -->
+<header class="header">
+    <div class="brand">
+        <div class="brand-icon">⚛</div>
+        <div>
+            <h1>PhysicsForLife</h1>
+            <p>Tutor Portal & Course Management</p>
         </div>
     </div>
-</div>
+    <div class="header-right">
+        <span class="header-status">● System Online</span>
+    </div>
+</header>
+
+<!-- MAIN APPLICATION -->
+<main class="app-container">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <div class="sidebar-title">
+            <span>MENU</span>
+        </div>
+
+        <button class="sidebar-item active" data-section="dashboard" onclick="showTutorDashboard()">
+            <span class="sidebar-icon">⌂</span>
+            <span>Tutor Dashboard</span>
+        </button>
+
+        <button class="sidebar-item" data-section="classes" onclick="showAssignedClasses()">
+            <span class="sidebar-icon">📖</span>
+            <span>My Assigned Classes</span>
+        </button>
+
+        <button class="sidebar-item" data-section="materials" onclick="showUploadMaterials()">
+            <span class="sidebar-icon">📝</span>
+            <span>Upload Tutes & Materials</span>
+        </button>
+
+        <button class="sidebar-item" data-section="ratings" onclick="showStudentRatings()">
+            <span class="sidebar-icon">⭐</span>
+            <span>Student Exam Ratings</span>
+        </button>
+        <button class="sidebar-item" onclick="window.location.href='/quiz/quiz-manage.html'">
+            <span class="sidebar-icon">📝</span>
+            <span>Quizzes</span>
+        </button>
+
+        <button class="sidebar-item" onclick="window.location.href='/finance/finance-manage.html'">
+            <span class="sidebar-icon">💳</span>
+            <span>Finance</span>
+        </button>
+
+        <div class="sidebar-divider"></div>
+
+        <div style="padding: 10px 0;">
+            <button id="logoutBtn" style="width: 100%; background: linear-gradient(120deg, #e34f69, #c93654); color: white; border: none; padding: 10px; border-radius: 8px; cursor: pointer; font-weight: 600;">
+                Logout
+            </button>
+        </div>
+    </aside>
+
+    <!-- CONTENT AREA -->
+    <section class="main-content">
+
+        <!-- DASHBOARD HOME VIEW -->
+        <div id="dashboard-view">
+            <!-- WELCOME SECTION -->
+            <div class="welcome-section">
+                <div>
+                    <span class="welcome-label">TUTOR PORTAL</span>
+                    <h2 id="welcomeTutor">Welcome, Tutor 👋</h2>
+                    <p>Manage your assigned physics classes, upload study materials and tutes, and track student exam ratings from one centralized dashboard.</p>
+                </div>
+                <div class="physics-visual">
+                    <div class="orbit orbit-one"></div>
+                    <div class="orbit orbit-two"></div>
+                    <div class="orbit orbit-three"></div>
+                    <div class="atom">⚛</div>
+                </div>
+            </div>
+
+            <!-- QUICK CARDS -->
+            <div class="section-heading" style="margin-top: 35px;">
+                <div>
+                    <span>OVERVIEW</span>
+                    <h2>Tutor Management</h2>
+                </div>
+            </div>
+
+            <div class="dashboard-cards">
+                <div class="dashboard-card institute-stat" onclick="showUploadMaterials()" style="cursor: pointer;">
+                    <div class="stat-icon">📁</div>
+                    <div class="stat-info">
+                        <span>Materials</span>
+                        <strong>Upload</strong>
+                        <p>Study resources & tutes</p>
+                    </div>
+                    <button>→</button>
+                </div>
+
+                <div class="dashboard-card curriculum-stat" onclick="showStudentRatings()" style="cursor: pointer;">
+                    <div class="stat-icon">⭐</div>
+                    <div class="stat-info">
+                        <span>Feedback</span>
+                        <strong>Ratings</strong>
+                        <p>Student exam ratings</p>
+                    </div>
+                    <button>→</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- DYNAMIC CONTENT CONTAINER -->
+        <div id="content" style="display: none;"></div>
+
+    </section>
+
+</main>
+
+<!-- FOOTER -->
+<footer class="footer">
+    <p>© 2026 PhysicsForLife. All rights reserved.</p>
+</footer>
+
 <script src="app.js"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const savedName = localStorage.getItem('userName');
+        if (savedName) {
+            document.getElementById('welcomeTutor').textContent = `Welcome, ${savedName} 👋`;
+        }
+    });
+
+    function showTutorDashboard() {
+        document.getElementById('dashboard-view').style.display = 'block';
+        document.getElementById('content').style.display = 'none';
+        updateSidebarActive(0);
+    }
+
+    function showAssignedClasses() {
+        document.getElementById('dashboard-view').style.display = 'none';
+        const content = document.getElementById('content');
+        content.style.display = 'block';
+        content.innerHTML = `<h2>My Assigned Classes</h2><p>Assigned course batches will appear here.</p>`;
+        updateSidebarActive(1);
+    }
+
+    function showUploadMaterials() {
+        document.getElementById('dashboard-view').style.display = 'none';
+        const content = document.getElementById('content');
+        content.style.display = 'block';
+        content.innerHTML = `<h2>Upload Tutes & Learning Materials</h2><p>Material upload module active.</p>`;
+        updateSidebarActive(2);
+    }
+
+    function showStudentRatings() {
+        document.getElementById('dashboard-view').style.display = 'none';
+        const content = document.getElementById('content');
+        content.style.display = 'block';
+        content.innerHTML = `<h2>Student Exam Ratings</h2><p>Student feedback and ratings view.</p>`;
+        updateSidebarActive(3);
+    }
+
+    function updateSidebarActive(index) {
+        const buttons = document.querySelectorAll('.sidebar-item');
+        buttons.forEach((btn, idx) => {
+            btn.classList.toggle('active', idx === index);
+        });
+    }
+</script>
 </body>
 </html>

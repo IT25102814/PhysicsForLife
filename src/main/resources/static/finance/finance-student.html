@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Payments | Physics for Life</title>
+    <link rel="stylesheet" href="/style.css">
+    <link rel="stylesheet" href="/quiz/quiz.css">
+    <link rel="stylesheet" href="/finance/finance.css">
+</head>
+<body class="dashboard-body">
+
+<header class="header">
+    <div class="brand">
+        <div class="brand-icon">⚛</div>
+        <div>
+            <h1>PhysicsForLife</h1>
+            <p>Student Portal & Payments</p>
+        </div>
+    </div>
+    <div class="header-right">
+        <span class="header-status">● System Online</span>
+    </div>
+</header>
+
+<main class="app-container">
+    <aside class="sidebar">
+        <div class="sidebar-title"><span>MENU</span></div>
+        <button class="sidebar-item" onclick="backToDashboard()">
+            <span class="sidebar-icon">⌂</span><span>Back to Dashboard</span>
+        </button>
+        <button class="sidebar-item active" onclick="location.reload()">
+            <span class="sidebar-icon">💳</span><span>Payments & Requests</span>
+        </button>
+        <div class="sidebar-divider"></div>
+        <div style="padding: 10px 0;">
+            <button style="width: 100%; background: linear-gradient(120deg, #e34f69, #c93654); color: white; border: none; padding: 10px; border-radius: 8px; cursor: pointer; font-weight: 600;" onclick="logoutQuiz()">Logout</button>
+        </div>
+    </aside>
+
+    <section class="main-content" id="content">
+
+        <div class="section-heading">
+            <div><span>STUDENT</span><h2>My Payments &amp; Revision Requests</h2></div>
+        </div>
+
+        <div class="fin-cards">
+            <div class="fin-card"><span>Total billed</span><strong id="sum-billed">-</strong></div>
+            <div class="fin-card good"><span>Total paid</span><strong id="sum-paid">-</strong></div>
+            <div class="fin-card danger"><span>Outstanding balance</span><strong id="sum-balance">-</strong></div>
+        </div>
+
+        <div class="fin-tabs">
+            <button class="fin-tab active" id="tab-btn-invoices" onclick="showTab('invoices')">My Invoices</button>
+            <button class="fin-tab" id="tab-btn-payments" onclick="showTab('payments')">Payment History</button>
+            <button class="fin-tab" id="tab-btn-revisions" onclick="showTab('revisions')">Revision Requests</button>
+        </div>
+
+        <div id="tab-invoices">
+            <div class="fin-box">
+                <h3>My Invoices</h3>
+                <div class="fin-scroll">
+                    <table class="fin-table">
+                        <thead><tr><th>Class</th><th>Month</th><th>Amount</th><th>Paid</th><th>Balance</th><th>Due date</th><th>Status</th></tr></thead>
+                        <tbody id="invoice-body"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div id="tab-payments" class="hidden">
+            <div class="fin-box">
+                <h3>Payment History</h3>
+                <div class="fin-scroll">
+                    <table class="fin-table">
+                        <thead><tr><th>Date</th><th>Class</th><th>Invoice month</th><th>Amount</th><th>Method</th><th>Reference</th><th>Notes</th></tr></thead>
+                        <tbody id="payment-body"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div id="tab-revisions" class="hidden">
+            <div class="fin-box">
+                <h3>Request a Revision Class</h3>
+                <div class="fin-form">
+                    <div><label>Class</label><select id="rev-batch"></select></div>
+                    <div><label>Topic</label><input type="text" id="rev-topic" placeholder="e.g. Newton's Laws"></div>
+                    <div><label>Preferred date (optional)</label><input type="date" id="rev-date"></div>
+                    <textarea id="rev-reason" placeholder="Why do you need this revision? (optional)"></textarea>
+                    <div><button class="fin-btn" onclick="submitRevision()">Send Request</button></div>
+                </div>
+            </div>
+            <div class="fin-box">
+                <h3>My Requests</h3>
+                <div class="fin-scroll">
+                    <table class="fin-table">
+                        <thead><tr><th>Sent</th><th>Class</th><th>Topic</th><th>Preferred date</th><th>Status</th><th>Tutor reply</th></tr></thead>
+                        <tbody id="revision-body"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </section>
+</main>
+
+<footer class="footer"><p>© 2026 PhysicsForLife. All rights reserved.</p></footer>
+
+<script src="/quiz/quiz-common.js"></script>
+<script src="/finance/finance-student.js"></script>
+</body>
+</html>

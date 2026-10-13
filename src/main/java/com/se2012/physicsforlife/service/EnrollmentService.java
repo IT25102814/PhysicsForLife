@@ -26,15 +26,22 @@ public class EnrollmentService {
         this.courseBatchRepository = courseBatchRepository;
     }
 
-    // Core Member 1 function: Enroll a student into a batch
-    public Enrollment enrollStudent(Long studentId, Long batchId) {
+    // Core function: Enroll a student into a batch (batchId is Integer to match CourseBatch)
+    public Enrollment enrollStudent(Long studentId, Integer batchId) {
         AppUser student = userRepository.findById(studentId)
                 .orElseThrow(() -> new IllegalArgumentException("Student not found."));
 
         CourseBatch batch = courseBatchRepository.findById(batchId)
                 .orElseThrow(() -> new IllegalArgumentException("Course batch not found."));
 
-        if (enrollmentRepository.findByStudentAndCourseBatch(student, batch).isPresent()) {
+        java.util.Optional<Enrollment> existing = enrollmentRepository.findByStudentAndCourseBatch(student, batch);
+        if (existing.isPresent()) {
+            Enrollment old = existing.get();
+            // A student who left earlier can join again: just switch the old record back to ACTIVE.
+            if (old.getStatus() == EnrollmentStatus.WITHDRAWN) {
+                old.setStatus(EnrollmentStatus.ACTIVE);
+                return enrollmentRepository.save(old);
+            }
             throw new IllegalStateException("You are already enrolled in this batch!");
         }
 
@@ -69,5 +76,20 @@ public class EnrollmentService {
             throw new IllegalArgumentException("Enrollment not found.");
         }
         enrollmentRepository.deleteById(enrollmentId);
+    }
+
+    // A student leaves a class by himself. The record is kept (status WITHDRAWN) so history stays correct.
+    public Enrollment leaveBatch(Long enrollmentId, Long studentId) {
+        Enrollment enrollment = enrollmentRepository.findById(enrollmentId)
+                .orElseThrow(() -> new IllegalArgumentException("Enrollment not found."));
+
+        if (enrollment.getStudent() == null || !enrollment.getStudent().getUserId().equals(studentId)) {
+            throw new IllegalArgumentException("This enrollment does not belong to you.");
+        }
+        if (enrollment.getStatus() != EnrollmentStatus.ACTIVE) {
+            throw new IllegalStateException("Only an active class can be left. Please contact the admin.");
+        }
+        enrollment.setStatus(EnrollmentStatus.WITHDRAWN);
+        return enrollmentRepository.save(enrollment);
     }
 }

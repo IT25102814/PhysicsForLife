@@ -18,9 +18,9 @@ public class EnrollmentController {
         this.enrollmentService = enrollmentService;
     }
 
-    // Endpoint to enroll a student in a batch with clean error handling
+    // Endpoint to enroll a student in a batch (batchId is Integer)
     @PostMapping("/enroll")
-    public ResponseEntity<?> enrollStudent(@RequestParam Long studentId, @RequestParam Long batchId) {
+    public ResponseEntity<?> enrollStudent(@RequestParam Long studentId, @RequestParam Integer batchId) {
         try {
             Enrollment enrollment = enrollmentService.enrollStudent(studentId, batchId);
             return ResponseEntity.ok(enrollment);
@@ -39,6 +39,16 @@ public class EnrollmentController {
     @PutMapping("/{enrollmentId}/status")
     public ResponseEntity<Enrollment> updateStatus(@PathVariable Long enrollmentId, @RequestParam EnrollmentStatus status) {
         return ResponseEntity.ok(enrollmentService.updateEnrollmentStatus(enrollmentId, status));
+    }
+
+    // Endpoint for a student to leave a class by himself
+    @PutMapping("/{enrollmentId}/leave")
+    public ResponseEntity<?> leave(@PathVariable Long enrollmentId, @RequestParam Long studentId) {
+        try {
+            return ResponseEntity.ok(enrollmentService.leaveBatch(enrollmentId, studentId));
+        } catch (IllegalStateException | IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     // Endpoint to delete an enrollment record

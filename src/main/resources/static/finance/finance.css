@@ -1,0 +1,38 @@
+/* Finance pages (Member 4) - extra styles on top of style.css and quiz/quiz.css */
+.fin-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 16px; margin-bottom: 25px; }
+.fin-card { background: white; border: 1px solid var(--border); border-radius: 14px; padding: 18px 20px; box-shadow: var(--shadow); }
+.fin-card span { display: block; font-size: 12px; color: var(--muted); font-weight: 600; letter-spacing: .04em; text-transform: uppercase; }
+.fin-card strong { display: block; font-size: 26px; color: var(--navy); margin-top: 4px; }
+.fin-card.danger strong { color: var(--red); }
+.fin-card.good strong { color: var(--green); }
+
+.fin-tabs { display: flex; gap: 10px; margin-bottom: 22px; flex-wrap: wrap; }
+.fin-tab { padding: 9px 18px; border: 1px solid var(--border); border-radius: 30px; background: white; color: var(--text); font-weight: 600; cursor: pointer; }
+.fin-tab.active { background: var(--blue); border-color: var(--blue); color: white; }
+
+.fin-box { background: white; border: 1px solid var(--border); border-radius: 16px; padding: 22px; box-shadow: var(--shadow); margin-bottom: 25px; }
+.fin-box h3 { margin: 0 0 14px 0; color: var(--navy); }
+.fin-scroll { overflow-x: auto; }
+.fin-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+.fin-table th { text-align: left; padding: 10px 12px; border-bottom: 2px solid var(--border); color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: .04em; white-space: nowrap; }
+.fin-table td { padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+.fin-empty { text-align: center; color: var(--muted); padding: 18px !important; }
+
+.badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 12px; font-weight: 700; }
+.badge-UNPAID, .badge-DECLINED { background: #fde8ec; color: #b4233f; }
+.badge-PARTIAL, .badge-PENDING { background: #fff3d6; color: #9a6400; }
+.badge-PAID, .badge-ACCEPTED { background: #d8f3e8; color: #0d7550; }
+.badge-VOID { background: #e9edf3; color: #55637a; }
+.badge-SCHEDULED { background: #e0efff; color: #1f4e79; }
+.badge-overdue { background: #b4233f; color: white; margin-left: 6px; }
+
+.fin-form { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; align-items: end; }
+.fin-form label { display: block; font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+.fin-form input, .fin-form select, .fin-form textarea { width: 100%; padding: 9px 11px; border: 1px solid var(--border); border-radius: 8px; background: white; }
+.fin-form textarea { grid-column: 1 / -1; min-height: 70px; }
+.fin-btn { padding: 9px 18px; border: none; border-radius: 8px; background: var(--blue); color: white; font-weight: 600; cursor: pointer; }
+.fin-btn.small { padding: 5px 12px; font-size: 13px; }
+.fin-btn.green { background: var(--green); }
+.fin-btn.grey { background: var(--muted); }
+.fin-btn:hover { filter: brightness(1.08); }
+.pay-row td { background: #f6f9fe; }

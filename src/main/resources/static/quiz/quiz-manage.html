@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Management | Physics for Life</title>
+    <link rel="stylesheet" href="/style.css">
+    <link rel="stylesheet" href="/quiz/quiz.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="dashboard-body">
+
+<header class="header">
+    <div class="brand">
+        <div class="brand-icon">⚛</div>
+        <div>
+            <h1>PhysicsForLife</h1>
+            <p>Assessment Management</p>
+        </div>
+    </div>
+    <div class="header-right">
+        <span class="header-status">● System Online</span>
+    </div>
+</header>
+
+<main class="app-container">
+    <aside class="sidebar">
+        <div class="sidebar-title"><span>MENU</span></div>
+        <button class="sidebar-item" onclick="backToDashboard()">
+            <span class="sidebar-icon">⌂</span><span>Back to Dashboard</span>
+        </button>
+        <button class="sidebar-item active" onclick="location.reload()">
+            <span class="sidebar-icon">📝</span><span>Quiz Management</span>
+        </button>
+        <div class="sidebar-divider"></div>
+        <div style="padding: 10px 0;">
+            <button style="width: 100%; background: linear-gradient(120deg, #e34f69, #c93654); color: white; border: none; padding: 10px; border-radius: 8px; cursor: pointer; font-weight: 600;" onclick="logoutQuiz()">Logout</button>
+        </div>
+    </aside>
+
+    <section class="main-content" id="content">
+        <div id="quiz-manage">
+                <div class="section-heading">
+                    <div>
+                        <span>TUTOR &amp; ADMIN</span>
+                        <h2>Quiz Management</h2>
+                    </div>
+                </div>
+
+                <div class="dashboard-cards" style="margin-bottom: 40px;">
+                    <div class="form-card" style="margin: 0;">
+                        <h3>Quiz Settings</h3>
+                        <p style="font-size: 13px; color: var(--muted); margin-bottom: 15px;">Saving creates a NEW quiz. Students always take the newest quiz.</p>
+                        <input type="text" id="title-input" placeholder="Enter Quiz Title">
+                        <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+                            <input type="number" id="time-input" placeholder="Time (Mins)" min="1">
+                            <input type="number" id="count-input" placeholder="Max Questions" min="1">
+                        </div>
+                        <button onclick="saveFullQuizConfig()">Save Configuration</button>
+                    </div>
+                </div>
+
+                <div class="section-heading">
+                    <div>
+                        <span>DATABASE</span>
+                        <h2>Assessment Builder</h2>
+                    </div>
+                </div>
+                <div class="form-card" style="max-width: 100%;">
+                    <h3>Add New Question</h3>
+
+                    <label>Question Type</label>
+                    <select id="q-type" onchange="toggleQuestionType()">
+                        <option value="mcq-single">Single Choice MCQ (One correct answer)</option>
+                        <option value="mcq-multi">Multiple Answer MCQ (Select multiple)</option>
+                        <option value="tf">True / False</option>
+                        <option value="dnd">Drag & Drop (Fill in Blanks)</option>
+                    </select>
+
+                    <label>Question Text</label>
+                    <input type="text" id="q-input" placeholder="Enter the physics problem here...">
+
+                    <div style="display: flex; gap: 15px;">
+                        <div style="flex: 1;">
+                            <label>Option A</label>
+                            <input type="text" id="opt-a" placeholder="Answer choice A">
+                        </div>
+                        <div style="flex: 1;">
+                            <label>Option B</label>
+                            <input type="text" id="opt-b" placeholder="Answer choice B">
+                        </div>
+                    </div>
+
+                    <div style="display: flex; gap: 15px;" id="row-cd">
+                        <div style="flex: 1;">
+                            <label>Option C</label>
+                            <input type="text" id="opt-c" placeholder="Answer choice C">
+                        </div>
+                        <div style="flex: 1;">
+                            <label>Option D</label>
+                            <input type="text" id="opt-d" placeholder="Answer choice D">
+                        </div>
+                    </div>
+
+                    <label>Correct Answer Definition</label>
+
+                    <select id="correct-single-opt">
+                        <option value="A">Option A</option>
+                        <option value="B">Option B</option>
+                        <option value="C" id="opt-c-val">Option C</option>
+                        <option value="D" id="opt-d-val">Option D</option>
+                    </select>
+
+                    <div id="mcq-multi-options" class="hidden" style="display: none; gap: 15px; margin-top: 5px;">
+                        <label style="font-weight: normal;"><input type="checkbox" class="mcq-cb" value="A"> Option A</label>
+                        <label style="font-weight: normal;"><input type="checkbox" class="mcq-cb" value="B"> Option B</label>
+                        <label style="font-weight: normal;"><input type="checkbox" class="mcq-cb" value="C"> Option C</label>
+                        <label style="font-weight: normal;"><input type="checkbox" class="mcq-cb" value="D"> Option D</label>
+                    </div>
+
+                    <input type="text" id="correct-dnd-input" class="hidden" placeholder="Type correct order with commas (e.g., A,B,C)">
+                    <p id="dnd-hint" class="hidden" style="font-size: 13px; color: var(--muted); margin-top: -10px; margin-bottom: 15px;">
+                        *For Drag & Drop, type <b>[blank]</b>, <b>[]</b>, or <b>___</b> in your Question Text where you want the drop zones to appear.
+                    </p>
+
+                    <label>Theory & Explanation</label>
+                    <textarea id="q-explanation" placeholder="Provide the underlying physics theory..."></textarea>
+
+                    <div style="margin-top: 20px; display: flex; gap: 10px;">
+                        <button onclick="addQuestion()">Add Question</button>
+                        <button style="background-color: var(--muted);" onclick="clearQuestionForm()">Clear Fields</button>
+                        <button style="background-color: var(--red);" onclick="clearAllQuestions()">Delete All Questions</button>
+                    </div>
+                </div>
+            
+                <div class="section-heading" style="margin-top: 40px;">
+                    <div>
+                        <span>ANALYTICS</span>
+                        <h2>Student Results</h2>
+                    </div>
+                </div>
+                <div class="form-card" style="max-width: 100%;">
+                    <button onclick="loadResults()">Load Results for Current Quiz</button>
+                    <div id="results-view" class="hidden" style="margin-top: 20px;">
+                        <p id="results-summary" style="font-weight: 600; color: var(--blue);"></p>
+                        <div style="overflow-x: auto;">
+                            <table style="width: 100%; border-collapse: collapse; margin: 15px 0;">
+                                <thead><tr style="text-align: left; border-bottom: 2px solid var(--border);">
+                                    <th>Student</th><th>Correct</th><th>Mark (%)</th><th>Submitted</th><th>Quiz ID</th>
+                                </tr></thead>
+                                <tbody id="results-body"></tbody>
+                            </table>
+                        </div>
+                        <div style="position: relative; height: 350px;"><canvas id="tutorChart"></canvas></div>
+                    </div>
+                </div>
+            </div>
+        
+    </section>
+</main>
+
+<footer class="footer"><p>© 2026 PhysicsForLife. All rights reserved.</p></footer>
+
+<script src="/quiz/quiz-common.js"></script>
+<script src="/quiz/quiz-charts.js"></script>
+<script src="/quiz/quiz-manage.js"></script>
+<script>requireRole(['TUTOR', 'ADMIN']);</script>
+</body>
+</html>

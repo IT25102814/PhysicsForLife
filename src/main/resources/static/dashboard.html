@@ -8,137 +8,243 @@
 </head>
 <body class="dashboard-body">
 
-<!-- SIDEBAR NAVIGATION -->
-<div class="sidebar">
-  <h2>Physics for Life</h2>
-  <ul class="nav-links">
-    <li><a href="#" class="active" onclick="switchTab('dashboard', event)">📊 Dashboard</a></li>
-    <li><a href="#" onclick="switchTab('classes', event)">📚 My Enrolled Classes</a></li>
-    <li><a href="#" onclick="switchTab('purchase', event)">💳 Purchase Classes</a></li>
-    <li class="section-title">STUDENT</li>
-    <li><a href="#" onclick="openEditProfileModal()">👤 My Profile</a></li>
-  </ul>
-  <div class="sidebar-footer">
-    <button id="logoutBtn" class="logout-btn">Logout</button>
-  </div>
-</div>
-
-<!-- MAIN CONTENT AREA -->
-<div class="main-content">
-  <!-- Top Greeting Banner -->
-  <div class="welcome-card">
-    <div class="welcome-text">
-      <h3 id="welcomeHeading">Good Evening, Student!</h3>
-      <p>Let's Start Learning Physics</p>
-    </div>
-    <div class="avatar-box">
-      <span style="font-size: 40px;">👨‍🎓</span>
+<!-- TOP HEADER -->
+<header class="header">
+  <div class="brand">
+    <div class="brand-icon">⚛</div>
+    <div>
+      <h1>PhysicsForLife</h1>
+      <p>Student Portal & Learning Management</p>
     </div>
   </div>
+  <div class="header-right">
+    <span class="header-status">● System Online</span>
+  </div>
+</header>
 
-  <!-- General Message Banner -->
-  <div id="studentMessage" class="alert-banner" style="margin-bottom: 20px; display: none;"></div>
+<!-- MAIN APPLICATION -->
+<main class="app-container">
 
-  <!-- DASHBOARD HOME TAB -->
-  <div id="dashboardTab" class="student-tab-content">
-    <div class="card-grid">
-      <div class="portal-card" onclick="switchTab('classes', event)" style="cursor: pointer;">
-        <span class="card-icon">📖</span>
-        <h4>MY CLASSES</h4>
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-title">
+      <span>MENU</span>
+    </div>
+
+    <button class="sidebar-item active" data-section="dashboard" onclick="switchTab('dashboard', event)">
+      <span class="sidebar-icon">⌂</span>
+      <span>Dashboard</span>
+    </button>
+
+    <button class="sidebar-item" data-section="classes" onclick="switchTab('classes', event)">
+      <span class="sidebar-icon">📚</span>
+      <span>My Enrolled Classes</span>
+    </button>
+
+    <button class="sidebar-item" data-section="materials" onclick="switchTab('materials', event)">
+      <span class="sidebar-icon">📄</span>
+      <span>Learning Materials</span>
+    </button>
+
+    <button class="sidebar-item" data-section="purchase" onclick="switchTab('purchase', event)">
+      <span class="sidebar-icon">💳</span>
+      <span>Purchase Classes</span>
+    </button>
+
+    <div class="sidebar-divider"></div>
+
+    <div class="sidebar-title">
+      <span>STUDENT</span>
+    </div>
+
+    <button class="sidebar-item" onclick="openEditProfileModal()">
+      <span class="sidebar-icon">👤</span>
+      <span>My Profile</span>
+    </button>
+
+    <button class="sidebar-item" onclick="window.location.href='/finance/finance-student.html'">
+      <span class="sidebar-icon">💳</span>
+      <span>Payments</span>
+    </button>
+    <div style="padding: 10px 0;">
+      <button id="logoutBtn" style="width: 100%; background: linear-gradient(120deg, #e34f69, #c93654); color: white; border: none; padding: 10px; border-radius: 8px; cursor: pointer; font-weight: 600;">
+        Logout
+      </button>
+    </div>
+  </aside>
+
+  <!-- CONTENT AREA -->
+  <section class="main-content">
+
+    <!-- GENERAL MESSAGE BANNER -->
+    <div id="studentMessage" class="alert-banner" style="margin-bottom: 20px; display: none;"></div>
+
+    <!-- DASHBOARD HOME TAB -->
+    <div id="dashboardTab" class="student-tab-content">
+
+      <!-- WELCOME SECTION -->
+      <div class="welcome-section">
+        <div>
+          <span class="welcome-label">STUDENT LEARNING PORTAL</span>
+          <h2 id="welcomeHeading">Good Evening, Student 👋</h2>
+          <p>Access your enrolled course batches, explore and purchase new physics classes, and manage your learning resources.</p>
+        </div>
+        <div class="physics-visual">
+          <div class="orbit orbit-one"></div>
+          <div class="orbit orbit-two"></div>
+          <div class="orbit orbit-three"></div>
+          <div class="atom">⚛</div>
+        </div>
       </div>
-      <div class="portal-card" onclick="openEditProfileModal()" style="cursor: pointer;">
-        <span class="card-icon">👤</span>
-        <h4>EDIT PROFILE</h4>
+
+      <!-- DASHBOARD QUICK CARDS -->
+      <div class="section-heading" style="margin-top: 35px;">
+        <div>
+          <span>QUICK ACCESS</span>
+          <h2>Student Dashboard</h2>
+        </div>
       </div>
-      <div class="portal-card" onclick="switchTab('purchase', event)" style="cursor: pointer;">
-        <span class="card-icon">💳</span>
-        <h4>PURCHASE CLASSES</h4>
+
+      <div class="dashboard-cards">
+        <div class="dashboard-card institute-stat" onclick="switchTab('classes', event)" style="cursor: pointer;">
+          <div class="stat-icon">📖</div>
+          <div class="stat-info">
+            <span>Classes</span>
+            <strong>My Classes</strong>
+            <p>Enrolled course batches</p>
+          </div>
+          <button>→</button>
+        </div>
+
+        <div class="dashboard-card batch-stat" onclick="switchTab('materials', event)" style="cursor: pointer;">
+          <div class="stat-icon">📄</div>
+          <div class="stat-info">
+            <span>Content</span>
+            <strong>Learning Materials</strong>
+            <p>Notes, tutes and recordings</p>
+          </div>
+          <button>→</button>
+        </div>
+
+        <div class="dashboard-card curriculum-stat" onclick="switchTab('purchase', event)" style="cursor: pointer;">
+          <div class="stat-icon">💳</div>
+          <div class="stat-info">
+            <span>Enrollment</span>
+            <strong>Purchase</strong>
+            <p>Browse available classes</p>
+          </div>
+          <button>→</button>
+        </div>
       </div>
     </div>
-  </div>
 
-  <!-- MY CLASSES TAB -->
-  <div id="classesTab" class="student-tab-content" style="display: none;">
-    <div class="card" style="background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-      <h3>My Enrolled Course Batches</h3>
-      <table border="1" style="width: 100%; border-collapse: collapse; margin-top: 15px; text-align: left;">
-        <thead>
-        <tr style="background: #f8f9fa;">
-          <th style="padding: 10px;">Batch Name</th>
-          <th style="padding: 10px;">Institute</th>
-          <th style="padding: 10px;">Curriculum</th>
-          <th style="padding: 10px;">Syllabus</th>
-          <th style="padding: 10px;">Exam Level</th>
-          <th style="padding: 10px;">Fee (LKR)</th>
-          <th style="padding: 10px;">Status</th>
-        </tr>
-        </thead>
-        <tbody id="myEnrollmentsTableBody">
-        <!-- Populated via JS -->
-        </tbody>
-      </table>
+    <!-- MY CLASSES TAB -->
+    <div id="classesTab" class="student-tab-content" style="display: none;">
+      <div class="card" style="background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+        <h3>My Enrolled Course Batches</h3>
+        <table border="1" style="width: 100%; border-collapse: collapse; margin-top: 15px; text-align: left;">
+          <thead>
+          <tr style="background: #f8f9fa;">
+            <th style="padding: 10px;">Batch Name</th>
+            <th style="padding: 10px;">Institute</th>
+            <th style="padding: 10px;">Curriculum</th>
+            <th style="padding: 10px;">Syllabus</th>
+            <th style="padding: 10px;">Exam Level</th>
+            <th style="padding: 10px;">Fee (LKR)</th>
+            <th style="padding: 10px;">Status</th>
+            <th style="padding: 10px;">Action</th>
+          </tr>
+          </thead>
+          <tbody id="myEnrollmentsTableBody">
+          <!-- Populated via JS -->
+          </tbody>
+        </table>
+      </div>
     </div>
-  </div>
 
-  <!-- PURCHASE CLASSES TAB -->
-  <div id="purchaseTab" class="student-tab-content" style="display: none;">
-    <div class="card" style="background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-      <h3>Available Course Batches for Enrollment</h3>
-      <table border="1" style="width: 100%; border-collapse: collapse; margin-top: 15px; text-align: left;">
-        <thead>
-        <tr style="background: #f8f9fa;">
-          <th style="padding: 10px;">Batch Name</th>
-          <th style="padding: 10px;">Year</th>
-          <th style="padding: 10px;">Institute</th>
-          <th style="padding: 10px;">Curriculum</th>
-          <th style="padding: 10px;">Syllabus</th>
-          <th style="padding: 10px;">Exam Level</th>
-          <th style="padding: 10px;">Fee (LKR)</th>
-          <th style="padding: 10px;">Action</th>
-        </tr>
-        </thead>
-        <tbody id="availableBatchesTableBody">
-        <!-- Populated via JS -->
-        </tbody>
-      </table>
+    <!-- LEARNING MATERIALS TAB -->
+    <div id="materialsTab" class="student-tab-content" style="display: none;">
+      <div class="card" style="background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+        <h3>My Learning Materials</h3>
+        <p style="color: #666; margin-top: 5px;">Notes, tutes and recordings uploaded for the classes you are enrolled in.</p>
+        <label for="materialBatchFilter" style="font-weight: 600;">Class:</label>
+        <select id="materialBatchFilter" onchange="renderStudentMaterials()" style="padding: 8px; margin: 10px 0 5px 8px;"></select>
+        <div id="studentMaterialsList" style="margin-top: 10px;"></div>
+      </div>
     </div>
-  </div>
 
-  <!-- EDIT PROFILE CARD SECTION -->
-  <div id="editProfileCard" class="card" style="background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); margin-top: 30px; display: none;">
-    <h3>Edit Profile Details</h3>
-    <div id="profileMessage" class="alert-banner" style="margin-top: 15px; margin-bottom: 15px;"></div>
-    <form id="editProfileForm" style="margin-top: 15px;">
-      <div class="form-group" style="margin-bottom: 15px;">
-        <label for="editFullName">Full Name</label>
-        <input type="text" id="editFullName" required style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px;">
+    <!-- PURCHASE CLASSES TAB -->
+    <div id="purchaseTab" class="student-tab-content" style="display: none;">
+      <div class="card" style="background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+        <h3>Available Course Batches for Enrollment</h3>
+        <table border="1" style="width: 100%; border-collapse: collapse; margin-top: 15px; text-align: left;">
+          <thead>
+          <tr style="background: #f8f9fa;">
+            <th style="padding: 10px;">Batch Name</th>
+            <th style="padding: 10px;">Year</th>
+            <th style="padding: 10px;">Institute</th>
+            <th style="padding: 10px;">Curriculum</th>
+            <th style="padding: 10px;">Syllabus</th>
+            <th style="padding: 10px;">Exam Level</th>
+            <th style="padding: 10px;">Fee (LKR)</th>
+            <th style="padding: 10px;">Action</th>
+          </tr>
+          </thead>
+          <tbody id="availableBatchesTableBody">
+          <!-- Populated via JS -->
+          </tbody>
+        </table>
       </div>
-      <div class="form-group" style="margin-bottom: 15px;">
-        <label for="editEmail">Email Address</label>
-        <input type="email" id="editEmail" required style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px;">
-      </div>
-      <div class="form-group" style="margin-bottom: 15px;">
-        <label for="editPhone">Phone Number</label>
-        <input type="text" id="editPhone" placeholder="Enter phone number" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px;">
-      </div>
-      <div class="form-group" style="margin-bottom: 15px;">
-        <label for="currentPassword">Current Password (required if changing password)</label>
-        <input type="password" id="currentPassword" placeholder="Enter current password" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px;">
-      </div>
-      <div class="form-group" style="margin-bottom: 15px;">
-        <label for="newPassword">New Password (optional)</label>
-        <input type="password" id="newPassword" placeholder="Enter new password" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px;">
-      </div>
-      <button type="submit" style="padding: 10px 20px; background: #28a745; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;">Save Changes</button>
-      <button type="button" onclick="document.getElementById('editProfileCard').style.display='none'" style="padding: 10px 20px; background: #6c757d; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; margin-left: 10px;">Cancel</button>
-    </form>
-  </div>
-</div>
+    </div>
+
+    <!-- EDIT PROFILE CARD SECTION -->
+    <div id="editProfileCard" class="card" style="background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); margin-top: 30px; display: none;">
+      <h3>Edit Profile Details</h3>
+      <div id="profileMessage" class="alert-banner" style="margin-top: 15px; margin-bottom: 15px;"></div>
+      <form id="editProfileForm" style="margin-top: 15px;">
+        <div class="form-group" style="margin-bottom: 15px;">
+          <label for="editFullName">Full Name</label>
+          <input type="text" id="editFullName" required>
+        </div>
+        <div class="form-group" style="margin-bottom: 15px;">
+          <label for="editEmail">Email Address</label>
+          <input type="email" id="editEmail" required>
+        </div>
+        <div class="form-group" style="margin-bottom: 15px;">
+          <label for="editPhone">Phone Number</label>
+          <input type="text" id="editPhone" placeholder="Enter phone number">
+        </div>
+        <div class="form-group" style="margin-bottom: 15px;">
+          <label for="currentPassword">Current Password (required if changing password)</label>
+          <input type="password" id="currentPassword" placeholder="Enter current password">
+        </div>
+        <div class="form-group" style="margin-bottom: 15px;">
+          <label for="newPassword">New Password (optional)</label>
+          <input type="password" id="newPassword" placeholder="Enter new password">
+        </div>
+        <button type="submit" style="padding: 10px 20px; background: #28a745; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;">Save Changes</button>
+        <button type="button" onclick="document.getElementById('editProfileCard').style.display='none'" style="padding: 10px 20px; background: #6c757d; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; margin-left: 10px;">Cancel</button>
+      </form>
+    </div>
+
+  </section>
+
+</main>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <p>© 2026 PhysicsForLife. All rights reserved.</p>
+</footer>
 
 <script src="app.js"></script>
 
 <script>
   document.addEventListener("DOMContentLoaded", () => {
+    const userRole = localStorage.getItem('userRole');
+    if (userRole !== 'STUDENT' && userRole !== null) {
+      // Optional role check or allow general student access
+    }
+
     const savedName = localStorage.getItem('userName');
     const savedEmail = localStorage.getItem('userEmail');
     const savedPhone = localStorage.getItem('userPhone');
@@ -157,10 +263,12 @@
 
   function switchTab(tabName, event) {
     if (event) event.preventDefault();
-    document.querySelectorAll('.nav-links a').forEach(el => el.classList.remove('active'));
+
+    document.querySelectorAll('.sidebar-item').forEach(el => el.classList.remove('active'));
 
     document.getElementById('dashboardTab').style.display = 'none';
     document.getElementById('classesTab').style.display = 'none';
+    document.getElementById('materialsTab').style.display = 'none';
     document.getElementById('purchaseTab').style.display = 'none';
 
     if (tabName === 'dashboard') {
@@ -168,10 +276,19 @@
     } else if (tabName === 'classes') {
       document.getElementById('classesTab').style.display = 'block';
       loadStudentEnrollments();
+    } else if (tabName === 'materials') {
+      document.getElementById('materialsTab').style.display = 'block';
+      loadStudentMaterials();
     } else if (tabName === 'purchase') {
       document.getElementById('purchaseTab').style.display = 'block';
       loadAvailableBatches();
     }
+
+    document.querySelectorAll(".sidebar-item").forEach(button => {
+      if (button.getAttribute('onclick')?.includes(tabName)) {
+        button.classList.add("active");
+      }
+    });
   }
 
   function showMessage(text, isSuccess = true) {
@@ -192,27 +309,30 @@
     if (!studentId) return;
 
     try {
-      const res = await fetch(`/api/enrollments/student/${studentId}`);
+      const res = await fetch(`http://localhost:8081/api/enrollments/student/${studentId}`);
       if (res.ok) {
         const enrollments = await res.json();
         const tbody = document.getElementById('myEnrollmentsTableBody');
         tbody.innerHTML = '';
         if (enrollments.length === 0) {
-          tbody.innerHTML = `<tr><td colspan="7" style="padding: 12px; text-align: center; color: #666;">You are not enrolled in any classes yet.</td></tr>`;
+          tbody.innerHTML = `<tr><td colspan="8" style="padding: 12px; text-align: center; color: #666;">You are not enrolled in any classes yet.</td></tr>`;
           return;
         }
         enrollments.forEach(en => {
           const b = en.courseBatch;
           tbody.innerHTML += `
-            <tr>
-              <td style="padding: 8px;">${b ? b.batchName : 'N/A'}</td>
-              <td style="padding: 8px;">${b && b.institute ? b.institute.name : 'N/A'}</td>
-              <td style="padding: 8px;">${b && b.curriculum ? b.curriculum.name : 'N/A'}</td>
-              <td style="padding: 8px;">${b ? b.syllabusType : 'N/A'}</td>
-              <td style="padding: 8px;">${b ? b.examLevel : 'N/A'}</td>
-              <td style="padding: 8px;">${b ? b.monthlyFee : 'N/A'}</td>
-              <td style="padding: 8px; font-weight: bold; color: ${en.status === 'ACTIVE' ? 'green' : 'red'};">${en.status}</td>
-            </tr>`;
+                        <tr>
+                            <td style="padding: 8px;">${b ? b.batchName : 'N/A'}</td>
+                            <td style="padding: 8px;">${b && b.institute ? b.institute.name : 'N/A'}</td>
+                            <td style="padding: 8px;">${b && b.curriculum ? b.curriculum.name : 'N/A'}</td>
+                            <td style="padding: 8px;">${b ? b.syllabusType : 'N/A'}</td>
+                            <td style="padding: 8px;">${b ? b.examLevel : 'N/A'}</td>
+                            <td style="padding: 8px;">${b ? b.monthlyFee : 'N/A'}</td>
+                            <td style="padding: 8px; font-weight: bold; color: ${en.status === 'ACTIVE' ? 'green' : 'red'};">${en.status}</td>
+                            <td style="padding: 8px;">${en.status === 'ACTIVE'
+                              ? `<button onclick="leaveBatch(${en.enrollmentId}, '${safeText(b ? b.batchName : '').replace(/'/g, '')}')" style="padding: 6px 12px; background: #dc4c64; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: 600;">Leave</button>`
+                              : ''}</td>
+                        </tr>`;
         });
       }
     } catch (err) {
@@ -220,25 +340,110 @@
     }
   }
 
+  // ---------- LEARNING MATERIALS (student view) ----------
+  let studentMaterials = [];
+
+  function safeText(value) {
+    return String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  }
+
+  function materialIcon(type) {
+    const icons = { RECORDING: '🎥', VIDEO: '🎥', NOTE: '📝', WORKSHEET: '📋', TUTE: '📘', PDF: '📕' };
+    return icons[type] || '📄';
+  }
+
+  function formatFileSize(bytes) {
+    if (!bytes) return '';
+    if (bytes < 1024 * 1024) return Math.max(1, Math.round(bytes / 1024)) + ' KB';
+    return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+  }
+
+  async function loadStudentMaterials() {
+    const studentId = localStorage.getItem('userId');
+    const list = document.getElementById('studentMaterialsList');
+    if (!studentId) {
+      list.innerHTML = '<p>User session not found. Please log in again.</p>';
+      return;
+    }
+    list.innerHTML = '<p>Loading materials...</p>';
+    try {
+      const res = await fetch(`http://localhost:8081/api/learning-materials/student/${studentId}`);
+      if (!res.ok) throw new Error('Request failed');
+      studentMaterials = await res.json();
+
+      // build the class filter from the batches that have materials
+      const batches = new Map();
+      studentMaterials.forEach(m => { if (m.batch) batches.set(m.batch.batchId, m.batch); });
+      const filter = document.getElementById('materialBatchFilter');
+      const previous = filter.value;
+      filter.innerHTML = '<option value="all">All my classes</option>';
+      batches.forEach((b, id) => {
+        const inst = b.institute ? ' - ' + b.institute.name : '';
+        const curr = b.curriculum ? ' - ' + b.curriculum.name : '';
+        filter.innerHTML += `<option value="${id}">${safeText(b.batchName + curr + inst)}</option>`;
+      });
+      if ([...filter.options].some(o => o.value === previous)) filter.value = previous;
+      renderStudentMaterials();
+    } catch (err) {
+      console.error('Error loading learning materials:', err);
+      list.innerHTML = '<p style="color: #c0392b;">Could not load learning materials.</p>';
+    }
+  }
+
+  function renderStudentMaterials() {
+    const list = document.getElementById('studentMaterialsList');
+    const selected = document.getElementById('materialBatchFilter').value;
+    const items = studentMaterials.filter(m => selected === 'all' || (m.batch && String(m.batch.batchId) === selected));
+
+    if (items.length === 0) {
+      list.innerHTML = '<p style="color: #666;">No learning materials have been uploaded for your classes yet.</p>';
+      return;
+    }
+
+    let html = '';
+    let currentWeek = null;
+    items.forEach(m => {
+      const week = (m.batch ? m.batch.batchName : '') + ' - Week ' + m.weekNumber;
+      if (week !== currentWeek) {
+        html += `<h4 style="margin: 18px 0 8px; color: #1f4e79;">${safeText(week)}</h4>`;
+        currentWeek = week;
+      }
+      const fileUrl = `http://localhost:8081/api/learning-materials/files/${m.materialId}`;
+      html += `
+        <div style="border: 1px solid #e3e6ea; border-radius: 8px; padding: 12px 14px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; gap: 12px;">
+          <div>
+            <strong>${materialIcon(m.materialType)} ${safeText(m.title)}</strong>
+            <span style="color: #666; font-size: 13px;"> &middot; ${safeText(m.materialType)} ${formatFileSize(m.fileSizeBytes)}</span>
+            ${m.description ? `<div style="color: #555; font-size: 14px; margin-top: 4px;">${safeText(m.description)}</div>` : ''}
+          </div>
+          <div style="white-space: nowrap;">
+            <a href="${fileUrl}" target="_blank" style="padding: 6px 12px; background: #007bff; color: white; border-radius: 4px; text-decoration: none; font-weight: 600;">Open</a>
+            <a href="${fileUrl}" download="${safeText(m.fileName || 'material')}" style="padding: 6px 12px; background: #28a745; color: white; border-radius: 4px; text-decoration: none; font-weight: 600; margin-left: 6px;">Download</a>
+          </div>
+        </div>`;
+    });
+    list.innerHTML = html;
+  }
+
   async function loadAvailableBatches() {
     try {
-      const res = await fetch('/api/management/batches');
+      const res = await fetch('http://localhost:8081/api/management/batches');
       if (res.ok) {
         const batches = await res.json();
         const tbody = document.getElementById('availableBatchesTableBody');
         tbody.innerHTML = '';
         batches.forEach(b => {
           tbody.innerHTML += `
-            <tr>
-              <td style="padding: 8px;">${b.batchName}</td>
-              <td style="padding: 8px;">${b.batchYear}</td>
-              <td style="padding: 8px;">${b.institute ? b.institute.name : 'N/A'}</td>
-              <td style="padding: 8px;">${b.curriculum ? b.curriculum.name : 'N/A'}</td>
-              <td style="padding: 8px;">${b.syllabusType}</td>
-              <td style="padding: 8px;">${b.examLevel}</td>
-              <td style="padding: 8px;">${b.monthlyFee}</td>
-              <td style="padding: 8px;"><button onclick="enrollInBatch(${b.batchId})" style="padding: 6px 12px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: 600;">Enroll</button></td>
-            </tr>`;
+                        <tr>
+                            <td style="padding: 8px;">${b.batchName}</td>
+                            <td style="padding: 8px;">${b.batchYear}</td>
+                            <td style="padding: 8px;">${b.institute ? b.institute.name : 'N/A'}</td>
+                            <td style="padding: 8px;">${b.curriculum ? b.curriculum.name : 'N/A'}</td>
+                            <td style="padding: 8px;">${b.syllabusType}</td>
+                            <td style="padding: 8px;">${b.examLevel}</td>
+                            <td style="padding: 8px;">${b.monthlyFee}</td>
+                            <td style="padding: 8px;"><button onclick="enrollInBatch(${b.batchId})" style="padding: 6px 12px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: 600;">Enroll</button></td>
+                        </tr>`;
         });
       }
     } catch (err) {
@@ -254,7 +459,7 @@
     }
 
     try {
-      const res = await fetch(`/api/enrollments/enroll?studentId=${studentId}&batchId=${batchId}`, {
+      const res = await fetch(`http://localhost:8081/api/enrollments/enroll?studentId=${studentId}&batchId=${batchId}`, {
         method: 'POST'
       });
       if (res.ok) {
@@ -270,9 +475,34 @@
     }
   }
 
+  async function leaveBatch(enrollmentId, batchName) {
+    const studentId = localStorage.getItem('userId');
+    if (!studentId) {
+      showMessage('User session not found. Please log in again.', false);
+      return;
+    }
+    if (!confirm(`Leave "${batchName}"? You will lose access to its learning materials. You can enroll again later.`)) return;
+
+    try {
+      const res = await fetch(`http://localhost:8081/api/enrollments/${enrollmentId}/leave?studentId=${studentId}`, {
+        method: 'PUT'
+      });
+      if (res.ok) {
+        showMessage('You have left the class.', true);
+        loadStudentEnrollments();
+      } else {
+        showMessage((await res.text()) || 'Could not leave the class.', false);
+      }
+    } catch (err) {
+      console.error('Error leaving class:', err);
+      showMessage('Could not reach the server.', false);
+    }
+  }
+
   function openEditProfileModal() {
     const card = document.getElementById('editProfileCard');
     card.style.display = card.style.display === 'none' ? 'block' : 'none';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   document.getElementById('editProfileForm').addEventListener('submit', async function(e) {
@@ -291,7 +521,7 @@
         newPassword: document.getElementById('newPassword').value
       };
 
-      const updateRes = await fetch(`/api/users/${userId}`, {
+      const updateRes = await fetch(`http://localhost:8081/api/users/${userId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(updatedPayload)

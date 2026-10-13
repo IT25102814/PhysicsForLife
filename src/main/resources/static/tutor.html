@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Physics For Life - Tutor View</title>
+    <link rel="stylesheet" href="/shared/common.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body data-view="tutor">
+
+<header class="header">
+    <div class="brand">
+        <div class="brand-icon">⚛</div>
+        <div>
+            <h1>Physics For Life</h1>
+            <p>Tuition Management</p>
+        </div>
+    </div>
+    <div style="display: flex; gap: 10px; align-items: center;">
+        <button id="btn-student-view" class="nav-button" onclick="switchView('student')">Student View</button>
+        <button id="btn-tutor-view" class="nav-button active" onclick="switchView('tutor')">Tutor View</button>
+        <button id="btn-admin-view" class="nav-button" onclick="switchView('admin')">Admin View</button>
+        <button id="logoutBtn" class="nav-button" onclick="logoutTutor()" style="background-color: var(--red); color: white; border: none;">Logout</button>
+    </div>
+</header>
+
+<div class="app-container">
+    <aside class="sidebar">
+        <div class="sidebar-title">NAVIGATION</div>
+        <button class="sidebar-item active" onclick="location.reload()">
+            <span class="sidebar-icon">📊</span> Dashboard
+        </button>
+        <button class="sidebar-item" onclick="switchView('student')">
+            <span class="sidebar-icon">📝</span> Assessments
+        </button>
+    </aside>
+
+    <main class="main-content" id="content">
+        <section id="tutor-section">
+            <div id="tutor-login-card">
+                <div class="form-card" style="margin-top: 30px;">
+                    <h3>Tutor Login</h3>
+                    <label>Secure Username</label>
+                    <input type="text" id="tutor-user-input" placeholder="Enter Username (default: tutor)">
+                    <label>Secure Password</label>
+                    <input type="password" id="tutor-pass-input" placeholder="Enter Tutor Password (1234)">
+                    <button style="width: 100%; margin-top: 10px;" onclick="loginTutor()">Login</button>
+                    <p id="tutor-error" class="hidden" style="color: var(--red); font-weight: bold; margin-top: 15px; margin-bottom: 0;"></p>
+                </div>
+            </div>
+
+            <div id="tutor-dashboard" class="hidden">
+                <div class="section-heading">
+                    <div>
+                        <span>PORTAL</span>
+                        <h2>Tutor Dashboard</h2>
+                    </div>
+                </div>
+                <div class="dashboard-cards" style="margin-bottom: 40px;">
+                    <div class="dashboard-card batch-stat">
+                        <div class="stat-icon">📊</div>
+                        <div class="stat-info">
+                            <span>Analytics</span>
+                            <strong>Class Performance</strong>
+                            <p>Review overall student performance and individual scores.</p>
+                        </div>
+                        <button onclick="loadTutorAnalytics()">👁</button>
+                    </div>
+                </div>
+
+                <div id="tutor-analytics-view" class="hidden form-card" style="max-width: 100%; margin-bottom: 40px;">
+                    <h3 style="color: var(--blue); margin-bottom: 20px;">Correct Responses per Question</h3>
+                    <div style="position: relative; height: 350px;">
+                        <canvas id="tutorChart"></canvas>
+                    </div>
+                    <button style="margin-top: 25px; width: 100%;" onclick="document.getElementById('tutor-analytics-view').classList.add('hidden')">Close Analytics</button>
+                </div>
+            </div>
+        </section>
+    </main>
+</div>
+
+<footer class="footer">
+    <p>© 2026 Physics Assessment Portal</p>
+</footer>
+
+<script src="/shared/common.js"></script>
+<script src="/shared/charts.js"></script>
+<script src="/tutor/tutor.js"></script>
+</body>
+</html>

@@ -400,12 +400,36 @@ async function updateInstitute(id) {
     }
 }
 
+function adminToast(message, isSuccess) {
+    const t = document.createElement("div");
+    t.textContent = message;
+    t.style.cssText = "position:fixed; top:20px; right:20px; z-index:99999; max-width:420px; padding:14px 18px; "
+        + "border-radius:10px; color:white; font-weight:600; box-shadow:0 8px 25px rgba(0,0,0,0.25); "
+        + "background:" + (isSuccess ? "#159b72" : "#dc4c64");
+    document.body.appendChild(t);
+    setTimeout(() => t.remove(), 4500);
+}
+
+async function deleteItem(url, okText, reload) {
+    try {
+        const res = await fetch(url, { method: "DELETE" });
+        if (res.ok) {
+            adminToast(okText, true);
+            reload();
+        } else {
+            let msg = "Could not delete.";
+            try { const body = await res.json(); if (body.message) msg = body.message; } catch (e) {}
+            adminToast(msg, false);
+        }
+    } catch (e) {
+        console.error(e);
+        adminToast("Server not reachable.", false);
+    }
+}
+
 async function deleteInstitute(id) {
     if (!confirm("Are you sure you want to delete this institute?")) return;
-    try {
-        await fetch(`http://localhost:8081/api/management/institutes/${id}`, { method: "DELETE" });
-        showInstitutes();
-    } catch (e) { console.error(e); }
+    deleteItem(`http://localhost:8081/api/management/institutes/${id}`, "Institute deleted.", showInstitutes);
 }
 
 // 7. CURRICULA MODULE
@@ -518,13 +542,9 @@ async function updateCurriculum(id) {
 }
 
 async function deleteCurriculum(id) {
-    if (!confirm("Are you sure?")) return;
-    try {
-        await fetch(`http://localhost:8081/api/management/curricula/${id}`, { method: "DELETE" });
-        showCurricula();
-    } catch (e) { console.error(e); }
+    if (!confirm("Are you sure you want to delete this curriculum?")) return;
+    deleteItem(`http://localhost:8081/api/management/curricula/${id}`, "Curriculum deleted.", showCurricula);
 }
-
 // 8. BATCHES MODULE (WITH ADD & EDIT SUPPORT)
 async function showBatches() {
     const content = document.getElementById("content");
@@ -683,11 +703,8 @@ async function submitBatchData(url, method) {
 }
 
 async function deleteBatch(id) {
-    if (!confirm("Are you sure?")) return;
-    try {
-        await fetch(`http://localhost:8081/api/management/batches/${id}`, { method: "DELETE" });
-        showBatches();
-    } catch (e) { console.error(e); }
+    if (!confirm("Are you sure you want to delete this batch?")) return;
+    deleteItem(`http://localhost:8081/api/management/batches/${id}`, "Batch deleted.", showBatches);
 }
 
 // 9. LEARNING MATERIALS MODULE

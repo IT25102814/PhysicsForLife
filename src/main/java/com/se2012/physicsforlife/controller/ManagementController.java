@@ -5,6 +5,8 @@ import com.se2012.physicsforlife.entity.Curriculum;
 import com.se2012.physicsforlife.entity.Institute;
 import com.se2012.physicsforlife.service.ManagementService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.dao.DataIntegrityViolationException;
+import java.util.Map;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -83,5 +85,14 @@ public class ManagementController {
     public ResponseEntity<Void> deleteBatch(@PathVariable Integer id) {
         managementService.deleteBatch(id);
         return ResponseEntity.noContent().build();
+    }
+
+    // If MySQL refuses a delete because other records still use it, send a clear message
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<Map<String, String>> handleInUse(DataIntegrityViolationException e) {
+        return ResponseEntity.status(409).body(Map.of(
+                "message", "Cannot delete: it is still used by other records "
+                        + "(batches, enrollments, materials, quizzes or invoices). "
+                        + "Remove or reassign those first."));
     }
 }

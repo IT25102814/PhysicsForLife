@@ -1,8 +1,6 @@
 const $=(s,r=document)=>r.querySelector(s),$$=(s,r=document)=>[...r.querySelectorAll(s)];
 const today=()=>new Date().toLocaleDateString([],{day:'numeric',month:'short',year:'numeric'});
-const NAV={student:[['Payments',[['mypay','My Payments','▣'],['bank','Bank Details','⌂']]],['Support',[['revisions','Revision Requests','✉']]]],
-admin:[['Payments',[['invoices','Invoices','▦'],['receipts','Payment Receipts','▣']]],['Support',[['revisions','Revision Requests','✉']]]]};
-const ME={id:'ST1042',name:'Kavya S.'};
+const ME={id:'ST1042',name:'Kavya S.'}; /* demo logged-in student - replace with the real user from login (Member A) */
 const PORTALS=[['Cambridge',['2029 OL','2028 OL','2027 OL','2028 AL']],['Edexcel',['2028 OL','2027 OL','2027 AL','2028 AL']]];
 const ALLC=PORTALS.flatMap(([g,l])=>l.map(x=>g+': '+x));
 const FEES=Object.fromEntries(ALLC.map(k=>[k,/AL$/.test(k)?6000:4500])); /* sample monthly fees - change here */
@@ -68,7 +66,7 @@ A.vw=b=>{const p=S.p.find(p=>p.id==b.dataset.v),m=document.createElement('div');
 /* ---------- revisions (by role) ---------- */
 const fmt=v=>v?new Date(v).toLocaleString([],{weekday:'short',day:'numeric',month:'short',hour:'numeric',minute:'2-digit'}):'';
 const reply=r=>`<div class="ok2">${r.ans?`<b>Tutor's answer</b><p style="margin:4px 0 ${r.slot?'10px':'0'}">${esc(r.ans)}</p>`:''}${r.slot?`<b>Call time slot</b><p style="margin-top:4px">📞 ${fmt(r.slot)}</p>`:''}</div>`;
-P.revisions=()=>{const stu=S.role=='student',L=stu?S.r.filter(r=>same(r.s,ME.id)):S.r;
+P.revisions=()=>{const stu=ROLE=='student',L=stu?S.r.filter(r=>same(r.s,ME.id)):S.r;
  return hero('✉','Revision Requests',stu?'Tell the tutor what you are finding difficult.':'Reply with an answer, a call time slot, or both.')+(stu?
  `<div class="card"><div class="ct">New request</div><form data-f="rev"><label>Student ID<input name="s" value="${ME.id}" readonly></label><label>Concerns<textarea name="c" rows="4" placeholder="Tell the tutor what you are struggling with" required></textarea></label><button class="b">Send to tutor</button></form></div>
  <div class="card"><div class="ct">My requests</div>${L.map(r=>`<div class="li" style="align-items:flex-start"><span style="flex:1"><b>Student ID: ${esc(r.s)}</b><br><span class="sub">${esc(r.c||'')}</span>${r.st=='RESPONDED'?reply(r):''}</span>${chip(r.st)}</div>`).join('')||'<p class="sub">No requests yet.</p>'}</div>`:
@@ -80,16 +78,24 @@ A.snd=b=>{const id=b.dataset.v,card=b.closest('.acc'),an=$('#an-'+id),sl=$('#sl-
  const r=S.r.find(r=>r.id==id);r.ans=ans;r.slot=slot;r.st='RESPONDED';save();go('revisions');hdr();toast('Sent back to the student')};
 F.rev=f=>{const d=fd(f);S.r.unshift({id:nid(S.r),s:d.s.trim(),c:d.c,st:'PENDING'});save();go('revisions');hdr();toast('Request sent to the tutor')};
 
-/* ---------- shell ---------- */
+/* ---------- shell (one HTML page per screen) ---------- */
+const PG=document.body.dataset.page;
+const CFG={'payments':['student','mypay'],'bank-details':['student','bank'],'revision-proposals':['student','revisions'],'invoices':['admin','invoices'],'receipts':['admin','receipts'],'tutor-revision-proposals':['tutor','revisions']};
+const ROLE=CFG[PG][0],KEY=CFG[PG][1];
+const LINKS={student:[['Payments',[['payments','My Payments','▣'],['bank-details','Bank Details','⌂']]],['Support',[['revision-proposals','Revision Requests','✉']]]],
+ admin:[['Payments',[['invoices','Invoices','▦'],['receipts','Payment Receipts','▣']]]],
+ tutor:[['Support',[['tutor-revision-proposals','Revision Requests','✉']]]]};
 const page=$('#page');
-function go(k){cur=k;page.innerHTML=P[k]();$$('.nv').forEach(n=>n.classList.toggle('on',n.dataset.k==k));$$('[data-n]',page).forEach(e=>cu(e,+e.dataset.n));$('#side').classList.remove('open');scrollTo(0,0)}
-function hdr(){const ad=S.role=='admin';let n=[],c=0;
- if(ad){const pr=S.p.filter(p=>p.st=='PENDING'),rv=S.r.filter(r=>r.st=='PENDING');c=pr.length+rv.length;n=[...pr.map(p=>`New receipt from ${esc((inv(p.i)||{}).s||'?')} for ${esc((inv(p.i)||{}).k||'?')}`),...rv.map(r=>`Revision request from ${esc(r.s)}`)]}
+function go(k){page.innerHTML=P[k]();$$('[data-n]',page).forEach(e=>cu(e,+e.dataset.n));scrollTo(0,0)}
+function hdr(){let n=[],c=0;
+ if(ROLE=='admin'){const pr=S.p.filter(p=>p.st=='PENDING');c=pr.length;n=pr.map(p=>`New receipt from ${esc((inv(p.i)||{}).s||'?')} for ${esc((inv(p.i)||{}).k||'?')}`)}
+ else if(ROLE=='tutor'){const rv=S.r.filter(r=>r.st=='PENDING');c=rv.length;n=rv.map(r=>`Revision request from ${esc(r.s)}`)}
  else{const rp=S.p.filter(p=>inv(p.i)&&same(inv(p.i).s,ME.id)&&p.st!='PENDING'),rr=S.r.filter(r=>same(r.s,ME.id)&&r.st=='RESPONDED');c=rp.length+rr.length;n=[...rp.map(p=>`Your payment for ${esc(inv(p.i).k)} was ${p.st.toLowerCase()}`),...rr.map(()=>'The tutor replied to your revision request')]}
  $('#bd').textContent=c;$('#bd').hidden=!c;$('#pop').innerHTML=n.map(t=>`<p>${t}</p>`).join('')||'<p>You are all caught up.</p>';
- $('#av').firstChild.textContent=ad?'AD':'KS';$$('.seg button').forEach(b=>b.classList.toggle('on',b.dataset.r==S.role))}
-function nav(){$('#nav').innerHTML=NAV[S.role].map(([h,l])=>`<div class="sec">${h}</div>`+l.map(([k,n,i])=>`<button class="nv" data-k="${k}"><span>${i}</span>${n}</button>`).join('')).join('')}
-$('#nav').onclick=e=>{const b=e.target.closest('.nv');if(b){pc=null;go(b.dataset.k)}};$('#burger').onclick=()=>$('#side').classList.toggle('open');$('#bell').onclick=()=>$('#pop').hidden=!$('#pop').hidden;
-$('.seg').onclick=e=>{const b=e.target.closest('button');if(!b||b.dataset.r==S.role)return;S.role=b.dataset.r;pc=null;save();nav();hdr();go(S.role=='admin'?'invoices':'mypay')};
+ $('#av').firstChild.textContent={student:'KS',admin:'AD',tutor:'TU'}[ROLE]}
+$('#nav').innerHTML=LINKS[ROLE].map(([h,l])=>`<div class="sec">${h}</div>`+l.map(([f,n,i])=>`<a class="nv ${f==PG?'on':''}" href="${f}.html"><span>${i}</span>${n}</a>`).join('')).join('');
+/* DEMO ONLY: lets you open each role's page. Remove when the real login (Member A) decides the role. */
+$('.seg').innerHTML=[['student','payments','Student'],['admin','invoices','Admin'],['tutor','tutor-revision-proposals','Tutor']].map(([r,f,t])=>`<a href="${f}.html" class="${r==ROLE?'on':''}">${t}</a>`).join('');
+$('#burger').onclick=()=>$('#side').classList.toggle('open');$('#bell').onclick=()=>$('#pop').hidden=!$('#pop').hidden;
 page.onclick=e=>{const b=e.target.closest('[data-a]');b&&A[b.dataset.a](b)};page.onsubmit=e=>{e.preventDefault();F[e.target.dataset.f](e.target)};page.oninput=e=>{const f=e.target.dataset.i;f&&I[f](e.target)};
-nav();hdr();go(S.role=='admin'?'invoices':'mypay');
+hdr();go(KEY);
